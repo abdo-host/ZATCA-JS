@@ -23,7 +23,7 @@ npm i zatca --save
 
 ```js
 // Import in your app
-const TT_Zatca = require('@tatwerat/zatca');
+const TT_Zatca = require('zatca');
 
 /*
 * Run Generate QrCode Class
