@@ -9,6 +9,7 @@
   <h3><a href="https://www.zatcajs.tatwerat.com">Demo Link</a></h3>
 </div>
 
+
 ## Installation
 
 You can install the package via composer:
@@ -16,6 +17,7 @@ You can install the package via composer:
 ```bash
 npm i zatca --save
 ```
+[![npm](https://img.shields.io/npm/v/zatca.svg)](https://www.npmjs.com/package/zatca)  [![downloads](https://img.shields.io/npm/dm/zatca.svg)](https://npmjs.org/package/zatca)
 
 ## Usage
 
