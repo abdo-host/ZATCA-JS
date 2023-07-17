@@ -1,0 +1,34 @@
+{
+  "name": "@tatwerat/zatca",
+  "version": "1.0.0",
+  "description": "Generate E-Invoice qr-code and valid XML then submitting to ZATCA API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdo-host/ZATCA-JS.git"
+  },
+  "keywords": [
+    "E-invoicing",
+    "ZATCA-QR",
+    "QR Code",
+    "ZATCA-XML",
+    "ZATCA-Invoicing",
+    "Zatca",
+    "KSA Invoice"
+  ],
+  "author": "Tatwerat <tatwerat@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/abdo-host/ZATCA-JS/issues"
+  },
+  "deprecated": false,
+  "devDependencies": {
+    "express": "^4.18.2",
+    "buffer": "^6.0.3",
+    "qrcode": "^1.5.3"
+  },
+  "homepage": "https://github.com/abdo-host/ZATCA-JS#readme"
+}
