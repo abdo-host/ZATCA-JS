@@ -14,7 +14,7 @@
 You can install the package via composer:
 
 ```bash
-npm i @tatwerat/zatca --save
+npm i zatca --save
 ```
 
 ## Usage
