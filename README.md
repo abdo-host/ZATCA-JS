@@ -12,7 +12,7 @@
 
 ## Installation
 
-You can install the package via composer:
+You can install the package via npm:
 
 ```bash
 npm i zatca --save
