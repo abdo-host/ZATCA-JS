@@ -7,6 +7,7 @@ import type {
 import {
   createInvoicing,
   generateXml,
+  hashInvoiceXml,
   type InvoiceInput,
 } from '../../src/server/invoicing.js';
 
@@ -43,7 +44,8 @@ const fixture = JSON.parse(
 ) as InvoiceInput;
 
 it('generates unsigned XML independently using the supplied chain link', () => {
-  const xml = generateXml(fixture, {
+  const xml = generateXml({
+    ...fixture,
     invoiceCounter: '2',
     previousInvoiceHash: Buffer.alloc(32).toString('base64'),
   });
@@ -188,13 +190,12 @@ it('reports ready XML using only the environment and CSID settings', async () =>
   );
   const invoicing = createInvoicing({ ...settings(), transport });
   const invoiceHash = Buffer.alloc(32).toString('base64');
-  const xml = generateXml(
-    { ...fixture, kind: 'simplified' },
-    {
-      invoiceCounter: '1',
-      previousInvoiceHash: invoiceHash,
-    },
-  ).replace(
+  const xml = generateXml({
+    ...fixture,
+    kind: 'simplified',
+    invoiceCounter: '1',
+    previousInvoiceHash: invoiceHash,
+  }).replace(
     '</Invoice>',
     '<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/></Invoice>',
   );
@@ -206,3 +207,33 @@ it('reports ready XML using only the environment and CSID settings', async () =>
   );
   expect(transport).toHaveBeenCalledTimes(1);
 });
+
+it.skipIf(!xmllintPath)(
+  'passes the same generated, prepared and hashed XML to reporting in memory',
+  async () => {
+    if (!xmllintPath) throw new Error('Missing test canonicalizer');
+    const draftXml = generateXml({
+      ...fixture,
+      kind: 'simplified',
+      invoiceCounter: '1',
+      previousInvoiceHash: Buffer.alloc(32).toString('base64'),
+    });
+    const xml = draftXml.replace(
+      '</Invoice>',
+      '<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/></Invoice>',
+    );
+    const invoiceHash = hashInvoiceXml(xml, xmllintPath);
+    const transport = vi.fn(async (_url: string, init: RequestInit) => {
+      const payload = JSON.parse(String(init.body));
+      expect(payload.uuid).toBe(fixture.uuid);
+      expect(payload.invoiceHash).toBe(invoiceHash);
+      expect(Buffer.from(payload.invoice, 'base64').toString('utf8')).toBe(xml);
+      return Response.json({ validationResults, reportingStatus: 'REPORTED' });
+    });
+    const invoicing = createInvoicing({ ...settings(), transport });
+    expect((await invoicing.reportXml({ xml, invoiceHash })).status).toBe(
+      'reported',
+    );
+    expect(transport).toHaveBeenCalledTimes(1);
+  },
+);

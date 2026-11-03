@@ -60,31 +60,21 @@
 }
 ```
 
-احفظ المثال في ملف `invoice.json`. في مثال TypeScript داخل `scripts/` في هذا المستودع، يمكنك قراءة الملف وتوليد المسودة من واجهات المصدر الحالية.
+مرّر قيمة `req.body` بعد تحليل الطلب إلى الدالة. في المثال أعلاه قيم ICV وPIH لأول مستند لجهاز جديد. في التطبيق يجلب الخادم القيم الحالية من سلسلة الجهاز ويضيفها إلى الـobject.
 
 ```ts
-import { readFile, writeFile } from 'node:fs/promises';
-import {
-  buildInvoiceXml,
-  calculateInvoice,
-  type InvoiceDraft,
-  validateInvoiceXml,
-} from '../src/xml/index.js';
+import { generateXml, hashInvoiceXml } from '../src/server/invoicing.js';
 
-const draft = JSON.parse(await readFile('invoice.json', 'utf8')) as InvoiceDraft;
-const totals = calculateInvoice(draft);
-const xml = buildInvoiceXml(draft);
-const validation = validateInvoiceXml(xml);
+const invoice = req.body;
+const draftXml = generateXml({ ...invoice, ...chainLink });
 
-if (!validation.structureValid) {
-  throw new Error('Invoice XML failed structural validation');
-}
-
-await writeFile('invoice-draft.xml', xml, 'utf8');
-console.log(totals.payableTotal); // 230.00
+// Simplified B2C
+const xml = await signSimplified(draftXml);
+const invoiceHash = hashInvoiceXml(xml, xmllintPath);
+const result = await invoicing.reportXml({ xml, invoiceHash });
 ```
 
-`calculateInvoice` و`buildInvoiceXml` يفحصان شكل المدخلات أثناء التشغيل. `validateInvoiceXml` يفحص البنية محليًا. المخرجات مسودة غير موقّعة. الرقم `1` والـPIH الابتدائي في المثال يخصّان أول مستند لجهاز جديد. في التكامل الفعلي يحصل الخادم على ICV وPIH من مخزن سلسلة دائم ومعاملة ذرّية لكل جهاز، بدل تثبيتهما في كل طلب. [دليل XML](m5-ubl-invoices.md) · [عقد سلسلة الفواتير](m6-crypto-foundation.md#chain-behavior)
+الدالة ترجع XML كنص. مزوّد التوقيع للمبسطة يرجع XML موقّعًا مع QR المرحلة الثانية، وهو النص الذي تحسب هاشه وترسله. في القياسية، استخدم النص المُعد للتخليص واحسب هاشه ثم استدعِ `invoicing.clearXml({ xml, invoiceHash })`. [دليل XML](m5-ubl-invoices.md) · [عقد سلسلة الفواتير](m6-crypto-foundation.md#chain-behavior)
 
 ## 2. من XML جاهز إلى زاتكا
 

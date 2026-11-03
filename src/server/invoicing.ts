@@ -11,7 +11,6 @@ import {
 import { invoicePayload, parseCsid } from '../api/protocol.js';
 import {
   appendInvoice,
-  type InvoiceChainLink,
   type InvoiceChainScope,
   type InvoiceChainStore,
 } from '../crypto/invoice-chain.js';
@@ -114,7 +113,7 @@ export function createInvoicing(options: InvoicingOptions) {
       scope,
       { issuanceId, intentHash },
       async (link) => {
-        const unsignedXml = generateXml(draft, link);
+        const unsignedXml = buildInvoiceXml({ ...draft, ...link });
         let xml = unsignedXml;
         if (kind === 'simplified') {
           if (!signSimplified)
@@ -151,10 +150,10 @@ export function createInvoicing(options: InvoicingOptions) {
   return { issueInvoice, reportXml, clearXml };
 }
 
-/** Creates an unsigned draft. Supply the current chain values for a real EGS. */
-export function generateXml(invoice: InvoiceInput, chain: InvoiceChainLink) {
-  return buildInvoiceXml({ ...invoice, ...chain });
-}
-
+/** Generates unsigned XML or hashes a prepared document for split workflows. */
 /** The standalone QR API creates Phase 1 payloads without onboarding. */
-export { encodeQrBase64 as generatePhase1Qr };
+export {
+  buildInvoiceXml as generateXml,
+  encodeQrBase64 as generatePhase1Qr,
+  hashInvoiceXml,
+};

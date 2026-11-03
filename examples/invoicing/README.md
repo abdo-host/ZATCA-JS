@@ -1,11 +1,10 @@
 # نقطة الدخول لتكامل الفواتير
 
-ملف [invoice.json](invoice.json) هو البيانات التي يرسلها نظامك. يحتوي على البائع والعميل والبنود والتصنيف الضريبي. كل كمية وسعر قيمة نصية مثل `"2"` و`"100.00"`. إعدادات زاتكا ثابتة لكل جهاز على الخادم وتُمرر إلى `createInvoicing()` مرة عند التهيئة.
+يمرّر خادم التطبيق بيانات الفاتورة من جسم الطلب مباشرةً كـobject. [عينة بيانات الفاتورة](invoice.json) توضّح شكل هذا الـobject. إعدادات زاتكا تخص جهاز الإصدار وتُمرّر إلى `createInvoicing()` عند التهيئة.
 
 مثال TypeScript داخل المستودع. استيراد المصدر التالي يناسب ملفًا داخل `examples/invoicing/`. قيم `store` و`signSimplified` تأتي من تطبيقك، وبيانات الاعتماد من مخزن أسرار الخادم.
 
 ```ts
-import { readFile } from 'node:fs/promises';
 import {
   createInvoicing,
   type InvoiceInput,
@@ -28,12 +27,11 @@ const invoicing = createInvoicing({
   },
 });
 
-const invoice = JSON.parse(
-  await readFile(new URL('./invoice.json', import.meta.url), 'utf8'),
-) as InvoiceInput;
+export function issueFromApi(invoice: InvoiceInput) {
+  return invoicing.issueInvoice(invoice, invoice.id);
+}
 
-const result = await invoicing.issueInvoice(invoice, invoice.id);
-console.log(result.status);
+// const result = await issueFromApi(req.body);
 ```
 
 `issueInvoice` يتحقق من بيانات الفاتورة، ويأخذ ICV وPIH من المخزن، ويولّد XML. لو الفاتورة مبسطة يستدعي `signSimplified` ليعيد XML موقّعًا فيه QR المرحلة الثانية. بعدها يحسب الهاش على المستند الجاهز ويستدعي Reporting أو Clearance. العينة قياسية، فتستخدم Clearance. غيّر `kind` إلى `simplified` عند تجربة الإبلاغ مع مزوّد توقيع مُعدّ للاختبار. التوقيع الفعلي مسؤولية المزود، ولا توجد دالة توقيع مدمجة في الحزمة الحالية.
@@ -41,10 +39,32 @@ console.log(result.status);
 | المطلوب | نقطة الدخول |
 | --- | --- |
 | JSON إلى XML ثم الإرسال | `invoicing.issueInvoice(invoice, issuanceId)` |
-| XML فقط | `generateXml(invoice, { invoiceCounter, previousInvoiceHash })` |
+| XML فقط | `generateXml({ ...invoice, invoiceCounter, previousInvoiceHash })` |
 | إرسال XML مبسّط جاهز وموقّع | `invoicing.reportXml({ xml, invoiceHash })` |
 | تخليص XML قياسي جاهز | `invoicing.clearXml({ xml, invoiceHash })` |
 | حمولة QR للمرحلة الأولى فقط | `generatePhase1Qr({ sellerName, vatNumber, issuedAt, invoiceTotal, vatTotal })` أو `encodeQrBase64` من `zatca/qr` في حزمة التطوير |
+
+## تنفيذ الخطوات منفصلة
+
+إذا كان خادمك يدير سلسلة الجهاز والإرسال بنفسه، مرّر نفس الـobject من الطلب، وأضف إليه عدّاد الفاتورة وهاش الفاتورة السابقة من السلسلة.
+
+```ts
+import {
+  createInvoicing,
+  generateXml,
+  hashInvoiceXml,
+} from '../../src/server/invoicing.js';
+
+const invoicing = createInvoicing({ environment: 'sandbox', csid });
+
+// Inside your API handler
+const draftXml = generateXml({ ...req.body, ...chainLink });
+const xml = await signSimplified(draftXml);
+const invoiceHash = hashInvoiceXml(xml, xmllintPath);
+const result = await invoicing.reportXml({ xml, invoiceHash });
+```
+
+هذا المثال للمبسطة. للقياسية استخدم `const xml = draftXml` بعد تجهيز المستند، و`clearXml({ xml, invoiceHash })`. كل القيم تمر كنصوص أو objects في الذاكرة.
 
 للإبلاغ أو التخليص من XML جاهز، أنشئ العميل بإعدادَي `environment` و`csid` فقط. إعدادات `issuance` تخص مسار إنشاء الفاتورة من JSON.
 
