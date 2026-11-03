@@ -3,298 +3,293 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>دليل تكامل الفاتورة مع زاتكا | Tatwerat</title>
+<meta name="description" content="دليل عربي وإنجليزي يوضح إعدادات زاتكا وبيانات الفاتورة واستدعاءات Node">
+<title>Tatwerat ZATCA JS | دليل المطوّر</title>
 <style>
-:root { color-scheme: light; --ink:#15213d; --blue:#2546b5; --paper:#f3f5fa; --line:#dbe1ee; --muted:#4c5871; --pale:#e9efff; font: 16px/1.72 "Segoe UI",Tahoma,sans-serif; color:var(--ink); background:var(--paper); }
+:root { color-scheme:light; --ink:#142340; --muted:#50617d; --paper:#f2f5fb; --white:#fff; --line:#dce4f0; --blue:#2145b8; --ice:#e9effe; --night:#12203d; font:16px/1.65 "Segoe UI",Tahoma,sans-serif; color:var(--ink); background:var(--paper); }
 *,*::before,*::after { box-sizing:border-box; }
-[hidden] { display:none !important; }
-body { margin:0; }
-h1,h2,h3,p { margin:0; }
-a { color:var(--blue); text-underline-offset:.19em; }
+body,h1,h2,h3,p { margin:0; }
+html[lang=ar] [data-lang=en],html[lang=en] [data-lang=ar] { display:none; }
+a { color:var(--blue); text-underline-offset:3px; }
 button { font:inherit; cursor:pointer; }
-:focus-visible { outline:3px solid #4662ea; outline-offset:3px; }
-.wrap { width:min(1160px,100% - 48px); margin-inline:auto; }
-.mast { background:var(--ink); color:#f7f9ff; border-bottom:4px solid #90a6ff; padding-block:28px 32px; }
-.brand { font-weight:700; color:#c6d3ff; font-size:.92rem; }
-h1 { font-size:clamp(2rem,5vw,3.5rem); line-height:1.15; margin-block:8px 10px; }
-.mast p { color:#d9e2ff; max-width:62ch; }
-.layout { display:grid; grid-template-columns:210px minmax(0,1fr); gap:28px; padding-block:24px 45px; }
-nav { align-self:start; position:sticky; top:16px; background:#fff; border:1px solid var(--line); padding:12px 15px; border-radius:10px; }
-nav ol { padding-inline-start:24px; margin:6px 0; }
-nav li { padding-block:3px; }
-main { min-width:0; }
-article, .path { background:#fff; border:1px solid var(--line); border-radius:11px; padding:clamp(16px,3vw,27px); margin-bottom:15px; scroll-margin-top:14px; }
-.path { border-inline-start:4px solid var(--blue); }
-.path-controls,.actions,.chapter { display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
-.path-controls { margin-block:9px 10px; }
-button, .button { border:1px solid #becae8; padding:5px 11px; border-radius:6px; background:#fff; color:var(--ink); text-decoration:none; min-height:38px; }
-button:hover, .button:hover { background:var(--pale); }
-button[aria-pressed="true"], .primary { color:#fff; background:var(--blue); border-color:var(--blue); }
-button[aria-pressed="true"]:hover,.primary:hover { background:#1b358d; }
+button:focus-visible,a:focus-visible,summary:focus-visible { outline:3px solid #577bfa; outline-offset:3px; }
+.wrap { width:min(1080px,100% - 44px); margin-inline:auto; }
+header { background:var(--night); color:var(--white); border-bottom:4px solid #9cafed; }
+.top,.control-row,.file-bar,.chapter,.jump,.flow { display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
+.top { padding-block:14px; justify-content:space-between; border-bottom:1px solid #344465; }
+.brand { font-weight:700; letter-spacing:.01em; }
+.lang { display:flex; gap:6px; }
+button { border:1px solid #b8c7e4; background:var(--white); color:var(--ink); border-radius:6px; padding:5px 12px; min-height:38px; }
+button:hover { background:var(--ice); }
+button[aria-pressed=true],.primary { color:var(--white); border-color:var(--blue); background:var(--blue); }
+button[aria-pressed=true]:hover,.primary:hover { background:#193590; }
+.lang button { min-height:36px; }
+.hero { padding-block:32px 36px; }
+h1 { font-size:clamp(2rem,5vw,3.3rem); line-height:1.2; margin-block-end:10px; }
+.hero p { max-width:60ch; color:#dee7fe; }
+.flow { margin-block-start:14px; justify-content:flex-start; color:#e7edff; }
+.flow span { background:#263759; padding:3px 8px; border-radius:5px; }
+main { padding-block:20px 38px; }
+.intro,.step { border:1px solid var(--line); border-radius:12px; background:var(--white); padding:clamp(16px,3vw,26px); margin-block-end:14px; min-width:0; scroll-margin-top:10px; }
+.intro { border-inline-start:4px solid var(--blue); }
+.intro h2,.step h2 { font-size:clamp(1.2rem,3vw,1.48rem); line-height:1.3; }
+.jump { margin-block-start:9px; font-size:.93rem; }
 .chapter { margin-block-end:10px; }
-.chapter span { color:var(--blue); border:1px solid #cdd8f7; border-radius:5px; min-width:2em; padding:1px 5px; text-align:center; font-weight:700; }
-h2 { font-size:clamp(1.3rem,3vw,1.65rem); line-height:1.3; }
-h3 { margin-block:14px 5px; font-size:1.05rem; }
-article p+p, .source { margin-block-start:8px; }
-.source,.muted { color:var(--muted); font-size:.92rem; }
-.note { background:var(--pale); border-inline-start:3px solid #99abe7; padding:9px 12px; margin-block:10px; }
-code,bdi[dir=ltr] { unicode-bidi:isolate; overflow-wrap:anywhere; }
-p code, li code, td code { direction:ltr; display:inline; color:#233b92; background:#edf1ff; padding:1px 3px; }
-pre { margin:8px 0 11px; padding:13px; background:#172544; color:#f2f6ff; direction:ltr; text-align:left; white-space:pre-wrap; overflow-wrap:anywhere; border-radius:7px; font: .88rem/1.55 Consolas,monospace; tab-size:2; }
-#xml-preview { max-height:310px; overflow:auto; }
-.actions { margin-block:10px; }
-.actions .feedback { font-size:.9rem; color:var(--muted); }
-summary { cursor:pointer; color:var(--blue); font-weight:600; margin-block:8px; }
-table { width:100%; border-collapse:collapse; table-layout:fixed; }
-th,td { text-align:start; vertical-align:top; padding:7px; border-bottom:1px solid var(--line); overflow-wrap:anywhere; }
-th:first-child { width:31%; }
-@media(max-width:800px){.layout{grid-template-columns:1fr;gap:12px}.wrap{width:calc(100% - 28px)}nav{position:static}nav ol{display:flex;gap:4px 24px;flex-wrap:wrap} }
-@media print { :root { color:#111; background:#fff; font-size:11pt } .wrap {width:100%} .layout{display:block} nav,.actions,.path-controls {display:none} .mast {background:#fff;color:#111;padding:0 0 12px} .mast p,.brand{color:#111} article,.path{border:0;padding:9px 0;margin:0} pre{color:#111;background:#f4f4f4} [data-route][hidden]{display:block !important} tr[data-route][hidden]{display:table-row !important} }
+.chapter bdi { color:var(--blue); background:var(--ice); border-radius:5px; min-width:2em; text-align:center; font-weight:700; }
+.muted { color:var(--muted); font-size:.94rem; }
+.stack > * + * { margin-block-start:9px; }
+.control-row,.file-bar { margin-block:8px; }
+.file-bar { justify-content:space-between; }
+.file-bar .control-row { margin:0; }
+.duo { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-block:10px; }
+.duo section { min-width:0; border:1px solid var(--line); border-radius:8px; padding:11px; }
+.duo h3 { font-size:1rem; margin-block-end:4px; }
+.notice { background:var(--ice); border-inline-start:3px solid #8099e8; padding:8px 12px; margin-block:10px; }
+pre { margin:8px 0 10px; padding:12px; border-radius:7px; color:#edf2ff; background:#172748; direction:ltr; text-align:left; font:.87rem/1.6 Consolas,monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+.preview { max-height:255px; overflow:auto; }
+code { unicode-bidi:isolate; }
+p code,li code,summary code { background:var(--ice); padding:1px 4px; border-radius:3px; color:#1e3c9e; overflow-wrap:anywhere; direction:ltr; }
+summary { color:var(--blue); cursor:pointer; font-weight:650; }
+ul { margin:8px 0; padding-inline-start:24px; }
+footer { color:var(--muted); font-size:.88rem; padding-block:3px 12px; }
+@media(max-width:650px) { .wrap{width:calc(100% - 24px)} .duo{grid-template-columns:1fr} .hero{padding-block:23px 26px} .top{padding-block:10px} }
+@media print { :root{background:#fff;font-size:11pt} .wrap{width:100%} header{background:#fff;color:#111;border:0} .hero p,.flow{color:#111} .flow span,pre{color:#111;background:#f2f2f2} .lang,.control-row,.jump{display:none} .step,.intro{border:0;padding:6px 0} .preview{max-height:none} }
 </style>
 </head>
 <body>
-<header class="mast">
+<header>
   <div class="wrap">
-    <div class="brand"><bdi dir="ltr">Tatwerat ZATCA JS</bdi> / دليل التنفيذ</div>
-    <h1>من ملف XML إلى رد زاتكا</h1>
-    <p>مثال عملي على الفاتورة المبسطة والقياسية. ابدأ بعينة UBL، ثم جهّز التوقيع والـQR حيث يلزم، وأرسل المستند واقرأ حالة الرد.</p>
+    <div class="top">
+      <span class="brand" dir="ltr">Tatwerat ZATCA JS</span>
+      <div class="lang" role="group" aria-label="Language / اللغة">
+        <button type="button" data-switch-lang="ar" lang="ar" aria-pressed="true">العربية</button>
+        <button type="button" data-switch-lang="en" lang="en" aria-pressed="false">English</button>
+      </div>
+    </div>
+    <div class="hero">
+      <h1 data-lang="ar">ربط الفواتير مع زاتكا</h1>
+      <h1 data-lang="en">Connect your invoices to ZATCA</h1>
+      <p data-lang="ar">فين تحط JSON الفاتورة وإعدادات زاتكا، وإيه الدالة اللي تولّد XML وتعيد حالة الإبلاغ أو التخليص.</p>
+      <p data-lang="en">Where the invoice JSON and ZATCA settings go, which function creates the XML, and how to read the reporting or clearance result.</p>
+      <div class="flow" dir="ltr" aria-label="Invoice flow"><span>invoice.json</span> → <span>UBL XML</span> → <span>Reporting / Clearance</span> → <span>status</span></div>
+    </div>
   </div>
 </header>
-<div class="wrap layout">
-  <nav aria-label="فهرس الدليل">
-    <strong>خطوات التنفيذ</strong>
-    <ol>
-      <li><a href="#xml">إنشاء XML</a></li>
-      <li><a href="#signature">التوقيع والهاش</a></li>
-      <li><a href="#qr">صورة QR</a></li>
-      <li><a href="#send">إرسال الفاتورة</a></li>
-      <li><a href="#response">معالجة الرد</a></li>
-    </ol>
-  </nav>
-  <main>
-    <article id="developer-entry">
-      <div class="chapter"><h2>ابدأ من هنا لو بتدمج الحزمة في نظامك</h2></div>
-      <p>ملف الفاتورة فيه بيانات البيع. إعدادات زاتكا مكانها خادمك، مرة لكل جهاز. الدالة <code>issueInvoice</code> تربطهم وتعيد حالة الإرسال.</p>
-      <p class="note">واجهة Node دي موجودة داخل المستودع. النسخة المتاحة للتثبيت من npm تدعم QR. التوقيع للفاتورة المبسطة يعتمد على مزوّد توقيع يهيّئه التطبيق.</p>
-      <p><a href="../examples/invoicing/invoice.json" download>نزّل JSON الفاتورة كامل</a> · <a href="../examples/invoicing/README.md">شوف مثال المطوّر وإعدادات الشهادة</a></p>
-      <pre>const invoicing = createInvoicing({
+<main class="wrap">
+  <section class="intro">
+    <h2 data-lang="ar">ابدأ من هنا</h2><h2 data-lang="en">Start here</h2>
+    <p data-lang="ar">الملف ده يفتح مباشرة في المتصفح. واجهة الفواتير في الأمثلة موجودة داخل المستودع. الإصدار المتاح للتثبيت من npm يوفّر وظائف QR، والتوقيع الفعلي للمبسطة يعتمد على مزوّد توقيع يهيّئه التطبيق.</p>
+    <p data-lang="en">Open this file directly in a browser. The invoice API shown below lives in the source repository. The published npm package provides QR functions. Simplified invoice signing requires a signer configured by your application.</p>
+    <div class="jump">
+      <a href="#input"><span data-lang="ar">JSON</span><span data-lang="en">Invoice JSON</span></a>
+      <a href="#settings"><span data-lang="ar">الإعدادات</span><span data-lang="en">Configuration</span></a>
+      <a href="#generate"><span data-lang="ar">توليد XML</span><span data-lang="en">Generate XML</span></a>
+      <a href="#submit"><span data-lang="ar">الإبلاغ والتخليص</span><span data-lang="en">Report and clear</span></a>
+    </div>
+  </section>
+
+  <section class="step stack" id="input">
+    <div class="chapter"><bdi>01</bdi><h2 data-lang="ar">حط بيانات الفاتورة في invoice.json</h2><h2 data-lang="en">Put invoice data in invoice.json</h2></div>
+    <p data-lang="ar">في مثال الملفات حطّه في <code>examples/invoicing/invoice.json</code>. في نظامك ممكن تبعت نفس الـobject من الـERP أو من endpoint على خادمك. <code>seller</code> للبائع، <code>buyer</code> للعميل، و<code>lines</code> للبنود والضريبة. الأسعار والكميات نصوص عشرية.</p>
+    <p data-lang="en">Save it as <code>examples/invoicing/invoice.json</code> for this example. In your application, pass the same object from your ERP or a server endpoint. Use <code>seller</code>, <code>buyer</code>, and <code>lines</code> for parties, items and tax. Pass quantities and prices as decimal strings.</p>
+    <div class="control-row" role="group" aria-label="Invoice profile / نوع الفاتورة">
+      <button type="button" data-profile="standard" aria-pressed="true"><span data-lang="ar">قياسية B2B</span><span data-lang="en">Standard B2B</span></button>
+      <button type="button" data-profile="simplified" aria-pressed="false"><span data-lang="ar">مبسطة B2C</span><span data-lang="en">Simplified B2C</span></button>
+    </div>
+    <div class="file-bar"><strong dir="ltr">invoice.json</strong><div class="control-row">
+      <button type="button" class="primary" data-download="json"><span data-lang="ar">تنزيل JSON</span><span data-lang="en">Download JSON</span></button>
+      <button type="button" data-copy="json"><span data-lang="ar">نسخ</span><span data-lang="en">Copy</span></button>
+    </div></div>
+    <pre id="json" class="preview" aria-label="Full invoice JSON"></pre>
+  </section>
+
+  <section class="step stack" id="settings">
+    <div class="chapter"><bdi>02</bdi><h2 data-lang="ar">حط إعدادات زاتكا في خادم Node</h2><h2 data-lang="en">Configure ZATCA on your Node server</h2></div>
+    <p data-lang="ar">في مثال المستودع، حط الكود في <code>examples/invoicing/example.ts</code> جنب ملف <code>invoice.json</code>. في تطبيقك حط إعدادات الجهاز في ملف التهيئة على الخادم. مرّر شهادة الإصدار اللي استلمتها من Sandbox بعد التهيئة. <code>requestId</code> و<code>binarySecurityToken</code> و<code>secret</code> جزء من <code>csid</code>. احتفظ بالقيم الفعلية في مخزن أسرار الخادم.</p>
+    <p data-lang="en">For the repository example, place this code in <code>examples/invoicing/example.ts</code> next to <code>invoice.json</code>. In your application, put per-device settings in your server configuration. Pass the issuance CSID you receive after Sandbox onboarding. <code>requestId</code>, <code>binarySecurityToken</code>, and <code>secret</code> are fields of <code>csid</code>. Load the real values from server-side secret storage.</p>
+    <pre id="config">import { createInvoicing } from '../../src/server/invoicing.js';
+
+const csid = {
   environment: 'sandbox',
-  csid: issuedSandboxCsid,
+  kind: 'production',
+  requestId: issuedCsid.requestId,
+  binarySecurityToken: issuedCsid.binarySecurityToken,
+  secret: issuedCsid.secret,
+} as const;
+
+const invoicing = createInvoicing({
+  environment: 'sandbox',
+  csid,
   issuance: {
     egsId: 'device-01',
     xmllintPath: absoluteXmllintPath,
     store,
     signSimplified,
   },
+});</pre>
+    <button type="button" data-copy="config"><span data-lang="ar">نسخ الإعدادات</span><span data-lang="en">Copy configuration</span></button>
+    <ul data-lang="ar"><li><code>kind: 'production'</code> هنا يعني شهادة إصدار. <code>environment: 'sandbox'</code> هو اللي يحدد وجهة الطلب.</li><li><code>store</code> مخزن دائم لسلسلة الفواتير ومنع تكرار الإرسال. <code>xmllintPath</code> مسار الأداة لحساب الهاش. <code>signSimplified</code> مزوّد التوقيع الخارجي للمبسطة.</li><li>لو معاك XML جاهز والهاش، يكفي <code>createInvoicing({ environment: 'sandbox', csid })</code>.</li></ul>
+    <ul data-lang="en"><li><code>kind: 'production'</code> identifies an issuance certificate. <code>environment: 'sandbox'</code> selects the destination.</li><li><code>store</code> is your durable invoice chain and submission guard. <code>xmllintPath</code> points to the canonicalizer. <code>signSimplified</code> is your external signer for simplified invoices.</li><li>For ready XML and its hash, use <code>createInvoicing({ environment: 'sandbox', csid })</code>.</li></ul>
+  </section>
+
+  <section class="step stack" id="generate">
+    <div class="chapter"><bdi>03</bdi><h2 data-lang="ar">حوّل JSON إلى XML</h2><h2 data-lang="en">Generate XML from the JSON</h2></div>
+    <p data-lang="ar">لو عايز ملف XML بس، استدعِ <code>generateXml</code>. الكود يجرّب أول فاتورة لعينة جديدة. في الشغل الفعلي، مرّر الرقم المتسلسل وهاش الفاتورة السابقة من سلسلة الجهاز. الناتج مسودة غير موقّعة.</p>
+    <p data-lang="en">For XML only, call <code>generateXml</code>. This example uses the first invoice in a test chain. In your application, supply the counter and previous invoice hash from the device chain. The result is an unsigned draft.</p>
+    <pre id="generate-code">import { readFile, writeFile } from 'node:fs/promises';
+import {
+  generateXml,
+  type InvoiceInput,
+} from '../../src/server/invoicing.js';
+import { initialPreviousInvoiceHash } from '../../src/xml/index.js';
+
+const invoice = JSON.parse(
+  await readFile(new URL('./invoice.json', import.meta.url), 'utf8'),
+) as InvoiceInput;
+
+const xml = generateXml(invoice, {
+  invoiceCounter: '1',
+  previousInvoiceHash: initialPreviousInvoiceHash,
 });
 
-const result = await invoicing.issueInvoice(invoiceJson, invoiceJson.id);
+await writeFile('invoice-draft.xml', xml, 'utf8');</pre>
+    <button type="button" data-copy="generate-code"><span data-lang="ar">نسخ كود التوليد</span><span data-lang="en">Copy generator code</span></button>
+    <div class="file-bar"><strong dir="ltr">invoice-draft.xml</strong><div class="control-row">
+      <button type="button" class="primary" data-download="xml"><span data-lang="ar">تنزيل XML</span><span data-lang="en">Download XML</span></button>
+      <button type="button" data-copy="xml"><span data-lang="ar">نسخ XML</span><span data-lang="en">Copy XML</span></button>
+    </div></div>
+    <details><summary><span data-lang="ar">معاينة ملف XML الناتج من نفس العينة</span><span data-lang="en">Preview XML generated from this sample</span></summary><pre id="xml" class="preview"></pre></details>
+    <p class="muted" data-lang="ar">إجمالي العينة 230.00 ريال شامل 30.00 ريال ضريبة. XML هنا للتجربة المحلية.</p>
+    <p class="muted" data-lang="en">The sample totals SAR 230.00 including SAR 30.00 VAT. Use this XML for local exploration.</p>
+  </section>
+
+  <section class="step stack" id="submit">
+    <div class="chapter"><bdi>04</bdi><h2 data-lang="ar">ابعث الفاتورة واقرأ النتيجة</h2><h2 data-lang="en">Submit the invoice and read the result</h2></div>
+    <p data-lang="ar">لو البداية JSON وعايز نتيجة الإرسال في نفس الاستدعاء، استخدم <code>issueInvoice</code>. الدالة تنشئ XML، وتستدعي مزوّد التوقيع للمبسطة، وتحسب الهاش وتختار الوجهة من <code>kind</code>. استخدم معرّف إصدار ثابت لنفس الطلب.</p>
+    <p data-lang="en">To start from JSON and receive a submission result in one call, use <code>issueInvoice</code>. It creates XML, calls the signer for a simplified invoice, hashes the prepared document and routes by <code>kind</code>. Use a stable issuance ID for the same request.</p>
+    <pre id="issue-code">const result = await invoicing.issueInvoice(invoice, invoice.id);
 console.log(result.status);</pre>
-      <p><code>csid</code> فيه معرّف طلب الشهادة و<code>binarySecurityToken</code> و<code>secret</code>. <code>store</code> يحفظ سلسلة الفواتير ويمنع تكرار الإرسال. الفاتورة القياسية تستخدم التخليص. المبسطة تستدعي مزوّد التوقيع أولًا ثم تستخدم الإبلاغ.</p>
-      <ul>
-        <li>XML فقط عبر <code>generateXml(invoiceJson, chainLink)</code>.</li>
-        <li>إبلاغ XML موقّع جاهز عبر <code>invoicing.reportXml({ xml, invoiceHash })</code>. تهيئة هذا المسار تحتاج <code>environment</code> و<code>csid</code> فقط.</li>
-        <li>QR المرحلة الأولى عبر <code>generatePhase1Qr(fields)</code>.</li>
-      </ul>
-    </article>
+    <div class="duo">
+      <section>
+        <h3 data-lang="ar">مبسطة B2C · الإبلاغ</h3><h3 data-lang="en">Simplified B2C · Reporting</h3>
+        <p data-lang="ar">مزوّد التوقيع يرجّع XML موقّع وفيه QR المرحلة الثانية. لو معاك الملف جاهز، ابعته مباشرة.</p>
+        <p data-lang="en">Your signer returns signed XML with its Phase 2 QR. If you already have that file, submit it directly.</p>
+        <pre>const result = await invoicing.reportXml({
+  xml: signedXml,
+  invoiceHash,
+});</pre>
+        <p><code>reported</code> <span data-lang="ar">احفظ النتيجة والـXML الموقّع اللي بعته.</span><span data-lang="en">Keep the result and the signed XML you sent.</span></p>
+      </section>
+      <section>
+        <h3 data-lang="ar">قياسية B2B · التخليص</h3><h3 data-lang="en">Standard B2B · Clearance</h3>
+        <p data-lang="ar">ابعث XML القياسي والهاش. عند القبول، زاتكا ترجع XML بالختم والـQR.</p>
+        <p data-lang="en">Send the standard XML and its hash. On acceptance, ZATCA returns XML with the clearance stamp and QR.</p>
+        <pre>const result = await invoicing.clearXml({
+  xml: standardXml,
+  invoiceHash,
+});</pre>
+        <p><code>cleared</code> <span data-lang="ar">فك Base64 من <code>clearedInvoiceBase64</code> واحفظ الملف الراجع.</span><span data-lang="en">Decode <code>clearedInvoiceBase64</code> and save the returned XML.</span></p>
+      </section>
+    </div>
+    <p data-lang="ar">مثال مختصر للنتيجة المتوقعة حسب نوع العينة. تفاصيل التحقق في <code>diagnostics</code> وحالة HTTP في <code>metadata.httpStatus</code>.</p>
+    <p data-lang="en">Abbreviated result for the selected sample type. Validation details are in <code>diagnostics</code>, and the HTTP status is in <code>metadata.httpStatus</code>.</p>
+    <pre id="result"></pre>
+    <p class="notice" data-lang="ar">إذا رجعت <code>already-attempted</code>، اعرض نتيجة المحاولة اللي حفظها تطبيقك. لو انتهت المهلة والنتيجة غير مؤكدة، راجع الطلب قبل إعادة الإرسال.</p>
+    <p class="notice" data-lang="en">On <code>already-attempted</code>, use the prior result saved by your application. If a timeout leaves the outcome unknown, reconcile it before sending again.</p>
+  </section>
 
-    <section class="path" aria-labelledby="path-title">
-      <h2 id="path-title">اختار نوع الفاتورة</h2>
-      <div class="path-controls" role="group" aria-label="نوع الفاتورة">
-        <button type="button" data-profile="simplified" aria-pressed="true">مبسطة <bdi>B2C</bdi></button>
-        <button type="button" data-profile="standard" aria-pressed="false">قياسية <bdi>B2B</bdi></button>
-      </div>
-      <p id="path-summary" aria-live="polite">مبسطة. أنشئ XML، وقّعه وأضف QR المرحلة الثانية على جهاز الإصدار، ثم أرسله للإبلاغ.</p>
-    </section>
-
-    <article id="xml">
-      <div class="chapter"><span>01</span><h2>إنشاء ملف UBL XML</h2></div>
-      <p>ابدأ بملف XML جاهز من الـERP، أو ولّد مسودة من بيانات نظام البيع. في المشروع افتح الديمو وشغّل <code>npm run demo</code>، ثم اضغط «إنشاء المسودة» و«تنزيل XML». في تطبيق Node استخدم <code>buildInvoiceXml(draft)</code> من <code>src/xml/index.ts</code>. الدالة ترجع نص XML تحفظه كملف UTF-8.</p>
-      <details>
-        <summary>مثال توليد الملف من خادم Node</summary>
-        <p>داخل مثال TypeScript في مجلد <code>scripts/</code> مرّر بيانات فاتورتك المجهزة كـ<code>InvoiceDraft</code>.</p>
-        <pre>import { writeFile } from 'node:fs/promises';
-import { buildInvoiceXml, type InvoiceDraft } from '../src/xml/index.js';
-
-export async function saveInvoiceDraft(draft: InvoiceDraft) {
-  const xml = buildInvoiceXml(draft);
-  await writeFile('invoice-draft.xml', xml, 'utf8');
-  return xml;
-}</pre>
-      </details>
-      <div class="actions">
-        <button type="button" class="primary" id="download-xml">تنزيل عينة XML</button>
-        <button type="button" data-copy="xml-preview">نسخ XML</button>
-        <span class="feedback" role="status" aria-live="polite" id="copy-status"></span>
-      </div>
-      <details id="xml-details" open>
-        <summary>معاينة الملف الكامل بتنسيق للقراءة</summary>
-        <pre id="xml-preview"></pre>
-      </details>
-      <p>داخل الملف، <code>cbc:UUID</code> معرّف المستند، و<code>cbc:InvoiceTypeCode</code> يحدد نوعه. <code>cac:InvoiceLine</code> يحتوي على البنود، و<code>cac:TaxTotal</code> و<code>cac:LegalMonetaryTotal</code> يحتويان على الضريبة والإجمالي. العينة تعرض 200 ريال قبل الضريبة و230 ريال شامل الضريبة.</p>
-      <p class="note">العينة مسودة تعليمية غير موقّعة. للتوقيع والتحقق جرّب العينة الرسمية المناسبة من حزمة SDK أو XML مُعدّ بنفس هوية جهاز الاختبار. خذ ICV وPIH من سلسلة الجهاز عند بناء مستندات متتالية.</p>
-      <p class="source"><a href="http://127.0.0.1:4177/">الديمو المحلي بعد تشغيله</a> · <a href="invoice-integration.md">مثال مدخلات buildInvoiceXml</a></p>
-    </article>
-
-    <article id="signature">
-      <div class="chapter"><span>02</span><h2>التوقيع والهاش</h2></div>
-      <div data-route="simplified">
-        <p>وقّع XML المبسّط على خادم جهاز الإصدار باستخدام المفتاح الخاص وشهادة CSID المطابقة من نفس بيئة الاختبار. في حزمة زاتكا الرسمية، اضبط شهادة الاختبار والمفتاح وفق تعليمات نسختك، ثم شغّل الأمر الموثّق لإنشاء الملف الموقّع مع QR. استخدم عينة مبسّطة مناسبة للـSDK باسم <code>simplified-input.xml</code>.</p>
-        <pre id="sign-command">fatoora -sign -qr -invoice simplified-input.xml -signedinvoice simplified-signed.xml</pre>
-        <p>الناتج <code>simplified-signed.xml</code> والهاش الذي يعرضه الـSDK. افحص المستند النهائي باستخدام مدقق SDK. احتفظ بالهاش بصيغة Base64. إذا احتجت لاستخراجه مرة أخرى، استخدم أمر الهاش على الملف النهائي.</p>
-        <pre>fatoora -generateHash -invoice simplified-signed.xml</pre>
-      </div>
-      <div data-route="standard" hidden>
-        <p>جهّز ملف UBL القياسي، وافحصه بالـSDK. احسب الهاش وأرسل الملف للتخليص. في المسار الموضّح هنا، زاتكا تضيف الختم والـQR عند التخليص وتعيد الملف المعتمد.</p>
-        <pre>fatoora -generateHash -invoice standard-input.xml</pre>
-      </div>
-      <p class="note">المفتاح الخاص يبقى على الخادم أو في مخزن المفاتيح. مكتبتنا الحالية تولّد المسودة وتستقبل ملفًا جاهزًا للإرسال. إنشاء توقيع Phase 2 داخل المكتبة نفسها لسه غير متاح.</p>
-      <p class="source"><a href="https://zatca.gov.sa/en/E-Invoicing/SystemsDevelopers/ComplianceEnablementToolbox/Pages/DownloadSDK.aspx">تنزيل SDK زاتكا</a> · <a href="https://sandbox.zatca.gov.sa/User_Manual_Developer_Portal_Manual_Version_3.pdf">دليل الأوامر الرسمي §2.3.10</a></p>
-    </article>
-
-    <article id="qr">
-      <div class="chapter"><span>03</span><h2>استخراج QR ورسمه</h2></div>
-      <p data-route="simplified">خد حمولة QR من <code>simplified-signed.xml</code> بعد التوقيع والتجهيز بالـSDK. دي الحمولة المضمّنة في الفاتورة نفسها.</p>
-      <p data-route="standard" hidden>في المسار القياسي نفّذ <a href="#send">الإرسال</a> أولًا. بعد التخليص، فكّ <code>clearedInvoice</code> من Base64 واحفظه كملف <code>cleared-invoice.xml</code>. خد حمولة QR من الملف المرجع.</p>
-      <p>لو محتاج صورة PNG للعرض، اقرأ قيمة QR من XML وارسم النص نفسه. المثال التالي يعمل في PowerShell من جذر المشروع بعد تثبيت اعتماداته.</p>
-      <pre id="qr-command"></pre>
-      <button type="button" data-copy="qr-command">نسخ كود QR</button>
-      <p class="note">الـSDK هو اللي يجهّز حمولة Phase 2. مكتبة <code>qrcode</code> هنا ترسم الحمولة الموجودة فقط. رمز الديمو المولّد محليًا للمرحلة الأولى.</p>
-      <p class="source"><a href="https://zatca.gov.sa/en/E-Invoicing/Introduction/Guidelines/Documents/E-Invoicing_Detailed__Guideline.pdf">دليل زاتكا للفوترة الإلكترونية §4.1.2 و§4.2.2</a></p>
-    </article>
-
-    <article id="send">
-      <div class="chapter"><span>04</span><h2>إرسال الطلب من خادمك</h2></div>
-      <p>هيّئ جهاز اختبار في Sandbox للحصول على شهادة إصدار اختبار و<code>secret</code>. يبدأ المسار بـCSR وOTP، ثم شهادة امتثال، وفحص عينات، وإصدار شهادة الاختبار. خزّن بيانات الاعتماد على الخادم واستخدم شهادة نفس الجهاز والبيئة.</p>
-      <p class="note"><bdi id="endpoint" dir="ltr">POST /invoices/reporting/single</bdi></p>
-      <p>الطلب فيه ثلاثة حقول. <code>uuid</code> من <code>cbc:UUID</code> في XML، و<code>invoiceHash</code> هو الهاش المرجعي من الـSDK، و<code>invoice</code> هو كامل ملف XML بترميز Base64. العميل يجهّز الحقول الثلاثة ويدير ترويسات Basic Auth وAccept-Version V2. المثال يستخدم TypeScript بعميل المستودع الداخلي، حيث <code>sandboxCsid</code> يأتي من مخزن الخادم.</p>
-      <pre id="send-code"></pre>
-      <button type="button" data-copy="send-code">نسخ استدعاء الإرسال</button>
-      <p class="source"><a href="m7-zatca-api.md#opt-in-sandbox-runs">تشغيل اختبار Sandbox وإعداد المدخلات</a> · <a href="specs/zatca-sandbox-2.1.0.json">عقد Swagger المثبّت</a></p>
-    </article>
-
-    <article id="response">
-      <div class="chapter"><span>05</span><h2>اقرأ الرد واحفظ الحالة</h2></div>
-      <p>الرد يرجع مباشرةً من نفس طلب HTTP. في الرد الخام اقرأ حالة العملية و<code>validationResults</code>. عميل المشروع يحولها إلى <code>result.status</code> و<code>result.diagnostics</code> و<code>result.metadata</code>. استدعِ <code>const result = await submitInvoice(invoiceHash, sandboxCsid)</code> واقرأ الحقول دي. لو رمى العميل <code>ZatcaApiError</code> افحص <code>code</code> و<code>metadata</code> و<code>outcomeUnknown</code>.</p>
-      <h3>مثال مختصر لرد JSON من زاتكا</h3>
-      <pre id="response-example"></pre>
-      <div data-route="simplified">
-        <p>عند <code>reported</code> خزّن نتيجة الإبلاغ واحتفظ بملف XML الموقّع الذي أرسلته. زاتكا لا تحتاج ترجع نسخة XML جديدة لمسار الإبلاغ.</p>
-      </div>
-      <div data-route="standard" hidden>
-        <p>عند <code>cleared</code> فكّ <code>result.clearedInvoiceBase64</code> واحفظ XML المرجع. العميل يتحقق من تطابق UUID قبل إرجاع حالة التخليص.</p>
-        <pre>if (result.status === 'cleared') {
-  await writeFile(
-    'cleared-invoice.xml',
-    Buffer.from(result.clearedInvoiceBase64, 'base64'),
-  );
-}</pre>
-      </div>
-      <table aria-label="معنى حالات الرد">
-        <thead><tr><th scope="col">الرد</th><th scope="col">التصرف في التطبيق</th></tr></thead>
-        <tbody>
-          <tr><td><bdi>200 / 202</bdi></td><td>اقرأ حالة العملية. احفظ التحذيرات مع الحالة النهائية عند القبول.</td></tr>
-          <tr><td><bdi>400</bdi></td><td>اعرض أخطاء التحقق واربطها بالمستند المرفوض.</td></tr>
-          <tr data-route="standard" hidden><td><bdi>208 / 303</bdi></td><td>208 قد يرجع نسخة لتخليص سابق. 303 يفيد بتعطيل التخليص ويحتاج قرار إرسال منفصل.</td></tr>
-          <tr data-route="simplified"><td><bdi>409 Reporting</bdi></td><td>راجع نتيجة المستند السابق عند رد التكرار.</td></tr>
-          <tr><td>انتهاء المهلة</td><td>احفظ الحالة كغير مؤكدة وراجع مصير الطلب قبل محاولة الإرسال مرة أخرى.</td></tr>
-        </tbody>
-      </table>
-      <p class="note">العميل الداخلي اتجرّب على Sandbox بعينات زاتكا للإبلاغ والتخليص. عينة XML التعليمية في الخطوة الأولى اتفحصت محليًا. الدليل يعرض أوامر التوقيع الموثّقة لاستخدامها مع SDK زاتكا وإعداداتك التجريبية.</p>
-    </article>
-  </main>
-</div>
-<script id="invoice-samples" type="application/json">{"standard":"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48SW52b2ljZSB4bWxucz0idXJuOm9hc2lzOm5hbWVzOnNwZWNpZmljYXRpb246dWJsOnNjaGVtYTp4c2Q6SW52b2ljZS0yIiB4bWxuczpjYWM9InVybjpvYXNpczpuYW1lczpzcGVjaWZpY2F0aW9uOnVibDpzY2hlbWE6eHNkOkNvbW1vbkFnZ3JlZ2F0ZUNvbXBvbmVudHMtMiIgeG1sbnM6Y2JjPSJ1cm46b2FzaXM6bmFtZXM6c3BlY2lmaWNhdGlvbjp1Ymw6c2NoZW1hOnhzZDpDb21tb25CYXNpY0NvbXBvbmVudHMtMiI+PGNiYzpQcm9maWxlSUQ+cmVwb3J0aW5nOjEuMDwvY2JjOlByb2ZpbGVJRD48Y2JjOklEPkxBQi0wMDE8L2NiYzpJRD48Y2JjOlVVSUQ+NDFhNTI2M2YtNzdjYy00MzhhLTk2OTYtZjE1NGJhNzEzMGQ4PC9jYmM6VVVJRD48Y2JjOklzc3VlRGF0ZT4yMDI2LTExLTAzPC9jYmM6SXNzdWVEYXRlPjxjYmM6SXNzdWVUaW1lPjEwOjMwOjAwPC9jYmM6SXNzdWVUaW1lPjxjYmM6SW52b2ljZVR5cGVDb2RlIG5hbWU9IjAxMDAwMDAiPjM4ODwvY2JjOkludm9pY2VUeXBlQ29kZT48Y2JjOkRvY3VtZW50Q3VycmVuY3lDb2RlPlNBUjwvY2JjOkRvY3VtZW50Q3VycmVuY3lDb2RlPjxjYmM6VGF4Q3VycmVuY3lDb2RlPlNBUjwvY2JjOlRheEN1cnJlbmN5Q29kZT48Y2FjOkFkZGl0aW9uYWxEb2N1bWVudFJlZmVyZW5jZT48Y2JjOklEPklDVjwvY2JjOklEPjxjYmM6VVVJRD4xPC9jYmM6VVVJRD48L2NhYzpBZGRpdGlvbmFsRG9jdW1lbnRSZWZlcmVuY2U+PGNhYzpBZGRpdGlvbmFsRG9jdW1lbnRSZWZlcmVuY2U+PGNiYzpJRD5QSUg8L2NiYzpJRD48Y2FjOkF0dGFjaG1lbnQ+PGNiYzpFbWJlZGRlZERvY3VtZW50QmluYXJ5T2JqZWN0IG1pbWVDb2RlPSJ0ZXh0L3BsYWluIj5OV1psWTJWaU5qWm1abU00Tm1Zek9HUTVOVEkzT0Raak5tUTJPVFpqTnpsak1tUmlZekl6T1dSa05HVTVNV0kwTmpjeU9XUTNNMkV5TjJaaU5UZGxPUT09PC9jYmM6RW1iZWRkZWREb2N1bWVudEJpbmFyeU9iamVjdD48L2NhYzpBdHRhY2htZW50PjwvY2FjOkFkZGl0aW9uYWxEb2N1bWVudFJlZmVyZW5jZT48Y2FjOkFjY291bnRpbmdTdXBwbGllclBhcnR5PjxjYWM6UGFydHk+PGNhYzpQYXJ0eUlkZW50aWZpY2F0aW9uPjxjYmM6SUQgc2NoZW1lSUQ9IkNSTiI+MTIzNDU2Nzg5MDwvY2JjOklEPjwvY2FjOlBhcnR5SWRlbnRpZmljYXRpb24+PGNhYzpQb3N0YWxBZGRyZXNzPjxjYmM6U3RyZWV0TmFtZT7YtNin2LHYuSDYp9mE2KrYrNix2KjYqTwvY2JjOlN0cmVldE5hbWU+PGNiYzpCdWlsZGluZ051bWJlcj4xMjM0PC9jYmM6QnVpbGRpbmdOdW1iZXI+PGNiYzpDaXR5U3ViZGl2aXNpb25OYW1lPtit2Yog2KfZhNin2K7Yqtio2KfYsTwvY2JjOkNpdHlTdWJkaXZpc2lvbk5hbWU+PGNiYzpDaXR5TmFtZT7Yp9mE2LHZitin2LY8L2NiYzpDaXR5TmFtZT48Y2JjOlBvc3RhbFpvbmU+MTIzNDU8L2NiYzpQb3N0YWxab25lPjxjYWM6Q291bnRyeT48Y2JjOklkZW50aWZpY2F0aW9uQ29kZT5TQTwvY2JjOklkZW50aWZpY2F0aW9uQ29kZT48L2NhYzpDb3VudHJ5PjwvY2FjOlBvc3RhbEFkZHJlc3M+PGNhYzpQYXJ0eVRheFNjaGVtZT48Y2JjOkNvbXBhbnlJRD4zMDAwMDAwMDAwMDAwMDM8L2NiYzpDb21wYW55SUQ+PGNhYzpUYXhTY2hlbWU+PGNiYzpJRD5WQVQ8L2NiYzpJRD48L2NhYzpUYXhTY2hlbWU+PC9jYWM6UGFydHlUYXhTY2hlbWU+PGNhYzpQYXJ0eUxlZ2FsRW50aXR5PjxjYmM6UmVnaXN0cmF0aW9uTmFtZT7YtNix2YPYqSDZhdiv2KfYsSDYp9mE2KrYrNix2YrYqNmK2Kk8L2NiYzpSZWdpc3RyYXRpb25OYW1lPjwvY2FjOlBhcnR5TGVnYWxFbnRpdHk+PC9jYWM6UGFydHk+PC9jYWM6QWNjb3VudGluZ1N1cHBsaWVyUGFydHk+PGNhYzpBY2NvdW50aW5nQ3VzdG9tZXJQYXJ0eT48Y2FjOlBhcnR5PjxjYWM6UG9zdGFsQWRkcmVzcz48Y2JjOlN0cmVldE5hbWU+2LTYp9ix2Lkg2KfZhNiq2KzYsdio2Kk8L2NiYzpTdHJlZXROYW1lPjxjYmM6QnVpbGRpbmdOdW1iZXI+MTIzNDwvY2JjOkJ1aWxkaW5nTnVtYmVyPjxjYmM6Q2l0eVN1YmRpdmlzaW9uTmFtZT7YrdmKINin2YTYp9iu2KrYqNin2LE8L2NiYzpDaXR5U3ViZGl2aXNpb25OYW1lPjxjYmM6Q2l0eU5hbWU+2KfZhNix2YrYp9i2PC9jYmM6Q2l0eU5hbWU+PGNiYzpQb3N0YWxab25lPjEyMzQ1PC9jYmM6UG9zdGFsWm9uZT48Y2FjOkNvdW50cnk+PGNiYzpJZGVudGlmaWNhdGlvbkNvZGU+U0E8L2NiYzpJZGVudGlmaWNhdGlvbkNvZGU+PC9jYWM6Q291bnRyeT48L2NhYzpQb3N0YWxBZGRyZXNzPjxjYWM6UGFydHlMZWdhbEVudGl0eT48Y2JjOlJlZ2lzdHJhdGlvbk5hbWU+2KfZhNmF2LTYqtix2Yog2KfZhNiq2KzYsdmK2KjZijwvY2JjOlJlZ2lzdHJhdGlvbk5hbWU+PC9jYWM6UGFydHlMZWdhbEVudGl0eT48L2NhYzpQYXJ0eT48L2NhYzpBY2NvdW50aW5nQ3VzdG9tZXJQYXJ0eT48Y2FjOkRlbGl2ZXJ5PjxjYmM6QWN0dWFsRGVsaXZlcnlEYXRlPjIwMjYtMTEtMDM8L2NiYzpBY3R1YWxEZWxpdmVyeURhdGU+PC9jYWM6RGVsaXZlcnk+PGNhYzpQYXltZW50TWVhbnM+PGNiYzpQYXltZW50TWVhbnNDb2RlPjMwPC9jYmM6UGF5bWVudE1lYW5zQ29kZT48L2NhYzpQYXltZW50TWVhbnM+PGNhYzpUYXhUb3RhbD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjwvY2FjOlRheFRvdGFsPjxjYWM6VGF4VG90YWw+PGNiYzpUYXhBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4zMC4wMDwvY2JjOlRheEFtb3VudD48Y2FjOlRheFN1YnRvdGFsPjxjYmM6VGF4YWJsZUFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIwMC4wMDwvY2JjOlRheGFibGVBbW91bnQ+PGNiYzpUYXhBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4zMC4wMDwvY2JjOlRheEFtb3VudD48Y2FjOlRheENhdGVnb3J5PjxjYmM6SUQ+UzwvY2JjOklEPjxjYmM6UGVyY2VudD4xNTwvY2JjOlBlcmNlbnQ+PGNhYzpUYXhTY2hlbWU+PGNiYzpJRD5WQVQ8L2NiYzpJRD48L2NhYzpUYXhTY2hlbWU+PC9jYWM6VGF4Q2F0ZWdvcnk+PC9jYWM6VGF4U3VidG90YWw+PC9jYWM6VGF4VG90YWw+PGNhYzpMZWdhbE1vbmV0YXJ5VG90YWw+PGNiYzpMaW5lRXh0ZW5zaW9uQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjAwLjAwPC9jYmM6TGluZUV4dGVuc2lvbkFtb3VudD48Y2JjOlRheEV4Y2x1c2l2ZUFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIwMC4wMDwvY2JjOlRheEV4Y2x1c2l2ZUFtb3VudD48Y2JjOlRheEluY2x1c2l2ZUFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIzMC4wMDwvY2JjOlRheEluY2x1c2l2ZUFtb3VudD48Y2JjOlBheWFibGVBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMzAuMDA8L2NiYzpQYXlhYmxlQW1vdW50PjwvY2FjOkxlZ2FsTW9uZXRhcnlUb3RhbD48Y2FjOkludm9pY2VMaW5lPjxjYmM6SUQ+MTwvY2JjOklEPjxjYmM6SW52b2ljZWRRdWFudGl0eSB1bml0Q29kZT0iUENFIj4yPC9jYmM6SW52b2ljZWRRdWFudGl0eT48Y2JjOkxpbmVFeHRlbnNpb25BbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMDAuMDA8L2NiYzpMaW5lRXh0ZW5zaW9uQW1vdW50PjxjYWM6VGF4VG90YWw+PGNiYzpUYXhBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4zMC4wMDwvY2JjOlRheEFtb3VudD48Y2JjOlJvdW5kaW5nQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjMwLjAwPC9jYmM6Um91bmRpbmdBbW91bnQ+PC9jYWM6VGF4VG90YWw+PGNhYzpJdGVtPjxjYmM6TmFtZT7Yrtiv2YXYqSDYqtis2LHZitio2YrYqTwvY2JjOk5hbWU+PGNhYzpDbGFzc2lmaWVkVGF4Q2F0ZWdvcnk+PGNiYzpJRD5TPC9jYmM6SUQ+PGNiYzpQZXJjZW50PjE1PC9jYmM6UGVyY2VudD48Y2FjOlRheFNjaGVtZT48Y2JjOklEPlZBVDwvY2JjOklEPjwvY2FjOlRheFNjaGVtZT48L2NhYzpDbGFzc2lmaWVkVGF4Q2F0ZWdvcnk+PC9jYWM6SXRlbT48Y2FjOlByaWNlPjxjYmM6UHJpY2VBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4xMDAuMDA8L2NiYzpQcmljZUFtb3VudD48L2NhYzpQcmljZT48L2NhYzpJbnZvaWNlTGluZT48L0ludm9pY2U+","simplified":"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48SW52b2ljZSB4bWxucz0idXJuOm9hc2lzOm5hbWVzOnNwZWNpZmljYXRpb246dWJsOnNjaGVtYTp4c2Q6SW52b2ljZS0yIiB4bWxuczpjYWM9InVybjpvYXNpczpuYW1lczpzcGVjaWZpY2F0aW9uOnVibDpzY2hlbWE6eHNkOkNvbW1vbkFnZ3JlZ2F0ZUNvbXBvbmVudHMtMiIgeG1sbnM6Y2JjPSJ1cm46b2FzaXM6bmFtZXM6c3BlY2lmaWNhdGlvbjp1Ymw6c2NoZW1hOnhzZDpDb21tb25CYXNpY0NvbXBvbmVudHMtMiI+PGNiYzpQcm9maWxlSUQ+cmVwb3J0aW5nOjEuMDwvY2JjOlByb2ZpbGVJRD48Y2JjOklEPkxBQi0wMDE8L2NiYzpJRD48Y2JjOlVVSUQ+NDFhNTI2M2YtNzdjYy00MzhhLTk2OTYtZjE1NGJhNzEzMGQ4PC9jYmM6VVVJRD48Y2JjOklzc3VlRGF0ZT4yMDI2LTExLTAzPC9jYmM6SXNzdWVEYXRlPjxjYmM6SXNzdWVUaW1lPjEwOjMwOjAwPC9jYmM6SXNzdWVUaW1lPjxjYmM6SW52b2ljZVR5cGVDb2RlIG5hbWU9IjAyMDAwMDAiPjM4ODwvY2JjOkludm9pY2VUeXBlQ29kZT48Y2JjOkRvY3VtZW50Q3VycmVuY3lDb2RlPlNBUjwvY2JjOkRvY3VtZW50Q3VycmVuY3lDb2RlPjxjYmM6VGF4Q3VycmVuY3lDb2RlPlNBUjwvY2JjOlRheEN1cnJlbmN5Q29kZT48Y2FjOkFkZGl0aW9uYWxEb2N1bWVudFJlZmVyZW5jZT48Y2JjOklEPklDVjwvY2JjOklEPjxjYmM6VVVJRD4xPC9jYmM6VVVJRD48L2NhYzpBZGRpdGlvbmFsRG9jdW1lbnRSZWZlcmVuY2U+PGNhYzpBZGRpdGlvbmFsRG9jdW1lbnRSZWZlcmVuY2U+PGNiYzpJRD5QSUg8L2NiYzpJRD48Y2FjOkF0dGFjaG1lbnQ+PGNiYzpFbWJlZGRlZERvY3VtZW50QmluYXJ5T2JqZWN0IG1pbWVDb2RlPSJ0ZXh0L3BsYWluIj5OV1psWTJWaU5qWm1abU00Tm1Zek9HUTVOVEkzT0Raak5tUTJPVFpqTnpsak1tUmlZekl6T1dSa05HVTVNV0kwTmpjeU9XUTNNMkV5TjJaaU5UZGxPUT09PC9jYmM6RW1iZWRkZWREb2N1bWVudEJpbmFyeU9iamVjdD48L2NhYzpBdHRhY2htZW50PjwvY2FjOkFkZGl0aW9uYWxEb2N1bWVudFJlZmVyZW5jZT48Y2FjOkFjY291bnRpbmdTdXBwbGllclBhcnR5PjxjYWM6UGFydHk+PGNhYzpQYXJ0eUlkZW50aWZpY2F0aW9uPjxjYmM6SUQgc2NoZW1lSUQ9IkNSTiI+MTIzNDU2Nzg5MDwvY2JjOklEPjwvY2FjOlBhcnR5SWRlbnRpZmljYXRpb24+PGNhYzpQb3N0YWxBZGRyZXNzPjxjYmM6U3RyZWV0TmFtZT7YtNin2LHYuSDYp9mE2KrYrNix2KjYqTwvY2JjOlN0cmVldE5hbWU+PGNiYzpCdWlsZGluZ051bWJlcj4xMjM0PC9jYmM6QnVpbGRpbmdOdW1iZXI+PGNiYzpDaXR5U3ViZGl2aXNpb25OYW1lPtit2Yog2KfZhNin2K7Yqtio2KfYsTwvY2JjOkNpdHlTdWJkaXZpc2lvbk5hbWU+PGNiYzpDaXR5TmFtZT7Yp9mE2LHZitin2LY8L2NiYzpDaXR5TmFtZT48Y2JjOlBvc3RhbFpvbmU+MTIzNDU8L2NiYzpQb3N0YWxab25lPjxjYWM6Q291bnRyeT48Y2JjOklkZW50aWZpY2F0aW9uQ29kZT5TQTwvY2JjOklkZW50aWZpY2F0aW9uQ29kZT48L2NhYzpDb3VudHJ5PjwvY2FjOlBvc3RhbEFkZHJlc3M+PGNhYzpQYXJ0eVRheFNjaGVtZT48Y2JjOkNvbXBhbnlJRD4zMDAwMDAwMDAwMDAwMDM8L2NiYzpDb21wYW55SUQ+PGNhYzpUYXhTY2hlbWU+PGNiYzpJRD5WQVQ8L2NiYzpJRD48L2NhYzpUYXhTY2hlbWU+PC9jYWM6UGFydHlUYXhTY2hlbWU+PGNhYzpQYXJ0eUxlZ2FsRW50aXR5PjxjYmM6UmVnaXN0cmF0aW9uTmFtZT7YtNix2YPYqSDZhdiv2KfYsSDYp9mE2KrYrNix2YrYqNmK2Kk8L2NiYzpSZWdpc3RyYXRpb25OYW1lPjwvY2FjOlBhcnR5TGVnYWxFbnRpdHk+PC9jYWM6UGFydHk+PC9jYWM6QWNjb3VudGluZ1N1cHBsaWVyUGFydHk+PGNhYzpBY2NvdW50aW5nQ3VzdG9tZXJQYXJ0eS8+PGNhYzpEZWxpdmVyeT48Y2JjOkFjdHVhbERlbGl2ZXJ5RGF0ZT4yMDI2LTExLTAzPC9jYmM6QWN0dWFsRGVsaXZlcnlEYXRlPjwvY2FjOkRlbGl2ZXJ5PjxjYWM6UGF5bWVudE1lYW5zPjxjYmM6UGF5bWVudE1lYW5zQ29kZT4zMDwvY2JjOlBheW1lbnRNZWFuc0NvZGU+PC9jYWM6UGF5bWVudE1lYW5zPjxjYWM6VGF4VG90YWw+PGNiYzpUYXhBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4zMC4wMDwvY2JjOlRheEFtb3VudD48L2NhYzpUYXhUb3RhbD48Y2FjOlRheFRvdGFsPjxjYmM6VGF4QW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MzAuMDA8L2NiYzpUYXhBbW91bnQ+PGNhYzpUYXhTdWJ0b3RhbD48Y2JjOlRheGFibGVBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMDAuMDA8L2NiYzpUYXhhYmxlQW1vdW50PjxjYmM6VGF4QW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MzAuMDA8L2NiYzpUYXhBbW91bnQ+PGNhYzpUYXhDYXRlZ29yeT48Y2JjOklEPlM8L2NiYzpJRD48Y2JjOlBlcmNlbnQ+MTU8L2NiYzpQZXJjZW50PjxjYWM6VGF4U2NoZW1lPjxjYmM6SUQ+VkFUPC9jYmM6SUQ+PC9jYWM6VGF4U2NoZW1lPjwvY2FjOlRheENhdGVnb3J5PjwvY2FjOlRheFN1YnRvdGFsPjwvY2FjOlRheFRvdGFsPjxjYWM6TGVnYWxNb25ldGFyeVRvdGFsPjxjYmM6TGluZUV4dGVuc2lvbkFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIwMC4wMDwvY2JjOkxpbmVFeHRlbnNpb25BbW91bnQ+PGNiYzpUYXhFeGNsdXNpdmVBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMDAuMDA8L2NiYzpUYXhFeGNsdXNpdmVBbW91bnQ+PGNiYzpUYXhJbmNsdXNpdmVBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMzAuMDA8L2NiYzpUYXhJbmNsdXNpdmVBbW91bnQ+PGNiYzpQYXlhYmxlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjMwLjAwPC9jYmM6UGF5YWJsZUFtb3VudD48L2NhYzpMZWdhbE1vbmV0YXJ5VG90YWw+PGNhYzpJbnZvaWNlTGluZT48Y2JjOklEPjE8L2NiYzpJRD48Y2JjOkludm9pY2VkUXVhbnRpdHkgdW5pdENvZGU9IlBDRSI+MjwvY2JjOkludm9pY2VkUXVhbnRpdHk+PGNiYzpMaW5lRXh0ZW5zaW9uQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjAwLjAwPC9jYmM6TGluZUV4dGVuc2lvbkFtb3VudD48Y2FjOlRheFRvdGFsPjxjYmM6VGF4QW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MzAuMDA8L2NiYzpUYXhBbW91bnQ+PGNiYzpSb3VuZGluZ0Ftb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIzMC4wMDwvY2JjOlJvdW5kaW5nQW1vdW50PjwvY2FjOlRheFRvdGFsPjxjYWM6SXRlbT48Y2JjOk5hbWU+2K7Yr9mF2Kkg2KrYrNix2YrYqNmK2Kk8L2NiYzpOYW1lPjxjYWM6Q2xhc3NpZmllZFRheENhdGVnb3J5PjxjYmM6SUQ+UzwvY2JjOklEPjxjYmM6UGVyY2VudD4xNTwvY2JjOlBlcmNlbnQ+PGNhYzpUYXhTY2hlbWU+PGNiYzpJRD5WQVQ8L2NiYzpJRD48L2NhYzpUYXhTY2hlbWU+PC9jYWM6Q2xhc3NpZmllZFRheENhdGVnb3J5PjwvY2FjOkl0ZW0+PGNhYzpQcmljZT48Y2JjOlByaWNlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MTAwLjAwPC9jYmM6UHJpY2VBbW91bnQ+PC9jYWM6UHJpY2U+PC9jYWM6SW52b2ljZUxpbmU+PC9JbnZvaWNlPg=="}</script>
+  <section class="step stack" id="qr">
+    <div class="chapter"><bdi>05</bdi><h2 data-lang="ar">لو محتاج QR بس</h2><h2 data-lang="en">If you only need a QR</h2></div>
+    <p data-lang="ar"><code>generatePhase1Qr(fields)</code> يرجّع حمولة QR المرحلة الأولى. مرّر اسم البائع، الرقم الضريبي، الوقت، الإجمالي والضريبة. في حزمة التطوير نفس الوظيفة اسمها <code>encodeQrBase64</code> من <code>zatca/qr</code>.</p>
+    <p data-lang="en"><code>generatePhase1Qr(fields)</code> returns a Phase 1 QR payload from the seller, VAT number, timestamp, total and VAT amount. In the development package, use <code>encodeQrBase64</code> from <code>zatca/qr</code> for the same operation.</p>
+    <p data-lang="ar">QR المرحلة الثانية في XML الموقّع للمبسطة أو XML الراجع من تخليص القياسية.</p>
+    <p data-lang="en">For Phase 2, use the QR in the signed simplified XML or in the cleared standard XML returned by ZATCA.</p>
+  </section>
+  <footer>
+    <span data-lang="ar">الـJSON والـXML متضمّنين في الصفحة. أزرار التنزيل تعمل محليًا.</span>
+    <span data-lang="en">The JSON and XML are embedded in this page. Downloads are generated locally.</span>
+  </footer>
+</main>
+<script id="samples" type="application/json">{"simplified":{"invoice":{"kind":"simplified","documentKind":"invoice","id":"INV-1001","uuid":"a2e8e2b6-858c-4c16-bca8-ec820b12adcb","issuedAt":"2026-11-03T10:30:00+03:00","supplyDate":"2026-11-03","currency":"SAR","seller":{"name":"شركة مدار التجريبية","vatNumber":"300000000000003","registrationId":"1234567890","address":{"street":"شارع التجربة","buildingNumber":"1234","district":"حي الاختبار","city":"الرياض","postalCode":"12345","country":"SA"}},"buyer":{"name":"شركة العميل التجريبية","address":{"street":"شارع العميل","buildingNumber":"2345","district":"حي الاختبار","city":"الرياض","postalCode":"12345","country":"SA"}},"paymentMeansCode":"30","lines":[{"id":"1","name":"خدمة تجريبية","quantity":"2","unitCode":"PCE","unitPrice":"100.00","tax":{"category":"S"}}]},"xml":"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48SW52b2ljZSB4bWxucz0idXJuOm9hc2lzOm5hbWVzOnNwZWNpZmljYXRpb246dWJsOnNjaGVtYTp4c2Q6SW52b2ljZS0yIiB4bWxuczpjYWM9InVybjpvYXNpczpuYW1lczpzcGVjaWZpY2F0aW9uOnVibDpzY2hlbWE6eHNkOkNvbW1vbkFnZ3JlZ2F0ZUNvbXBvbmVudHMtMiIgeG1sbnM6Y2JjPSJ1cm46b2FzaXM6bmFtZXM6c3BlY2lmaWNhdGlvbjp1Ymw6c2NoZW1hOnhzZDpDb21tb25CYXNpY0NvbXBvbmVudHMtMiI+PGNiYzpQcm9maWxlSUQ+cmVwb3J0aW5nOjEuMDwvY2JjOlByb2ZpbGVJRD48Y2JjOklEPklOVi0xMDAxPC9jYmM6SUQ+PGNiYzpVVUlEPmEyZThlMmI2LTg1OGMtNGMxNi1iY2E4LWVjODIwYjEyYWRjYjwvY2JjOlVVSUQ+PGNiYzpJc3N1ZURhdGU+MjAyNi0xMS0wMzwvY2JjOklzc3VlRGF0ZT48Y2JjOklzc3VlVGltZT4xMDozMDowMDwvY2JjOklzc3VlVGltZT48Y2JjOkludm9pY2VUeXBlQ29kZSBuYW1lPSIwMjAwMDAwIj4zODg8L2NiYzpJbnZvaWNlVHlwZUNvZGU+PGNiYzpEb2N1bWVudEN1cnJlbmN5Q29kZT5TQVI8L2NiYzpEb2N1bWVudEN1cnJlbmN5Q29kZT48Y2JjOlRheEN1cnJlbmN5Q29kZT5TQVI8L2NiYzpUYXhDdXJyZW5jeUNvZGU+PGNhYzpBZGRpdGlvbmFsRG9jdW1lbnRSZWZlcmVuY2U+PGNiYzpJRD5JQ1Y8L2NiYzpJRD48Y2JjOlVVSUQ+MTwvY2JjOlVVSUQ+PC9jYWM6QWRkaXRpb25hbERvY3VtZW50UmVmZXJlbmNlPjxjYWM6QWRkaXRpb25hbERvY3VtZW50UmVmZXJlbmNlPjxjYmM6SUQ+UElIPC9jYmM6SUQ+PGNhYzpBdHRhY2htZW50PjxjYmM6RW1iZWRkZWREb2N1bWVudEJpbmFyeU9iamVjdCBtaW1lQ29kZT0idGV4dC9wbGFpbiI+TldabFkyVmlOalptWm1NNE5tWXpPR1E1TlRJM09EWmpObVEyT1Raak56bGpNbVJpWXpJek9XUmtOR1U1TVdJME5qY3lPV1EzTTJFeU4yWmlOVGRsT1E9PTwvY2JjOkVtYmVkZGVkRG9jdW1lbnRCaW5hcnlPYmplY3Q+PC9jYWM6QXR0YWNobWVudD48L2NhYzpBZGRpdGlvbmFsRG9jdW1lbnRSZWZlcmVuY2U+PGNhYzpBY2NvdW50aW5nU3VwcGxpZXJQYXJ0eT48Y2FjOlBhcnR5PjxjYWM6UGFydHlJZGVudGlmaWNhdGlvbj48Y2JjOklEIHNjaGVtZUlEPSJDUk4iPjEyMzQ1Njc4OTA8L2NiYzpJRD48L2NhYzpQYXJ0eUlkZW50aWZpY2F0aW9uPjxjYWM6UG9zdGFsQWRkcmVzcz48Y2JjOlN0cmVldE5hbWU+2LTYp9ix2Lkg2KfZhNiq2KzYsdio2Kk8L2NiYzpTdHJlZXROYW1lPjxjYmM6QnVpbGRpbmdOdW1iZXI+MTIzNDwvY2JjOkJ1aWxkaW5nTnVtYmVyPjxjYmM6Q2l0eVN1YmRpdmlzaW9uTmFtZT7YrdmKINin2YTYp9iu2KrYqNin2LE8L2NiYzpDaXR5U3ViZGl2aXNpb25OYW1lPjxjYmM6Q2l0eU5hbWU+2KfZhNix2YrYp9i2PC9jYmM6Q2l0eU5hbWU+PGNiYzpQb3N0YWxab25lPjEyMzQ1PC9jYmM6UG9zdGFsWm9uZT48Y2FjOkNvdW50cnk+PGNiYzpJZGVudGlmaWNhdGlvbkNvZGU+U0E8L2NiYzpJZGVudGlmaWNhdGlvbkNvZGU+PC9jYWM6Q291bnRyeT48L2NhYzpQb3N0YWxBZGRyZXNzPjxjYWM6UGFydHlUYXhTY2hlbWU+PGNiYzpDb21wYW55SUQ+MzAwMDAwMDAwMDAwMDAzPC9jYmM6Q29tcGFueUlEPjxjYWM6VGF4U2NoZW1lPjxjYmM6SUQ+VkFUPC9jYmM6SUQ+PC9jYWM6VGF4U2NoZW1lPjwvY2FjOlBhcnR5VGF4U2NoZW1lPjxjYWM6UGFydHlMZWdhbEVudGl0eT48Y2JjOlJlZ2lzdHJhdGlvbk5hbWU+2LTYsdmD2Kkg2YXYr9in2LEg2KfZhNiq2KzYsdmK2KjZitipPC9jYmM6UmVnaXN0cmF0aW9uTmFtZT48L2NhYzpQYXJ0eUxlZ2FsRW50aXR5PjwvY2FjOlBhcnR5PjwvY2FjOkFjY291bnRpbmdTdXBwbGllclBhcnR5PjxjYWM6QWNjb3VudGluZ0N1c3RvbWVyUGFydHk+PGNhYzpQYXJ0eT48Y2FjOlBvc3RhbEFkZHJlc3M+PGNiYzpTdHJlZXROYW1lPti02KfYsdi5INin2YTYudmF2YrZhDwvY2JjOlN0cmVldE5hbWU+PGNiYzpCdWlsZGluZ051bWJlcj4yMzQ1PC9jYmM6QnVpbGRpbmdOdW1iZXI+PGNiYzpDaXR5U3ViZGl2aXNpb25OYW1lPtit2Yog2KfZhNin2K7Yqtio2KfYsTwvY2JjOkNpdHlTdWJkaXZpc2lvbk5hbWU+PGNiYzpDaXR5TmFtZT7Yp9mE2LHZitin2LY8L2NiYzpDaXR5TmFtZT48Y2JjOlBvc3RhbFpvbmU+MTIzNDU8L2NiYzpQb3N0YWxab25lPjxjYWM6Q291bnRyeT48Y2JjOklkZW50aWZpY2F0aW9uQ29kZT5TQTwvY2JjOklkZW50aWZpY2F0aW9uQ29kZT48L2NhYzpDb3VudHJ5PjwvY2FjOlBvc3RhbEFkZHJlc3M+PGNhYzpQYXJ0eUxlZ2FsRW50aXR5PjxjYmM6UmVnaXN0cmF0aW9uTmFtZT7YtNix2YPYqSDYp9mE2LnZhdmK2YQg2KfZhNiq2KzYsdmK2KjZitipPC9jYmM6UmVnaXN0cmF0aW9uTmFtZT48L2NhYzpQYXJ0eUxlZ2FsRW50aXR5PjwvY2FjOlBhcnR5PjwvY2FjOkFjY291bnRpbmdDdXN0b21lclBhcnR5PjxjYWM6RGVsaXZlcnk+PGNiYzpBY3R1YWxEZWxpdmVyeURhdGU+MjAyNi0xMS0wMzwvY2JjOkFjdHVhbERlbGl2ZXJ5RGF0ZT48L2NhYzpEZWxpdmVyeT48Y2FjOlBheW1lbnRNZWFucz48Y2JjOlBheW1lbnRNZWFuc0NvZGU+MzA8L2NiYzpQYXltZW50TWVhbnNDb2RlPjwvY2FjOlBheW1lbnRNZWFucz48Y2FjOlRheFRvdGFsPjxjYmM6VGF4QW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MzAuMDA8L2NiYzpUYXhBbW91bnQ+PC9jYWM6VGF4VG90YWw+PGNhYzpUYXhUb3RhbD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjxjYWM6VGF4U3VidG90YWw+PGNiYzpUYXhhYmxlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjAwLjAwPC9jYmM6VGF4YWJsZUFtb3VudD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjxjYWM6VGF4Q2F0ZWdvcnk+PGNiYzpJRD5TPC9jYmM6SUQ+PGNiYzpQZXJjZW50PjE1PC9jYmM6UGVyY2VudD48Y2FjOlRheFNjaGVtZT48Y2JjOklEPlZBVDwvY2JjOklEPjwvY2FjOlRheFNjaGVtZT48L2NhYzpUYXhDYXRlZ29yeT48L2NhYzpUYXhTdWJ0b3RhbD48L2NhYzpUYXhUb3RhbD48Y2FjOkxlZ2FsTW9uZXRhcnlUb3RhbD48Y2JjOkxpbmVFeHRlbnNpb25BbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMDAuMDA8L2NiYzpMaW5lRXh0ZW5zaW9uQW1vdW50PjxjYmM6VGF4RXhjbHVzaXZlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjAwLjAwPC9jYmM6VGF4RXhjbHVzaXZlQW1vdW50PjxjYmM6VGF4SW5jbHVzaXZlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjMwLjAwPC9jYmM6VGF4SW5jbHVzaXZlQW1vdW50PjxjYmM6UGF5YWJsZUFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIzMC4wMDwvY2JjOlBheWFibGVBbW91bnQ+PC9jYWM6TGVnYWxNb25ldGFyeVRvdGFsPjxjYWM6SW52b2ljZUxpbmU+PGNiYzpJRD4xPC9jYmM6SUQ+PGNiYzpJbnZvaWNlZFF1YW50aXR5IHVuaXRDb2RlPSJQQ0UiPjI8L2NiYzpJbnZvaWNlZFF1YW50aXR5PjxjYmM6TGluZUV4dGVuc2lvbkFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIwMC4wMDwvY2JjOkxpbmVFeHRlbnNpb25BbW91bnQ+PGNhYzpUYXhUb3RhbD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjxjYmM6Um91bmRpbmdBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMzAuMDA8L2NiYzpSb3VuZGluZ0Ftb3VudD48L2NhYzpUYXhUb3RhbD48Y2FjOkl0ZW0+PGNiYzpOYW1lPtiu2K/ZhdipINiq2KzYsdmK2KjZitipPC9jYmM6TmFtZT48Y2FjOkNsYXNzaWZpZWRUYXhDYXRlZ29yeT48Y2JjOklEPlM8L2NiYzpJRD48Y2JjOlBlcmNlbnQ+MTU8L2NiYzpQZXJjZW50PjxjYWM6VGF4U2NoZW1lPjxjYmM6SUQ+VkFUPC9jYmM6SUQ+PC9jYWM6VGF4U2NoZW1lPjwvY2FjOkNsYXNzaWZpZWRUYXhDYXRlZ29yeT48L2NhYzpJdGVtPjxjYWM6UHJpY2U+PGNiYzpQcmljZUFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjEwMC4wMDwvY2JjOlByaWNlQW1vdW50PjwvY2FjOlByaWNlPjwvY2FjOkludm9pY2VMaW5lPjwvSW52b2ljZT4="},"standard":{"invoice":{"kind":"standard","documentKind":"invoice","id":"INV-1001","uuid":"a2e8e2b6-858c-4c16-bca8-ec820b12adcb","issuedAt":"2026-11-03T10:30:00+03:00","supplyDate":"2026-11-03","currency":"SAR","seller":{"name":"شركة مدار التجريبية","vatNumber":"300000000000003","registrationId":"1234567890","address":{"street":"شارع التجربة","buildingNumber":"1234","district":"حي الاختبار","city":"الرياض","postalCode":"12345","country":"SA"}},"buyer":{"name":"شركة العميل التجريبية","address":{"street":"شارع العميل","buildingNumber":"2345","district":"حي الاختبار","city":"الرياض","postalCode":"12345","country":"SA"}},"paymentMeansCode":"30","lines":[{"id":"1","name":"خدمة تجريبية","quantity":"2","unitCode":"PCE","unitPrice":"100.00","tax":{"category":"S"}}]},"xml":"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48SW52b2ljZSB4bWxucz0idXJuOm9hc2lzOm5hbWVzOnNwZWNpZmljYXRpb246dWJsOnNjaGVtYTp4c2Q6SW52b2ljZS0yIiB4bWxuczpjYWM9InVybjpvYXNpczpuYW1lczpzcGVjaWZpY2F0aW9uOnVibDpzY2hlbWE6eHNkOkNvbW1vbkFnZ3JlZ2F0ZUNvbXBvbmVudHMtMiIgeG1sbnM6Y2JjPSJ1cm46b2FzaXM6bmFtZXM6c3BlY2lmaWNhdGlvbjp1Ymw6c2NoZW1hOnhzZDpDb21tb25CYXNpY0NvbXBvbmVudHMtMiI+PGNiYzpQcm9maWxlSUQ+cmVwb3J0aW5nOjEuMDwvY2JjOlByb2ZpbGVJRD48Y2JjOklEPklOVi0xMDAxPC9jYmM6SUQ+PGNiYzpVVUlEPmEyZThlMmI2LTg1OGMtNGMxNi1iY2E4LWVjODIwYjEyYWRjYjwvY2JjOlVVSUQ+PGNiYzpJc3N1ZURhdGU+MjAyNi0xMS0wMzwvY2JjOklzc3VlRGF0ZT48Y2JjOklzc3VlVGltZT4xMDozMDowMDwvY2JjOklzc3VlVGltZT48Y2JjOkludm9pY2VUeXBlQ29kZSBuYW1lPSIwMTAwMDAwIj4zODg8L2NiYzpJbnZvaWNlVHlwZUNvZGU+PGNiYzpEb2N1bWVudEN1cnJlbmN5Q29kZT5TQVI8L2NiYzpEb2N1bWVudEN1cnJlbmN5Q29kZT48Y2JjOlRheEN1cnJlbmN5Q29kZT5TQVI8L2NiYzpUYXhDdXJyZW5jeUNvZGU+PGNhYzpBZGRpdGlvbmFsRG9jdW1lbnRSZWZlcmVuY2U+PGNiYzpJRD5JQ1Y8L2NiYzpJRD48Y2JjOlVVSUQ+MTwvY2JjOlVVSUQ+PC9jYWM6QWRkaXRpb25hbERvY3VtZW50UmVmZXJlbmNlPjxjYWM6QWRkaXRpb25hbERvY3VtZW50UmVmZXJlbmNlPjxjYmM6SUQ+UElIPC9jYmM6SUQ+PGNhYzpBdHRhY2htZW50PjxjYmM6RW1iZWRkZWREb2N1bWVudEJpbmFyeU9iamVjdCBtaW1lQ29kZT0idGV4dC9wbGFpbiI+TldabFkyVmlOalptWm1NNE5tWXpPR1E1TlRJM09EWmpObVEyT1Raak56bGpNbVJpWXpJek9XUmtOR1U1TVdJME5qY3lPV1EzTTJFeU4yWmlOVGRsT1E9PTwvY2JjOkVtYmVkZGVkRG9jdW1lbnRCaW5hcnlPYmplY3Q+PC9jYWM6QXR0YWNobWVudD48L2NhYzpBZGRpdGlvbmFsRG9jdW1lbnRSZWZlcmVuY2U+PGNhYzpBY2NvdW50aW5nU3VwcGxpZXJQYXJ0eT48Y2FjOlBhcnR5PjxjYWM6UGFydHlJZGVudGlmaWNhdGlvbj48Y2JjOklEIHNjaGVtZUlEPSJDUk4iPjEyMzQ1Njc4OTA8L2NiYzpJRD48L2NhYzpQYXJ0eUlkZW50aWZpY2F0aW9uPjxjYWM6UG9zdGFsQWRkcmVzcz48Y2JjOlN0cmVldE5hbWU+2LTYp9ix2Lkg2KfZhNiq2KzYsdio2Kk8L2NiYzpTdHJlZXROYW1lPjxjYmM6QnVpbGRpbmdOdW1iZXI+MTIzNDwvY2JjOkJ1aWxkaW5nTnVtYmVyPjxjYmM6Q2l0eVN1YmRpdmlzaW9uTmFtZT7YrdmKINin2YTYp9iu2KrYqNin2LE8L2NiYzpDaXR5U3ViZGl2aXNpb25OYW1lPjxjYmM6Q2l0eU5hbWU+2KfZhNix2YrYp9i2PC9jYmM6Q2l0eU5hbWU+PGNiYzpQb3N0YWxab25lPjEyMzQ1PC9jYmM6UG9zdGFsWm9uZT48Y2FjOkNvdW50cnk+PGNiYzpJZGVudGlmaWNhdGlvbkNvZGU+U0E8L2NiYzpJZGVudGlmaWNhdGlvbkNvZGU+PC9jYWM6Q291bnRyeT48L2NhYzpQb3N0YWxBZGRyZXNzPjxjYWM6UGFydHlUYXhTY2hlbWU+PGNiYzpDb21wYW55SUQ+MzAwMDAwMDAwMDAwMDAzPC9jYmM6Q29tcGFueUlEPjxjYWM6VGF4U2NoZW1lPjxjYmM6SUQ+VkFUPC9jYmM6SUQ+PC9jYWM6VGF4U2NoZW1lPjwvY2FjOlBhcnR5VGF4U2NoZW1lPjxjYWM6UGFydHlMZWdhbEVudGl0eT48Y2JjOlJlZ2lzdHJhdGlvbk5hbWU+2LTYsdmD2Kkg2YXYr9in2LEg2KfZhNiq2KzYsdmK2KjZitipPC9jYmM6UmVnaXN0cmF0aW9uTmFtZT48L2NhYzpQYXJ0eUxlZ2FsRW50aXR5PjwvY2FjOlBhcnR5PjwvY2FjOkFjY291bnRpbmdTdXBwbGllclBhcnR5PjxjYWM6QWNjb3VudGluZ0N1c3RvbWVyUGFydHk+PGNhYzpQYXJ0eT48Y2FjOlBvc3RhbEFkZHJlc3M+PGNiYzpTdHJlZXROYW1lPti02KfYsdi5INin2YTYudmF2YrZhDwvY2JjOlN0cmVldE5hbWU+PGNiYzpCdWlsZGluZ051bWJlcj4yMzQ1PC9jYmM6QnVpbGRpbmdOdW1iZXI+PGNiYzpDaXR5U3ViZGl2aXNpb25OYW1lPtit2Yog2KfZhNin2K7Yqtio2KfYsTwvY2JjOkNpdHlTdWJkaXZpc2lvbk5hbWU+PGNiYzpDaXR5TmFtZT7Yp9mE2LHZitin2LY8L2NiYzpDaXR5TmFtZT48Y2JjOlBvc3RhbFpvbmU+MTIzNDU8L2NiYzpQb3N0YWxab25lPjxjYWM6Q291bnRyeT48Y2JjOklkZW50aWZpY2F0aW9uQ29kZT5TQTwvY2JjOklkZW50aWZpY2F0aW9uQ29kZT48L2NhYzpDb3VudHJ5PjwvY2FjOlBvc3RhbEFkZHJlc3M+PGNhYzpQYXJ0eUxlZ2FsRW50aXR5PjxjYmM6UmVnaXN0cmF0aW9uTmFtZT7YtNix2YPYqSDYp9mE2LnZhdmK2YQg2KfZhNiq2KzYsdmK2KjZitipPC9jYmM6UmVnaXN0cmF0aW9uTmFtZT48L2NhYzpQYXJ0eUxlZ2FsRW50aXR5PjwvY2FjOlBhcnR5PjwvY2FjOkFjY291bnRpbmdDdXN0b21lclBhcnR5PjxjYWM6RGVsaXZlcnk+PGNiYzpBY3R1YWxEZWxpdmVyeURhdGU+MjAyNi0xMS0wMzwvY2JjOkFjdHVhbERlbGl2ZXJ5RGF0ZT48L2NhYzpEZWxpdmVyeT48Y2FjOlBheW1lbnRNZWFucz48Y2JjOlBheW1lbnRNZWFuc0NvZGU+MzA8L2NiYzpQYXltZW50TWVhbnNDb2RlPjwvY2FjOlBheW1lbnRNZWFucz48Y2FjOlRheFRvdGFsPjxjYmM6VGF4QW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MzAuMDA8L2NiYzpUYXhBbW91bnQ+PC9jYWM6VGF4VG90YWw+PGNhYzpUYXhUb3RhbD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjxjYWM6VGF4U3VidG90YWw+PGNiYzpUYXhhYmxlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjAwLjAwPC9jYmM6VGF4YWJsZUFtb3VudD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjxjYWM6VGF4Q2F0ZWdvcnk+PGNiYzpJRD5TPC9jYmM6SUQ+PGNiYzpQZXJjZW50PjE1PC9jYmM6UGVyY2VudD48Y2FjOlRheFNjaGVtZT48Y2JjOklEPlZBVDwvY2JjOklEPjwvY2FjOlRheFNjaGVtZT48L2NhYzpUYXhDYXRlZ29yeT48L2NhYzpUYXhTdWJ0b3RhbD48L2NhYzpUYXhUb3RhbD48Y2FjOkxlZ2FsTW9uZXRhcnlUb3RhbD48Y2JjOkxpbmVFeHRlbnNpb25BbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMDAuMDA8L2NiYzpMaW5lRXh0ZW5zaW9uQW1vdW50PjxjYmM6VGF4RXhjbHVzaXZlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjAwLjAwPC9jYmM6VGF4RXhjbHVzaXZlQW1vdW50PjxjYmM6VGF4SW5jbHVzaXZlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjMwLjAwPC9jYmM6VGF4SW5jbHVzaXZlQW1vdW50PjxjYmM6UGF5YWJsZUFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIzMC4wMDwvY2JjOlBheWFibGVBbW91bnQ+PC9jYWM6TGVnYWxNb25ldGFyeVRvdGFsPjxjYWM6SW52b2ljZUxpbmU+PGNiYzpJRD4xPC9jYmM6SUQ+PGNiYzpJbnZvaWNlZFF1YW50aXR5IHVuaXRDb2RlPSJQQ0UiPjI8L2NiYzpJbnZvaWNlZFF1YW50aXR5PjxjYmM6TGluZUV4dGVuc2lvbkFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIwMC4wMDwvY2JjOkxpbmVFeHRlbnNpb25BbW91bnQ+PGNhYzpUYXhUb3RhbD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjxjYmM6Um91bmRpbmdBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMzAuMDA8L2NiYzpSb3VuZGluZ0Ftb3VudD48L2NhYzpUYXhUb3RhbD48Y2FjOkl0ZW0+PGNiYzpOYW1lPtiu2K/ZhdipINiq2KzYsdmK2KjZitipPC9jYmM6TmFtZT48Y2FjOkNsYXNzaWZpZWRUYXhDYXRlZ29yeT48Y2JjOklEPlM8L2NiYzpJRD48Y2JjOlBlcmNlbnQ+MTU8L2NiYzpQZXJjZW50PjxjYWM6VGF4U2NoZW1lPjxjYmM6SUQ+VkFUPC9jYmM6SUQ+PC9jYWM6VGF4U2NoZW1lPjwvY2FjOkNsYXNzaWZpZWRUYXhDYXRlZ29yeT48L2NhYzpJdGVtPjxjYWM6UHJpY2U+PGNiYzpQcmljZUFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjEwMC4wMDwvY2JjOlByaWNlQW1vdW50PjwvY2FjOlByaWNlPjwvY2FjOkludm9pY2VMaW5lPjwvSW52b2ljZT4="}}</script>
 <script>
 (() => {
-  const el = (id) => document.getElementById(id);
-  const samples = JSON.parse(el('invoice-samples').textContent);
-  let profile = 'simplified';
+  const find = (id) => document.getElementById(id);
+  const samples = JSON.parse(find('samples').textContent);
+  const bytes = (value) => Uint8Array.from(atob(value), (char) => char.charCodeAt(0));
+  let profile = 'standard';
+  let language = 'ar';
   let xml = '';
-  function update(next) {
+
+  function setLanguage(next) {
+    language = next;
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.title = language === 'ar' ? 'Tatwerat ZATCA JS | دليل المطوّر' : 'Tatwerat ZATCA JS | Developer guide';
+    document.querySelectorAll('[data-switch-lang]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.switchLang === language));
+    });
+  }
+
+  function setProfile(next) {
     profile = next;
     const standard = profile === 'standard';
-    const filename = standard ? 'cleared-invoice.xml' : 'simplified-signed.xml';
+    const sample = samples[profile];
+    xml = new TextDecoder().decode(bytes(sample.xml));
+    find('json').textContent = JSON.stringify(sample.invoice, null, 2) + '\n';
+    find('xml').textContent = xml.replaceAll('><', '>\n<');
+    find('result').textContent = JSON.stringify({
+      status: standard ? 'cleared' : 'reported',
+      ...(standard ? { clearedInvoiceBase64: '<Base64 XML>' } : {}),
+      diagnostics: [],
+      metadata: { httpStatus: 200 },
+    }, null, 2);
     document.querySelectorAll('[data-profile]').forEach((button) => {
       button.setAttribute('aria-pressed', String(button.dataset.profile === profile));
     });
-    document.querySelectorAll('[data-route]').forEach((section) => {
-      section.hidden = section.dataset.route !== profile;
-    });
-    el('path-summary').textContent = standard
-      ? 'قياسية. أنشئ XML واحسب هاشه، ثم أرسله للتخليص. احتفظ بالملف المختوم والـQR من الرد.'
-      : 'مبسطة. أنشئ XML، وقّعه وأضف QR المرحلة الثانية على جهاز الإصدار، ثم أرسله للإبلاغ.';
-    xml = new TextDecoder().decode(Uint8Array.from(atob(samples[profile]), (c) => c.charCodeAt(0)));
-    el('xml-preview').textContent = xml.replaceAll('><', '>\n<');
-    el('endpoint').textContent = standard ? 'POST /invoices/clearance/single' : 'POST /invoices/reporting/single';
-    el('qr-command').textContent = [
-      '[xml]$doc = Get-Content -LiteralPath "' + filename + '" -Raw -Encoding utf8',
-      '$ns = [System.Xml.XmlNamespaceManager]::new($doc.NameTable)',
-      "$ns.AddNamespace('cac', 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2')",
-      "$ns.AddNamespace('cbc', 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2')",
-      '$qr = $doc.DocumentElement.SelectSingleNode("cac:AdditionalDocumentReference[cbc:ID=\'QR\']/cac:Attachment/cbc:EmbeddedDocumentBinaryObject", $ns)',
-      "if (-not $qr -or -not $qr.InnerText.Trim()) { throw 'QR payload missing' }",
-      '$env:ZATCA_QR = $qr.InnerText.Trim()',
-      'node -e "require(\'qrcode\').toFile(\'invoice-qr.png\', process.env.ZATCA_QR).catch(e => { console.error(e.message); process.exitCode = 1 })"',
-    ].join('\n');
-    el('send-code').textContent = [
-      "import { readFile } from 'node:fs/promises';",
-      "import { createZatcaApi, type Csid } from '../src/api/client.js';",
-      '',
-      'export async function submitInvoice(',
-      '  invoiceHash: string,',
-      "  sandboxCsid: Csid<'production'>,",
-      ') {',
-      "  const api = createZatcaApi({ environment: 'sandbox' });",
-      "  const xml = await readFile('" + (standard ? 'standard-input.xml' : filename) + "', 'utf8');",
-      '  const document = { xml, invoiceHash };',
-      standard
-        ? '  return api.clear(document, sandboxCsid);'
-        : '  return api.report(document, sandboxCsid, { clearanceEnabled: true });',
-      '}',
-    ].join('\n');
-    el('response-example').textContent = JSON.stringify({
-      validationResults: {
-        infoMessages: [], warningMessages: [], errorMessages: [], status: 'PASS',
-      },
-      ...(standard
-        ? { clearanceStatus: 'CLEARED', clearedInvoice: '<Base64 XML>' }
-        : { reportingStatus: 'REPORTED' }),
-    }, null, 2);
   }
+
+  document.querySelectorAll('[data-switch-lang]').forEach((button) => {
+    button.addEventListener('click', () => setLanguage(button.dataset.switchLang));
+  });
   document.querySelectorAll('[data-profile]').forEach((button) => {
-    button.addEventListener('click', () => update(button.dataset.profile));
+    button.addEventListener('click', () => setProfile(button.dataset.profile));
+  });
+  document.querySelectorAll('[data-download]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const isXml = button.dataset.download === 'xml';
+      const blob = new Blob([isXml ? xml : find('json').textContent], {
+        type: isXml ? 'application/xml;charset=utf-8' : 'application/json;charset=utf-8',
+      });
+      const href = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = href;
+      anchor.download = isXml ? 'invoice-draft.xml' : 'invoice.json';
+      anchor.click();
+      setTimeout(() => URL.revokeObjectURL(href), 1000);
+    });
   });
   document.querySelectorAll('[data-copy]').forEach((button) => {
     button.addEventListener('click', async () => {
-      const target = el(button.dataset.copy);
+      const id = button.dataset.copy;
       try {
-        await navigator.clipboard.writeText(target.id === 'xml-preview' ? xml : target.textContent);
-        button.textContent = 'تم النسخ';
+        await navigator.clipboard.writeText(id === 'xml' ? xml : find(id).textContent);
+        button.dataset.originalLabel ??= button.innerHTML;
+        button.textContent = language === 'ar' ? 'تم النسخ' : 'Copied';
+        setTimeout(() => { button.innerHTML = button.dataset.originalLabel; }, 1250);
       } catch {
-        if (target.id === 'xml-preview') {
-          el('copy-status').textContent = 'نزّل عينة XML للحصول على النص الأصلي.';
+        if (id === 'xml') {
+          document.querySelector('[data-download=xml]').click();
           return;
         }
-        const range = document.createRange();
-        range.selectNodeContents(target);
         const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(find(id));
         selection.removeAllRanges();
         selection.addRange(range);
-        button.textContent = 'النص محدد للنسخ';
       }
     });
   });
-  el('download-xml').addEventListener('click', () => {
-    const url = URL.createObjectURL(new Blob([xml], { type: 'application/xml;charset=utf-8' }));
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = profile + '-draft.xml';
-    anchor.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    el('copy-status').textContent = 'تم تجهيز تنزيل المسودة.';
-  });
-  update(profile);
+  setProfile(profile);
 })();
 </script>
 </body>

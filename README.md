@@ -56,7 +56,7 @@ let qrCode = await generateQrCode.render();
 
 ## Invoice lab
 
-Run `npm ci` and `npm run demo` to open the [local invoice lab](http://127.0.0.1:4177/). It generates a UBL draft and Phase 1 QR, and simulates reporting and clearance outcomes. The [Arabic walkthrough](docs/invoice-demo.md) includes steps for a demo. The [Node integration example](examples/invoicing/README.md) shows the invoice JSON and per-device settings for the internal server entry. The [HTML implementation guide](docs/invoice-integration.html) walks through UBL XML, signing, QR and ZATCA responses. The [technical Markdown guide](docs/invoice-integration.md) covers JSON-to-UBL and ready-XML submission.
+Run `npm ci` and `npm run demo` to open the [local invoice lab](http://127.0.0.1:4177/). It generates a UBL draft and Phase 1 QR, and simulates reporting and clearance outcomes. The [Arabic walkthrough](docs/invoice-demo.md) includes steps for a demo. The [Node integration example](examples/invoicing/README.md) shows the invoice JSON and per-device settings for the internal server entry. Open the [standalone Arabic and English HTML guide](docs/invoice-integration.html) in a browser to see the JSON, settings, XML downloads and reporting and clearance examples. The [technical Markdown guide](docs/invoice-integration.md) covers JSON-to-UBL and ready-XML submission.
 
 ## Local development build
 
