@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="دليل عربي وإنجليزي يوضح إعدادات زاتكا وبيانات الفاتورة واستدعاءات Node">
+<title>Tatwerat ZATCA JS | Developer guide</title>
+<style>
+:root { color-scheme:light; --ink:#142340; --muted:#50617d; --paper:#f2f5fb; --white:#fff; --line:#dce4f0; --blue:#2145b8; --ice:#e9effe; --night:#12203d; font:16px/1.65 "Segoe UI",Tahoma,sans-serif; color:var(--ink); background:var(--paper); }
+*,*::before,*::after { box-sizing:border-box; }
+body,h1,h2,h3,p { margin:0; }
+html[lang=ar] [data-lang=en],html[lang=en] [data-lang=ar] { display:none; }
+a { color:var(--blue); text-underline-offset:3px; }
+button { font:inherit; cursor:pointer; }
+button:focus-visible,a:focus-visible,summary:focus-visible { outline:3px solid #577bfa; outline-offset:3px; }
+.wrap { width:min(1080px,100% - 44px); margin-inline:auto; }
+header { background:var(--night); color:var(--white); border-bottom:4px solid #9cafed; }
+.top,.control-row,.chapter { display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
+.top { padding-block:14px; justify-content:space-between; border-bottom:1px solid #344465; }
+.brand { font-weight:700; letter-spacing:.01em; }
+.lang { display:flex; gap:6px; }
+button { border:1px solid #b8c7e4; background:var(--white); color:var(--ink); border-radius:6px; padding:5px 12px; min-height:38px; }
+button:hover { background:var(--ice); }
+button[aria-pressed=true],.primary { color:var(--white); border-color:var(--blue); background:var(--blue); }
+button[aria-pressed=true]:hover,.primary:hover { background:#193590; }
+.lang button { min-height:36px; }
+.hero { padding-block:32px 36px; }
+h1 { font-size:clamp(2rem,5vw,3.3rem); line-height:1.2; margin-block-end:10px; }
+.hero p { max-width:60ch; color:#dee7fe; }
+.feature-nav { display:flex; flex-wrap:wrap; gap:7px; margin-block-start:16px; }
+.feature-nav a { display:inline-flex; align-items:center; min-height:38px; padding:4px 9px; border:1px solid #57709d; border-radius:5px; color:#f2f5ff; }
+#function-reference > summary { padding:9px 12px; border:1px solid var(--line); border-radius:8px; color:var(--ink); }
+.reference-nav { display:flex; flex-wrap:wrap; gap:6px; margin-block:12px; }
+.reference-nav a { border:1px solid var(--line); border-radius:6px; padding:5px 9px; color:var(--ink); text-decoration:none; font-size:.86rem; }
+.reference-nav a:hover { background:#f1f4f9; text-decoration:underline; }
+.reference-group { margin-block-start:16px; border:1px solid var(--line); border-radius:10px; scroll-margin-top:12px; }
+.reference-group:target { outline:2px solid #9baed1; outline-offset:2px; }
+.reference-heading { display:flex; flex-wrap:wrap; align-items:center; gap:5px 12px; padding:12px 15px; background:#f7f9fc; border-radius:9px 9px 0 0; }
+.reference-heading h3 { font-size:1.08rem; }
+.reference-heading .muted { flex-basis:100%; font-size:.86rem; overflow-wrap:anywhere; }
+.reference-scope { border:1px solid #d5deeb; border-radius:5px; padding:1px 7px; color:#374762; background:#fff; font-size:.76rem; font-weight:650; }
+.feature-list { margin:0; padding-inline:15px; }
+.feature-row { display:grid; grid-template-columns:minmax(0, 1.05fr) minmax(0, 1fr); align-items:start; gap:8px 20px; padding-block:11px; border-block-start:1px solid var(--line); }
+.feature-row dt,.feature-row dd { margin:0; min-width:0; }
+.feature-row dd { padding-block:3px; font-size:.94rem; }
+.feature-signature { display:block; width:fit-content; max-width:100%; padding:4px 8px; border-radius:5px; background:#edf1f7; color:#4b5870; font:.83rem/1.6 Consolas,monospace; overflow-wrap:anywhere; text-align:left; }
+.feature-signature + .feature-signature { margin-block-start:4px; }
+.feature-signature b { color:#233a60; font-weight:700; }
+@media(max-width:650px) { .feature-row { grid-template-columns:1fr; gap:3px; } }
+main { padding-block:20px 38px; }
+.manual-heading { margin-block-end:14px; scroll-margin-top:10px; }
+.step { border:1px solid var(--line); border-radius:12px; background:var(--white); padding:clamp(16px,3vw,26px); margin-block-end:14px; min-width:0; scroll-margin-top:10px; }
+.step h2 { font-size:clamp(1.2rem,3vw,1.48rem); line-height:1.3; }
+.chapter { margin-block-end:10px; }
+.chapter bdi { color:var(--blue); background:var(--ice); border-radius:5px; min-width:2em; text-align:center; font-weight:700; }
+.muted { color:var(--muted); font-size:.94rem; }
+.stack > * + * { margin-block-start:9px; }
+.control-row { margin-block:8px; }
+.notice { background:var(--ice); border-inline-start:3px solid #8099e8; padding:8px 12px; margin-block:10px; }
+pre { margin:8px 0 10px; padding:12px; border-radius:7px; color:#edf2ff; background:#172748; direction:ltr; text-align:left; font:.87rem/1.6 Consolas,monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+.preview { max-height:255px; overflow:auto; }
+.qr-preview { display:flex; flex-wrap:wrap; align-items:center; gap:16px; padding:12px; border:1px solid var(--line); border-radius:8px; }
+.qr-preview img { display:block; flex:none; background:#fff; }
+.qr-preview p { max-width:60ch; }
+code { unicode-bidi:isolate; }
+.reference-heading code { font-size:.86em; color:inherit; overflow-wrap:anywhere; direction:ltr; }
+p code,li code,summary code { background:var(--ice); padding:1px 4px; border-radius:3px; color:#1e3c9e; overflow-wrap:anywhere; direction:ltr; }
+summary { color:var(--blue); cursor:pointer; font-weight:650; }
+ul { margin:8px 0; padding-inline-start:24px; }
+footer { color:var(--muted); font-size:.88rem; padding-block:3px 12px; }
+@media(max-width:650px) { .wrap{width:calc(100% - 24px)} .hero{padding-block:23px 26px} .top{padding-block:10px} }
+@media print { :root{background:#fff;font-size:11pt} .wrap{width:100%} header{background:#fff;color:#111;border:0} .hero p,.feature-nav a{color:#111} pre{color:#111;background:#f2f2f2} .lang,.control-row{display:none} .step{border:0;padding:6px 0} .preview{max-height:none} }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <span class="brand" dir="ltr">Tatwerat ZATCA JS</span>
+      <div class="lang" role="group" aria-label="Language / اللغة">
+        <button type="button" data-switch-lang="ar" lang="ar" aria-pressed="false">العربية</button>
+        <button type="button" data-switch-lang="en" lang="en" aria-pressed="true">English</button>
+      </div>
+    </div>
+    <div class="hero">
+      <h1 data-lang="ar">دليل وظائف ZATCA JS</h1>
+      <h1 data-lang="en">ZATCA JS developer reference</h1>
+      <p data-lang="ar">اختار الوظيفة اللي يحتاجها تطبيقك. تقدر تبدأ من بيانات الفاتورة، أو XML جاهز، أو حمولة QR موجودة.</p>
+      <p data-lang="en">Choose the operation your application needs. Start with invoice data, ready XML, or an existing QR payload.</p>
+      <nav class="feature-nav" aria-label="Guide sections / أقسام الدليل">
+        <a href="#manual"><span data-lang="ar">خطوات الاستخدام</span><span data-lang="en">Manual</span></a>
+        <a href="#functions"><span data-lang="ar">مرجع الدوال</span><span data-lang="en">API Reference</span></a>
+      </nav>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <div id="manual" class="manual-heading">
+    <h2 data-lang="ar">خطوات الاستخدام</h2>
+    <h2 data-lang="en">Manual</h2>
+    <nav class="reference-nav" aria-label="Manual examples / أمثلة الاستخدام">
+      <a href="#input"><span data-lang="ar">خطوات الفاتورة</span><span data-lang="en">Invoice walkthrough</span></a>
+      <a href="#qr"><span data-lang="ar">مثال عرض QR</span><span data-lang="en">QR display example</span></a>
+    </nav>
+  </div>
+  <section class="step stack" id="input">
+    <p class="muted"><span data-lang="ar">مثال اختياري لربط الدوال معًا</span><span data-lang="en">Optional example that combines several operations</span></p>
+    <div class="chapter"><bdi>01</bdi><h2 data-lang="ar">ابدأ ببيانات الفاتورة</h2><h2 data-lang="en">Start with the invoice object</h2></div>
+    <p data-lang="ar"><code>invoice</code> هو object فيه بيانات الفاتورة. ممكن يكون من فورم، أو حالة التطبيق، أو أي مصدر بيانات عندك. اختار نوع الفاتورة وشوف مثال كامل للـobject اللي هتمرّره للدالة.</p>
+    <p data-lang="en"><code>invoice</code> is an object containing the invoice data. It can come from a form, application state or any data source. Pick the invoice type to see the full object you pass to the function.</p>
+    <div class="control-row" role="group" aria-label="Invoice profile / نوع الفاتورة">
+      <button type="button" data-profile="simplified" aria-pressed="true"><span data-lang="ar">مبسطة B2C</span><span data-lang="en">Simplified B2C</span></button>
+      <button type="button" data-profile="standard" aria-pressed="false"><span data-lang="ar">قياسية B2B</span><span data-lang="en">Standard B2B</span></button>
+    </div>
+    <details open>
+      <summary><span data-lang="ar">مثال كامل لـinvoice</span><span data-lang="en">Full invoice object example</span></summary>
+      <pre id="json" class="preview" aria-label="Invoice object example"></pre>
+    </details>
+  </section>
+
+  <section class="step stack" id="generate">
+    <div class="chapter"><bdi>02</bdi><h2 data-lang="ar">مرّر الـobject واستلم XML</h2><h2 data-lang="en">Pass the object and get XML back</h2></div>
+    <p data-lang="ar"><code>generateXml()</code> تأخذ object واحد وترجع <code>string</code>. <code>chainLink</code> يأتي من خادمك، وفيه عدّاد الفاتورة وهاش الفاتورة السابقة لنفس الجهاز.</p>
+    <p data-lang="en"><code>generateXml()</code> takes one object and returns a string. Your server supplies <code>chainLink</code> with the invoice counter and previous invoice hash for the device.</p>
+    <pre id="generate-code">import { generateXml } from '../../src/server/invoicing.js';
+
+const draftXml = generateXml({ ...invoice, ...chainLink });</pre>
+    <details>
+      <summary><span data-lang="ar">شوف نص XML الناتج من العينة</span><span data-lang="en">See the XML string from this sample</span></summary>
+      <pre id="xml" class="preview"></pre>
+    </details>
+  </section>
+
+  <section class="step stack" id="submit">
+    <div class="chapter"><bdi>03</bdi><h2 data-lang="ar">احسب الهاش وأرسل الـXML نفسه</h2><h2 data-lang="en">Hash the XML and send that same string</h2></div>
+    <p data-lang="ar" data-profile-only="simplified">للمبسطة، مرّر <code>draftXml</code> لمزوّد التوقيع عشان يرجع XML موقّع وفيه QR المرحلة الثانية. احسب الهاش من النص اللي رجع، ثم ابعت النص والهاش معًا إلى <code>reportXml()</code>.</p>
+    <p data-lang="en" data-profile-only="simplified">For a simplified invoice, pass <code>draftXml</code> to your signer. It returns signed XML with the Phase 2 QR. Hash the returned string and pass that string and its hash to <code>reportXml()</code>.</p>
+    <p data-lang="ar" data-profile-only="standard" hidden>للقياسية، احسب هاش <code>draftXml</code> بعد تجهيز المستند، ومرّر النص نفسه والهاش إلى <code>clearXml()</code>. عند القبول، زاتكا ترجع XML التخليص.</p>
+    <p data-lang="en" data-profile-only="standard" hidden>For a standard invoice, hash <code>draftXml</code> after preparing it and pass the same string and its hash to <code>clearXml()</code>. On acceptance, ZATCA returns the cleared XML.</p>
+    <pre id="submit-code"></pre>
+    <button type="button" data-copy="submit-code"><span data-lang="ar">نسخ كود الإرسال</span><span data-lang="en">Copy submission code</span></button>
+    <p data-lang="ar">اقرأ <code>result.status</code>. المثال يعرض نتيجة قبول. التفاصيل في <code>diagnostics</code> وحالة HTTP في <code>metadata.httpStatus</code>.</p>
+    <p data-lang="en">Read <code>result.status</code>. This is an example of an accepted result. See <code>diagnostics</code> for validation details and <code>metadata.httpStatus</code> for the HTTP status.</p>
+    <pre id="result"></pre>
+    <p data-lang="ar" data-profile-only="standard" hidden>الـXML الراجع كنص في الذاكرة هو <code>Buffer.from(result.clearedInvoiceBase64, 'base64').toString('utf8')</code> بعد التأكد من أن الحالة <code>cleared</code>.</p>
+    <p data-lang="en" data-profile-only="standard" hidden>After checking for <code>cleared</code>, get the returned XML string with <code>Buffer.from(result.clearedInvoiceBase64, 'base64').toString('utf8')</code>.</p>
+  </section>
+
+  <section class="step stack" id="settings">
+    <h2 data-lang="ar">إعداد الإرسال مرة واحدة على الخادم</h2><h2 data-lang="en">Configure submission once on your server</h2>
+    <p data-lang="ar"><code>createInvoicing()</code> تهيّئ عميل الإرسال. خذ شهادة الإصدار <code>csid</code> من تهيئة جهازك في زاتكا. فيها <code>requestId</code> و<code>binarySecurityToken</code> و<code>secret</code>، ومع شهادة اختبار تكون <code>environment: 'sandbox'</code> و<code>kind: 'production'</code>. <code>xmllintPath</code> مسار أداة الهاش على الخادم، و<code>signSimplified</code> دالة التوقيع التي يوفّرها تطبيقك.</p>
+    <p data-lang="en"><code>createInvoicing()</code> sets up the submission client. Use the issuance <code>csid</code> obtained when onboarding your device. It contains <code>requestId</code>, <code>binarySecurityToken</code> and <code>secret</code>. A Sandbox issuance CSID has <code>environment: 'sandbox'</code> and <code>kind: 'production'</code>. <code>xmllintPath</code> points to the server canonicalizer, and your application provides <code>signSimplified</code>.</p>
+    <pre>import { createInvoicing } from '../../src/server/invoicing.js';
+
+const invoicing = createInvoicing({ environment: 'sandbox', csid });</pre>
+    <p data-lang="ar">لو الـXML والهاش جاهزين بالفعل، ابدأ من <code>reportXml({ xml, invoiceHash })</code> للمبسطة الموقّعة أو <code>clearXml({ xml, invoiceHash })</code> للقياسية.</p>
+    <p data-lang="en">If you already have the XML and hash, start with <code>reportXml({ xml, invoiceHash })</code> for a signed simplified invoice or <code>clearXml({ xml, invoiceHash })</code> for a standard invoice.</p>
+    <p class="notice" data-lang="ar">وظائف الفواتير دي موجودة في كود Node داخل المستودع. التوقيع الفعلي للمبسطة يأتي من مزوّد خارجي. حزمة npm الحالية تعرض وظائف QR.</p>
+    <p class="notice" data-lang="en">These invoice functions live in the repository's Node source. An external signer provides the simplified invoice signature. The current npm package exposes QR functions.</p>
+  </section>
+  <section class="step stack" id="qr">
+    <h2 data-lang="ar">QR فقط — من بيانات الفاتورة لصورة في الصفحة</h2>
+    <h2 data-lang="en">QR only — from invoice fields to an image on the page</h2>
+    <p data-lang="ar">المثال التالي لنسخة التطوير <code>2.0.0-dev.0</code> بعد تثبيت ملف الحزمة المحلي. تقدر تنفّذه في تطبيق متصفح. مرّر بيانات الفاتورة كـobject، وحطّ رابط الصورة الناتج في <code>src</code> للـ<code>&lt;img&gt;</code>.</p>
+    <p data-lang="en">Use the following browser example after installing the local <code>2.0.0-dev.0</code> tarball. Pass the invoice fields as an object, then assign the returned image URL to the <code>&lt;img&gt;</code> element's <code>src</code>.</p>
+    <pre><code>&lt;img id="invoice-qr" alt="Invoice QR" width="180" height="180"&gt;</code></pre>
+    <pre id="qr-browser-code">import { encodeQrTlv, encodeBase64 } from 'zatca/qr';
+import { qrToDataUrl } from 'zatca/qr/render';
+
+const fields = {
+  sellerName: 'شركة مدار التجريبية',
+  vatNumber: '300000000000003',
+  issuedAt: '2026-11-03T15:30:00+03:00',
+  invoiceTotal: '230.00',
+  vatTotal: '30.00',
+};
+
+const tlv = encodeQrTlv(fields);       // Uint8Array
+const base64 = encodeBase64(tlv);      // string
+const imageUrl = await qrToDataUrl(base64, { width: 320 });
+
+document.querySelector('#invoice-qr').src = imageUrl;</pre>
+    <button type="button" data-copy="qr-browser-code"><span data-lang="ar">نسخ كود العرض</span><span data-lang="en">Copy display code</span></button>
+    <p data-lang="ar">لو محتاج Base64 فقط، استدعِ <code>encodeQrBase64(fields)</code> من <code>zatca/qr</code> مباشرة. لقراءة الحقول استخدم <code>decodeQrBase64(base64)</code>، وللفحص استخدم <code>validateQrPayload(base64)</code>. في React أو Vue استخدم نفس <code>imageUrl</code> كقيمة <code>src</code>.</p>
+    <p data-lang="en">For Base64 alone, call <code>encodeQrBase64(fields)</code> from <code>zatca/qr</code> directly. Use <code>decodeQrBase64(base64)</code> to read the fields and <code>validateQrPayload(base64)</code> to validate the payload. In React or Vue, bind the same <code>imageUrl</code> to <code>src</code>.</p>
+    <div class="qr-preview">
+      <img src="data:image/png;base64,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" alt="Phase 1 example QR" width="144" height="144">
+      <div>
+        <strong data-lang="ar">ده شكل الرمز الناتج من بيانات المثال</strong>
+        <strong data-lang="en">QR rendered from the sample fields above</strong>
+        <p class="muted" data-lang="ar">QR المرحلة الأولى يستخدم الحقول الخمسة المعروضة في الكود.</p>
+        <p class="muted" data-lang="en">This Phase 1 QR uses the five fields in the code.</p>
+      </div>
+    </div>
+
+    <details>
+      <summary><span data-lang="ar">مثال npm المنشور حاليًا · zatca@1.0.2</span><span data-lang="en">Current npm release · zatca@1.0.2</span></summary>
+      <p data-lang="ar">في الإصدار المنشور، ولّد البيانات والصورة على Node.js. لو هتعرض الصورة في موقعك، رجّع <code>imageUrl</code> للواجهة واستخدمها كقيمة <code>src</code>.</p>
+      <p data-lang="en">In the published release, generate the data and image on Node.js. To show it on your website, return <code>imageUrl</code> to the frontend and assign it to <code>src</code>.</p>
+      <pre>npm install zatca@1.0.2 qrcode@1.5.4</pre>
+      <pre id="qr-node-code">const { GenerateQrCode } = require('zatca');
+
+async function generateInvoiceQr() {
+  const qr = new GenerateQrCode(
+    'Example Store',
+    '300000000000003',
+    '2026-11-03T12:30:00.000Z',
+    230,
+    30,
+  );
+
+  return {
+    tlv: await qr.getTLV(),        // Buffer
+    base64: await qr.toBase64(),   // string
+    imageUrl: await qr.render(),  // PNG data URL
+  };
+}</pre>
+      <button type="button" data-copy="qr-node-code"><span data-lang="ar">نسخ كود Node.js</span><span data-lang="en">Copy Node.js code</span></button>
+    </details>
+  </section>
+  <section class="step stack" id="functions">
+    <h2 data-lang="ar">مرجع الدوال</h2>
+    <h2 data-lang="en">API Reference</h2>
+    <p data-lang="ar">كل مجموعة لها استخدام مستقل. مثلًا، عرض QR يحتاج بيانات الرمز فقط، وإرسال XML جاهز يبدأ من النص والهاش وبيانات اعتماد الإرسال.</p>
+    <p data-lang="en">Use each group independently. For example, QR rendering starts with QR data, and ready-XML submission starts with the document, its hash and submission credentials.</p>
+    <p class="notice" data-lang="ar"><strong>مكان التشغيل.</strong> دوال QR في نسخة التطوير تعمل داخل React أو Vue في المتصفح، وتعمل أيضًا على Node.js. إصدار npm الحالي <code>1.0.2</code> يستخدم مولّد QR على Node.js. توليد XML والهاش والتوقيع والإرسال مسار Node على الخادم في الكود الحالي.</p>
+    <p class="notice" data-lang="en"><strong>Where the code runs.</strong> The development QR API runs in a React or Vue browser app and on Node.js. The published <code>1.0.2</code> QR generator runs on Node.js. XML generation, hashing, signing and submission are server-side in the current source.</p>
+    <details id="function-reference" open>
+      <summary><span data-lang="ar">تصفّح الدوال حسب المجموعة</span><span data-lang="en">Browse functions by group</span></summary>
+      <nav class="reference-nav" aria-label="API reference sections / أقسام مرجع الدوال">
+        <a href="#published-qr"><span data-lang="ar">npm المنشور</span><span data-lang="en">Published npm</span></a>
+        <a href="#qr-payload"><span data-lang="ar">حمولة QR</span><span data-lang="en">QR data</span></a>
+        <a href="#qr-images"><span data-lang="ar">صور QR</span><span data-lang="en">QR images</span></a>
+        <a href="#xml-tools"><span data-lang="ar">XML والهاش</span><span data-lang="en">XML and hash</span></a>
+        <a href="#onboarding"><span data-lang="ar">الشهادات</span><span data-lang="en">Certificates</span></a>
+        <a href="#ready-xml"><span data-lang="ar">الإرسال</span><span data-lang="en">Submission</span></a>
+      </nav>
+    <div class="reference-group" id="published-qr">
+      <div class="reference-heading">
+        <h3 data-lang="ar">مولّد QR المنشور على npm</h3><h3 data-lang="en">Published npm QR generator</h3>
+        <span class="reference-scope" data-lang="ar">npm المنشور</span><span class="reference-scope" data-lang="en">Published npm</span>
+        <p class="muted" data-lang="ar"><code>zatca@1.0.2</code> · Node.js · مثال العرض تحت قسم QR.</p><p class="muted" data-lang="en"><code>zatca@1.0.2</code> · Node.js · see the display example in the QR section.</p>
+      </div>
+      <dl class="feature-list">
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>new GenerateQrCode</b>(name, vat, time, total, tax)</code></dt><dd data-lang="ar">يجهّز بيانات QR للمرحلة الأولى من خمس قيم.</dd><dd data-lang="en">Creates a Phase 1 QR generator from five values.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>qr.getTLV</b>()</code></dt><dd data-lang="ar">ترجّع بايتات TLV في Node.js Buffer.</dd><dd data-lang="en">Returns TLV bytes as a Node.js Buffer.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>qr.toBase64</b>()</code></dt><dd data-lang="ar">ترجّع حمولة QR كنص Base64.</dd><dd data-lang="en">Returns the QR payload as a Base64 string.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>qr.render</b>()</code></dt><dd data-lang="ar">ترجّع رابط بيانات لصورة PNG تقدر تعرضه في src.</dd><dd data-lang="en">Returns a PNG data URL for an image src.</dd></div>
+      </dl>
+    </div>
+    <div class="reference-group" id="qr-payload">
+      <div class="reference-heading">
+        <h3 data-lang="ar">توليد وقراءة وفحص QR</h3><h3 data-lang="en">Generate, decode and validate QR</h3>
+        <span class="reference-scope" data-lang="ar">نسخة التطوير</span><span class="reference-scope" data-lang="en">Development build</span>
+        <p class="muted" data-lang="ar"><code>zatca/qr</code> · المتصفح وNode.js</p><p class="muted" data-lang="en"><code>zatca/qr</code> · Browser and Node.js</p>
+      </div>
+      <dl class="feature-list">
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>encodeQrTlv</b>(fields)</code></dt><dd data-lang="ar">يحوّل بيانات الفاتورة إلى بايتات TLV.</dd><dd data-lang="en">Encodes invoice fields as TLV bytes.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>encodeQrBase64</b>(fields)</code></dt><dd data-lang="ar">يحوّل بيانات الفاتورة إلى نص Base64.</dd><dd data-lang="en">Encodes invoice fields as a Base64 string.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>decodeQrTlv</b>(bytes, options?)</code><code class="feature-signature"><b>decodeQrBase64</b>(base64, options?)</code></dt><dd data-lang="ar">اقرأ الحقول والوسوم ونتائج الفحص من حمولة جاهزة.</dd><dd data-lang="en">Read fields, tags and validation results from an existing payload.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>validateQrPayload</b>(payload, options?)</code></dt><dd data-lang="ar">افحص حمولة المرحلة الأولى بصيغة Base64 أو بايتات TLV.</dd><dd data-lang="en">Validate a Phase 1 Base64 or TLV payload.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>inspectPhase2Qr</b>(payload, invoiceType)</code></dt><dd data-lang="ar">يفحص البنية والوسوم لحمولة مرحلة ثانية موجودة. حدّد standard أو simplified. الفحص تجريبي وبنيوي فقط.</dd><dd data-lang="en">Experimental structural inspection of an existing Phase 2 payload. Set standard or simplified.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>encodeBase64</b></code><code class="feature-signature"><b>decodeBase64</b></code><code class="feature-signature"><b>encodeUtf8</b></code><code class="feature-signature"><b>decodeUtf8</b></code></dt><dd data-lang="ar">أدوات تحويل عامة بين النص والبايتات.</dd><dd data-lang="en">General-purpose helpers for converting between text and bytes.</dd></div>
+      </dl>
+    </div>
+    <div class="reference-group" id="qr-images">
+      <div class="reference-heading">
+        <h3 data-lang="ar">تحويل حمولة QR إلى صورة</h3><h3 data-lang="en">Render a QR payload as an image</h3>
+        <span class="reference-scope" data-lang="ar">نسخة التطوير</span><span class="reference-scope" data-lang="en">Development build</span>
+        <p class="muted" data-lang="ar"><code>zatca/qr/render</code> · المتصفح وNode.js</p><p class="muted" data-lang="en"><code>zatca/qr/render</code> · Browser and Node.js</p>
+      </div>
+      <dl class="feature-list">
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>qrToDataUrl</b>(base64, options?)</code></dt><dd data-lang="ar">رابط صورة PNG افتراضيًا، أو SVG لو حدّدت format. استخدمه في src.</dd><dd data-lang="en">PNG data URL by default, or SVG when you set the format. Use it as src.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>qrToPngBytes</b>(base64, options?)</code></dt><dd data-lang="ar">بايتات صورة PNG لما تحتاج تتعامل مع الصورة كملف أو بيانات.</dd><dd data-lang="en">PNG bytes for file or binary handling.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>qrToSvg</b>(base64, options?)</code></dt><dd data-lang="ar">نص SVG جاهز من الحمولة.</dd><dd data-lang="en">SVG markup from the supplied payload.</dd></div>
+      </dl>
+    </div>
+    <div class="reference-group" id="xml-tools">
+      <div class="reference-heading">
+        <h3 data-lang="ar">الحساب وملفات XML</h3><h3 data-lang="en">Calculation and XML</h3>
+        <span class="reference-scope" data-lang="ar">واجهة داخلية</span><span class="reference-scope" data-lang="en">Internal API</span>
+        <p class="muted" data-lang="ar"><code>src/xml/index.ts</code> و<code>src/server/invoicing.ts</code> · Node.js</p><p class="muted" data-lang="en"><code>src/xml/index.ts</code> and <code>src/server/invoicing.ts</code> · Node.js</p>
+      </div>
+      <dl class="feature-list">
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>calculateInvoice</b>(invoiceDraft)</code></dt><dd data-lang="ar">احسب الإجماليات والضريبة وملخص الفئات الضريبية.</dd><dd data-lang="en">Compute totals, VAT and the tax-category breakdown.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>buildInvoiceXml</b>(invoiceDraft)</code><code class="feature-signature"><b>generateXml</b>(invoiceDraft)</code></dt><dd data-lang="ar">ولّد مسودة UBL غير موقّعة لفاتورة أو إشعار دائن أو مدين. المولّد الحالي يغطي مسودات محلية بالريال.</dd><dd data-lang="en">Generate an unsigned UBL invoice, credit note or debit note. The current builder covers local SAR drafts.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>parseInvoiceXml</b>(xml)</code></dt><dd data-lang="ar">يقرأ رؤوس الفاتورة والإجماليات.</dd><dd data-lang="en">Reads invoice headers and totals.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>validateInvoiceXml</b>(xml)</code></dt><dd data-lang="ar">يفحص بنية XML محليًا.</dd><dd data-lang="en">Validates the XML structure locally.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>hashInvoiceXml</b>(xml, xmllintPath)</code></dt><dd data-lang="ar">احسب هاش الفاتورة المرجعي بصيغة Base64.</dd><dd data-lang="en">Compute the canonical invoice digest as Base64.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>initialPreviousInvoiceHash</b></code><code class="feature-signature"><b>appendInvoice</b>(store, scope, request, prepare)</code></dt><dd data-lang="ar">استخدم الهاش الابتدائي لجهاز جديد، أو خزّن المستند والهاش في سلسلة جهاز يديرها تطبيقك.</dd><dd data-lang="en">Use the initial hash for a new device, or record a document and digest in a host-managed device chain.</dd></div>
+      </dl>
+    </div>
+    <div class="reference-group" id="onboarding">
+      <div class="reference-heading">
+        <h3 data-lang="ar">تهيئة الجهاز والشهادات</h3><h3 data-lang="en">Device onboarding and certificates</h3>
+        <span class="reference-scope" data-lang="ar">واجهة داخلية</span><span class="reference-scope" data-lang="en">Internal API</span>
+        <p class="muted" data-lang="ar"><code>createZatcaApi</code> من <code>src/api/client.ts</code> · Node.js</p><p class="muted" data-lang="en"><code>createZatcaApi</code> from <code>src/api/client.ts</code> · Node.js</p>
+      </div>
+      <dl class="feature-list">
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>requestComplianceCsid</b>(csr, otp)</code></dt><dd data-lang="ar">اطلب شهادة الامتثال باستخدام CSR جاهز وOTP.</dd><dd data-lang="en">Request a compliance CSID with a prepared CSR and OTP.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>checkCompliance</b>({ xml, invoiceHash }, complianceCsid)</code></dt><dd data-lang="ar">أرسل مستندًا جاهزًا لفحص الامتثال.</dd><dd data-lang="en">Submit a prepared document for a compliance check.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>requestProductionCsid</b>(complianceCsid)</code></dt><dd data-lang="ar">اطلب شهادة الإصدار بعد خطوات الامتثال.</dd><dd data-lang="en">Request the issuance CSID after the compliance steps.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>renewProductionCsid</b>(currentCsid, csr, otp)</code></dt><dd data-lang="ar">اطلب تجديد شهادة الإصدار.</dd><dd data-lang="en">Request renewal of an issuance CSID.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>getCsidExpiry</b>(csid)</code></dt><dd data-lang="ar">يقرأ تاريخ انتهاء شهادة CSID.</dd><dd data-lang="en">Reads the CSID certificate expiry date.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>checkCertificateLocally</b>(certificate, publicKey, at)</code></dt><dd data-lang="ar">يفحص تاريخ الشهادة ومطابقة مفتاحها محليًا.</dd><dd data-lang="en">Checks certificate dates and public-key binding locally.</dd></div>
+      </dl>
+    </div>
+    <div class="reference-group" id="ready-xml">
+      <div class="reference-heading">
+        <h3 data-lang="ar">إرسال XML جاهز أو ربط الإصدار كله</h3><h3 data-lang="en">Submit ready XML or combine issuance steps</h3>
+        <span class="reference-scope" data-lang="ar">واجهة داخلية</span><span class="reference-scope" data-lang="en">Internal API</span>
+        <p class="muted" data-lang="ar"><code>createInvoicing</code> من <code>src/server/invoicing.ts</code> · Node.js</p><p class="muted" data-lang="en"><code>createInvoicing</code> from <code>src/server/invoicing.ts</code> · Node.js</p>
+      </div>
+      <dl class="feature-list">
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>reportXml</b>({ xml, invoiceHash })</code></dt><dd data-lang="ar">أبلغ عن فاتورة مبسطة موقّعة بالفعل، واقرأ الحالة والتشخيصات.</dd><dd data-lang="en">Report a signed simplified invoice and read its status and diagnostics.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>clearXml</b>({ xml, invoiceHash })</code></dt><dd data-lang="ar">اطلب تخليص فاتورة قياسية. عند نجاحها يتاح XML المرجع.</dd><dd data-lang="en">Request clearance for a standard invoice and receive cleared XML on success.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>generatePhase1Qr</b>(fields)</code></dt><dd data-lang="ar">اسم بديل لـ<code>encodeQrBase64</code> في واجهة المصدر الداخلية.</dd><dd data-lang="en">Alias for <code>encodeQrBase64</code> on the internal source entry.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>issueInvoice</b>(invoice, issuanceId)</code></dt><dd data-lang="ar">اختياري. يجمع توليد XML والهاش والإرسال مع مخزن التطبيق. في المبسطة يستدعي مزوّد التوقيع الخاص بالتطبيق.</dd><dd data-lang="en">Optional. Combines XML generation, hashing and submission with your store. Uses your signer for simplified invoices.</dd></div>
+      </dl>
+    </div>
+    </details>
+    <p class="notice" data-lang="ar">التوقيع وإنشاء CSR وتوليد QR المرحلة الثانية تحتاج أدوات أو مزوّدين خارجيين. النسخة الحالية توفر فحص بنية QR المرحلة الثانية داخل نسخة التطوير.</p>
+    <p class="notice" data-lang="en">Signing, CSR creation and Phase 2 QR generation use external tools or providers. The development build offers structural inspection of Phase 2 QR payloads.</p>
+  </section>
+</main>
+<script id="samples" type="application/json">{"simplified":{"invoice":{"kind":"simplified","documentKind":"invoice","id":"INV-1001","uuid":"a2e8e2b6-858c-4c16-bca8-ec820b12adcb","issuedAt":"2026-11-03T10:30:00+03:00","supplyDate":"2026-11-03","currency":"SAR","seller":{"name":"شركة مدار التجريبية","vatNumber":"300000000000003","registrationId":"1234567890","address":{"street":"شارع التجربة","buildingNumber":"1234","district":"حي الاختبار","city":"الرياض","postalCode":"12345","country":"SA"}},"buyer":{"name":"شركة العميل التجريبية","address":{"street":"شارع العميل","buildingNumber":"2345","district":"حي الاختبار","city":"الرياض","postalCode":"12345","country":"SA"}},"paymentMeansCode":"30","lines":[{"id":"1","name":"خدمة تجريبية","quantity":"2","unitCode":"PCE","unitPrice":"100.00","tax":{"category":"S"}}]},"xml":"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48SW52b2ljZSB4bWxucz0idXJuOm9hc2lzOm5hbWVzOnNwZWNpZmljYXRpb246dWJsOnNjaGVtYTp4c2Q6SW52b2ljZS0yIiB4bWxuczpjYWM9InVybjpvYXNpczpuYW1lczpzcGVjaWZpY2F0aW9uOnVibDpzY2hlbWE6eHNkOkNvbW1vbkFnZ3JlZ2F0ZUNvbXBvbmVudHMtMiIgeG1sbnM6Y2JjPSJ1cm46b2FzaXM6bmFtZXM6c3BlY2lmaWNhdGlvbjp1Ymw6c2NoZW1hOnhzZDpDb21tb25CYXNpY0NvbXBvbmVudHMtMiI+PGNiYzpQcm9maWxlSUQ+cmVwb3J0aW5nOjEuMDwvY2JjOlByb2ZpbGVJRD48Y2JjOklEPklOVi0xMDAxPC9jYmM6SUQ+PGNiYzpVVUlEPmEyZThlMmI2LTg1OGMtNGMxNi1iY2E4LWVjODIwYjEyYWRjYjwvY2JjOlVVSUQ+PGNiYzpJc3N1ZURhdGU+MjAyNi0xMS0wMzwvY2JjOklzc3VlRGF0ZT48Y2JjOklzc3VlVGltZT4xMDozMDowMDwvY2JjOklzc3VlVGltZT48Y2JjOkludm9pY2VUeXBlQ29kZSBuYW1lPSIwMjAwMDAwIj4zODg8L2NiYzpJbnZvaWNlVHlwZUNvZGU+PGNiYzpEb2N1bWVudEN1cnJlbmN5Q29kZT5TQVI8L2NiYzpEb2N1bWVudEN1cnJlbmN5Q29kZT48Y2JjOlRheEN1cnJlbmN5Q29kZT5TQVI8L2NiYzpUYXhDdXJyZW5jeUNvZGU+PGNhYzpBZGRpdGlvbmFsRG9jdW1lbnRSZWZlcmVuY2U+PGNiYzpJRD5JQ1Y8L2NiYzpJRD48Y2JjOlVVSUQ+MTwvY2JjOlVVSUQ+PC9jYWM6QWRkaXRpb25hbERvY3VtZW50UmVmZXJlbmNlPjxjYWM6QWRkaXRpb25hbERvY3VtZW50UmVmZXJlbmNlPjxjYmM6SUQ+UElIPC9jYmM6SUQ+PGNhYzpBdHRhY2htZW50PjxjYmM6RW1iZWRkZWREb2N1bWVudEJpbmFyeU9iamVjdCBtaW1lQ29kZT0idGV4dC9wbGFpbiI+TldabFkyVmlOalptWm1NNE5tWXpPR1E1TlRJM09EWmpObVEyT1Raak56bGpNbVJpWXpJek9XUmtOR1U1TVdJME5qY3lPV1EzTTJFeU4yWmlOVGRsT1E9PTwvY2JjOkVtYmVkZGVkRG9jdW1lbnRCaW5hcnlPYmplY3Q+PC9jYWM6QXR0YWNobWVudD48L2NhYzpBZGRpdGlvbmFsRG9jdW1lbnRSZWZlcmVuY2U+PGNhYzpBY2NvdW50aW5nU3VwcGxpZXJQYXJ0eT48Y2FjOlBhcnR5PjxjYWM6UGFydHlJZGVudGlmaWNhdGlvbj48Y2JjOklEIHNjaGVtZUlEPSJDUk4iPjEyMzQ1Njc4OTA8L2NiYzpJRD48L2NhYzpQYXJ0eUlkZW50aWZpY2F0aW9uPjxjYWM6UG9zdGFsQWRkcmVzcz48Y2JjOlN0cmVldE5hbWU+2LTYp9ix2Lkg2KfZhNiq2KzYsdio2Kk8L2NiYzpTdHJlZXROYW1lPjxjYmM6QnVpbGRpbmdOdW1iZXI+MTIzNDwvY2JjOkJ1aWxkaW5nTnVtYmVyPjxjYmM6Q2l0eVN1YmRpdmlzaW9uTmFtZT7YrdmKINin2YTYp9iu2KrYqNin2LE8L2NiYzpDaXR5U3ViZGl2aXNpb25OYW1lPjxjYmM6Q2l0eU5hbWU+2KfZhNix2YrYp9i2PC9jYmM6Q2l0eU5hbWU+PGNiYzpQb3N0YWxab25lPjEyMzQ1PC9jYmM6UG9zdGFsWm9uZT48Y2FjOkNvdW50cnk+PGNiYzpJZGVudGlmaWNhdGlvbkNvZGU+U0E8L2NiYzpJZGVudGlmaWNhdGlvbkNvZGU+PC9jYWM6Q291bnRyeT48L2NhYzpQb3N0YWxBZGRyZXNzPjxjYWM6UGFydHlUYXhTY2hlbWU+PGNiYzpDb21wYW55SUQ+MzAwMDAwMDAwMDAwMDAzPC9jYmM6Q29tcGFueUlEPjxjYWM6VGF4U2NoZW1lPjxjYmM6SUQ+VkFUPC9jYmM6SUQ+PC9jYWM6VGF4U2NoZW1lPjwvY2FjOlBhcnR5VGF4U2NoZW1lPjxjYWM6UGFydHlMZWdhbEVudGl0eT48Y2JjOlJlZ2lzdHJhdGlvbk5hbWU+2LTYsdmD2Kkg2YXYr9in2LEg2KfZhNiq2KzYsdmK2KjZitipPC9jYmM6UmVnaXN0cmF0aW9uTmFtZT48L2NhYzpQYXJ0eUxlZ2FsRW50aXR5PjwvY2FjOlBhcnR5PjwvY2FjOkFjY291bnRpbmdTdXBwbGllclBhcnR5PjxjYWM6QWNjb3VudGluZ0N1c3RvbWVyUGFydHk+PGNhYzpQYXJ0eT48Y2FjOlBvc3RhbEFkZHJlc3M+PGNiYzpTdHJlZXROYW1lPti02KfYsdi5INin2YTYudmF2YrZhDwvY2JjOlN0cmVldE5hbWU+PGNiYzpCdWlsZGluZ051bWJlcj4yMzQ1PC9jYmM6QnVpbGRpbmdOdW1iZXI+PGNiYzpDaXR5U3ViZGl2aXNpb25OYW1lPtit2Yog2KfZhNin2K7Yqtio2KfYsTwvY2JjOkNpdHlTdWJkaXZpc2lvbk5hbWU+PGNiYzpDaXR5TmFtZT7Yp9mE2LHZitin2LY8L2NiYzpDaXR5TmFtZT48Y2JjOlBvc3RhbFpvbmU+MTIzNDU8L2NiYzpQb3N0YWxab25lPjxjYWM6Q291bnRyeT48Y2JjOklkZW50aWZpY2F0aW9uQ29kZT5TQTwvY2JjOklkZW50aWZpY2F0aW9uQ29kZT48L2NhYzpDb3VudHJ5PjwvY2FjOlBvc3RhbEFkZHJlc3M+PGNhYzpQYXJ0eUxlZ2FsRW50aXR5PjxjYmM6UmVnaXN0cmF0aW9uTmFtZT7YtNix2YPYqSDYp9mE2LnZhdmK2YQg2KfZhNiq2KzYsdmK2KjZitipPC9jYmM6UmVnaXN0cmF0aW9uTmFtZT48L2NhYzpQYXJ0eUxlZ2FsRW50aXR5PjwvY2FjOlBhcnR5PjwvY2FjOkFjY291bnRpbmdDdXN0b21lclBhcnR5PjxjYWM6RGVsaXZlcnk+PGNiYzpBY3R1YWxEZWxpdmVyeURhdGU+MjAyNi0xMS0wMzwvY2JjOkFjdHVhbERlbGl2ZXJ5RGF0ZT48L2NhYzpEZWxpdmVyeT48Y2FjOlBheW1lbnRNZWFucz48Y2JjOlBheW1lbnRNZWFuc0NvZGU+MzA8L2NiYzpQYXltZW50TWVhbnNDb2RlPjwvY2FjOlBheW1lbnRNZWFucz48Y2FjOlRheFRvdGFsPjxjYmM6VGF4QW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MzAuMDA8L2NiYzpUYXhBbW91bnQ+PC9jYWM6VGF4VG90YWw+PGNhYzpUYXhUb3RhbD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjxjYWM6VGF4U3VidG90YWw+PGNiYzpUYXhhYmxlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjAwLjAwPC9jYmM6VGF4YWJsZUFtb3VudD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjxjYWM6VGF4Q2F0ZWdvcnk+PGNiYzpJRD5TPC9jYmM6SUQ+PGNiYzpQZXJjZW50PjE1PC9jYmM6UGVyY2VudD48Y2FjOlRheFNjaGVtZT48Y2JjOklEPlZBVDwvY2JjOklEPjwvY2FjOlRheFNjaGVtZT48L2NhYzpUYXhDYXRlZ29yeT48L2NhYzpUYXhTdWJ0b3RhbD48L2NhYzpUYXhUb3RhbD48Y2FjOkxlZ2FsTW9uZXRhcnlUb3RhbD48Y2JjOkxpbmVFeHRlbnNpb25BbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMDAuMDA8L2NiYzpMaW5lRXh0ZW5zaW9uQW1vdW50PjxjYmM6VGF4RXhjbHVzaXZlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjAwLjAwPC9jYmM6VGF4RXhjbHVzaXZlQW1vdW50PjxjYmM6VGF4SW5jbHVzaXZlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjMwLjAwPC9jYmM6VGF4SW5jbHVzaXZlQW1vdW50PjxjYmM6UGF5YWJsZUFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIzMC4wMDwvY2JjOlBheWFibGVBbW91bnQ+PC9jYWM6TGVnYWxNb25ldGFyeVRvdGFsPjxjYWM6SW52b2ljZUxpbmU+PGNiYzpJRD4xPC9jYmM6SUQ+PGNiYzpJbnZvaWNlZFF1YW50aXR5IHVuaXRDb2RlPSJQQ0UiPjI8L2NiYzpJbnZvaWNlZFF1YW50aXR5PjxjYmM6TGluZUV4dGVuc2lvbkFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIwMC4wMDwvY2JjOkxpbmVFeHRlbnNpb25BbW91bnQ+PGNhYzpUYXhUb3RhbD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjxjYmM6Um91bmRpbmdBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMzAuMDA8L2NiYzpSb3VuZGluZ0Ftb3VudD48L2NhYzpUYXhUb3RhbD48Y2FjOkl0ZW0+PGNiYzpOYW1lPtiu2K/ZhdipINiq2KzYsdmK2KjZitipPC9jYmM6TmFtZT48Y2FjOkNsYXNzaWZpZWRUYXhDYXRlZ29yeT48Y2JjOklEPlM8L2NiYzpJRD48Y2JjOlBlcmNlbnQ+MTU8L2NiYzpQZXJjZW50PjxjYWM6VGF4U2NoZW1lPjxjYmM6SUQ+VkFUPC9jYmM6SUQ+PC9jYWM6VGF4U2NoZW1lPjwvY2FjOkNsYXNzaWZpZWRUYXhDYXRlZ29yeT48L2NhYzpJdGVtPjxjYWM6UHJpY2U+PGNiYzpQcmljZUFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjEwMC4wMDwvY2JjOlByaWNlQW1vdW50PjwvY2FjOlByaWNlPjwvY2FjOkludm9pY2VMaW5lPjwvSW52b2ljZT4="},"standard":{"invoice":{"kind":"standard","documentKind":"invoice","id":"INV-1001","uuid":"a2e8e2b6-858c-4c16-bca8-ec820b12adcb","issuedAt":"2026-11-03T10:30:00+03:00","supplyDate":"2026-11-03","currency":"SAR","seller":{"name":"شركة مدار التجريبية","vatNumber":"300000000000003","registrationId":"1234567890","address":{"street":"شارع التجربة","buildingNumber":"1234","district":"حي الاختبار","city":"الرياض","postalCode":"12345","country":"SA"}},"buyer":{"name":"شركة العميل التجريبية","address":{"street":"شارع العميل","buildingNumber":"2345","district":"حي الاختبار","city":"الرياض","postalCode":"12345","country":"SA"}},"paymentMeansCode":"30","lines":[{"id":"1","name":"خدمة تجريبية","quantity":"2","unitCode":"PCE","unitPrice":"100.00","tax":{"category":"S"}}]},"xml":"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48SW52b2ljZSB4bWxucz0idXJuOm9hc2lzOm5hbWVzOnNwZWNpZmljYXRpb246dWJsOnNjaGVtYTp4c2Q6SW52b2ljZS0yIiB4bWxuczpjYWM9InVybjpvYXNpczpuYW1lczpzcGVjaWZpY2F0aW9uOnVibDpzY2hlbWE6eHNkOkNvbW1vbkFnZ3JlZ2F0ZUNvbXBvbmVudHMtMiIgeG1sbnM6Y2JjPSJ1cm46b2FzaXM6bmFtZXM6c3BlY2lmaWNhdGlvbjp1Ymw6c2NoZW1hOnhzZDpDb21tb25CYXNpY0NvbXBvbmVudHMtMiI+PGNiYzpQcm9maWxlSUQ+cmVwb3J0aW5nOjEuMDwvY2JjOlByb2ZpbGVJRD48Y2JjOklEPklOVi0xMDAxPC9jYmM6SUQ+PGNiYzpVVUlEPmEyZThlMmI2LTg1OGMtNGMxNi1iY2E4LWVjODIwYjEyYWRjYjwvY2JjOlVVSUQ+PGNiYzpJc3N1ZURhdGU+MjAyNi0xMS0wMzwvY2JjOklzc3VlRGF0ZT48Y2JjOklzc3VlVGltZT4xMDozMDowMDwvY2JjOklzc3VlVGltZT48Y2JjOkludm9pY2VUeXBlQ29kZSBuYW1lPSIwMTAwMDAwIj4zODg8L2NiYzpJbnZvaWNlVHlwZUNvZGU+PGNiYzpEb2N1bWVudEN1cnJlbmN5Q29kZT5TQVI8L2NiYzpEb2N1bWVudEN1cnJlbmN5Q29kZT48Y2JjOlRheEN1cnJlbmN5Q29kZT5TQVI8L2NiYzpUYXhDdXJyZW5jeUNvZGU+PGNhYzpBZGRpdGlvbmFsRG9jdW1lbnRSZWZlcmVuY2U+PGNiYzpJRD5JQ1Y8L2NiYzpJRD48Y2JjOlVVSUQ+MTwvY2JjOlVVSUQ+PC9jYWM6QWRkaXRpb25hbERvY3VtZW50UmVmZXJlbmNlPjxjYWM6QWRkaXRpb25hbERvY3VtZW50UmVmZXJlbmNlPjxjYmM6SUQ+UElIPC9jYmM6SUQ+PGNhYzpBdHRhY2htZW50PjxjYmM6RW1iZWRkZWREb2N1bWVudEJpbmFyeU9iamVjdCBtaW1lQ29kZT0idGV4dC9wbGFpbiI+TldabFkyVmlOalptWm1NNE5tWXpPR1E1TlRJM09EWmpObVEyT1Raak56bGpNbVJpWXpJek9XUmtOR1U1TVdJME5qY3lPV1EzTTJFeU4yWmlOVGRsT1E9PTwvY2JjOkVtYmVkZGVkRG9jdW1lbnRCaW5hcnlPYmplY3Q+PC9jYWM6QXR0YWNobWVudD48L2NhYzpBZGRpdGlvbmFsRG9jdW1lbnRSZWZlcmVuY2U+PGNhYzpBY2NvdW50aW5nU3VwcGxpZXJQYXJ0eT48Y2FjOlBhcnR5PjxjYWM6UGFydHlJZGVudGlmaWNhdGlvbj48Y2JjOklEIHNjaGVtZUlEPSJDUk4iPjEyMzQ1Njc4OTA8L2NiYzpJRD48L2NhYzpQYXJ0eUlkZW50aWZpY2F0aW9uPjxjYWM6UG9zdGFsQWRkcmVzcz48Y2JjOlN0cmVldE5hbWU+2LTYp9ix2Lkg2KfZhNiq2KzYsdio2Kk8L2NiYzpTdHJlZXROYW1lPjxjYmM6QnVpbGRpbmdOdW1iZXI+MTIzNDwvY2JjOkJ1aWxkaW5nTnVtYmVyPjxjYmM6Q2l0eVN1YmRpdmlzaW9uTmFtZT7YrdmKINin2YTYp9iu2KrYqNin2LE8L2NiYzpDaXR5U3ViZGl2aXNpb25OYW1lPjxjYmM6Q2l0eU5hbWU+2KfZhNix2YrYp9i2PC9jYmM6Q2l0eU5hbWU+PGNiYzpQb3N0YWxab25lPjEyMzQ1PC9jYmM6UG9zdGFsWm9uZT48Y2FjOkNvdW50cnk+PGNiYzpJZGVudGlmaWNhdGlvbkNvZGU+U0E8L2NiYzpJZGVudGlmaWNhdGlvbkNvZGU+PC9jYWM6Q291bnRyeT48L2NhYzpQb3N0YWxBZGRyZXNzPjxjYWM6UGFydHlUYXhTY2hlbWU+PGNiYzpDb21wYW55SUQ+MzAwMDAwMDAwMDAwMDAzPC9jYmM6Q29tcGFueUlEPjxjYWM6VGF4U2NoZW1lPjxjYmM6SUQ+VkFUPC9jYmM6SUQ+PC9jYWM6VGF4U2NoZW1lPjwvY2FjOlBhcnR5VGF4U2NoZW1lPjxjYWM6UGFydHlMZWdhbEVudGl0eT48Y2JjOlJlZ2lzdHJhdGlvbk5hbWU+2LTYsdmD2Kkg2YXYr9in2LEg2KfZhNiq2KzYsdmK2KjZitipPC9jYmM6UmVnaXN0cmF0aW9uTmFtZT48L2NhYzpQYXJ0eUxlZ2FsRW50aXR5PjwvY2FjOlBhcnR5PjwvY2FjOkFjY291bnRpbmdTdXBwbGllclBhcnR5PjxjYWM6QWNjb3VudGluZ0N1c3RvbWVyUGFydHk+PGNhYzpQYXJ0eT48Y2FjOlBvc3RhbEFkZHJlc3M+PGNiYzpTdHJlZXROYW1lPti02KfYsdi5INin2YTYudmF2YrZhDwvY2JjOlN0cmVldE5hbWU+PGNiYzpCdWlsZGluZ051bWJlcj4yMzQ1PC9jYmM6QnVpbGRpbmdOdW1iZXI+PGNiYzpDaXR5U3ViZGl2aXNpb25OYW1lPtit2Yog2KfZhNin2K7Yqtio2KfYsTwvY2JjOkNpdHlTdWJkaXZpc2lvbk5hbWU+PGNiYzpDaXR5TmFtZT7Yp9mE2LHZitin2LY8L2NiYzpDaXR5TmFtZT48Y2JjOlBvc3RhbFpvbmU+MTIzNDU8L2NiYzpQb3N0YWxab25lPjxjYWM6Q291bnRyeT48Y2JjOklkZW50aWZpY2F0aW9uQ29kZT5TQTwvY2JjOklkZW50aWZpY2F0aW9uQ29kZT48L2NhYzpDb3VudHJ5PjwvY2FjOlBvc3RhbEFkZHJlc3M+PGNhYzpQYXJ0eUxlZ2FsRW50aXR5PjxjYmM6UmVnaXN0cmF0aW9uTmFtZT7YtNix2YPYqSDYp9mE2LnZhdmK2YQg2KfZhNiq2KzYsdmK2KjZitipPC9jYmM6UmVnaXN0cmF0aW9uTmFtZT48L2NhYzpQYXJ0eUxlZ2FsRW50aXR5PjwvY2FjOlBhcnR5PjwvY2FjOkFjY291bnRpbmdDdXN0b21lclBhcnR5PjxjYWM6RGVsaXZlcnk+PGNiYzpBY3R1YWxEZWxpdmVyeURhdGU+MjAyNi0xMS0wMzwvY2JjOkFjdHVhbERlbGl2ZXJ5RGF0ZT48L2NhYzpEZWxpdmVyeT48Y2FjOlBheW1lbnRNZWFucz48Y2JjOlBheW1lbnRNZWFuc0NvZGU+MzA8L2NiYzpQYXltZW50TWVhbnNDb2RlPjwvY2FjOlBheW1lbnRNZWFucz48Y2FjOlRheFRvdGFsPjxjYmM6VGF4QW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MzAuMDA8L2NiYzpUYXhBbW91bnQ+PC9jYWM6VGF4VG90YWw+PGNhYzpUYXhUb3RhbD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjxjYWM6VGF4U3VidG90YWw+PGNiYzpUYXhhYmxlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjAwLjAwPC9jYmM6VGF4YWJsZUFtb3VudD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjxjYWM6VGF4Q2F0ZWdvcnk+PGNiYzpJRD5TPC9jYmM6SUQ+PGNiYzpQZXJjZW50PjE1PC9jYmM6UGVyY2VudD48Y2FjOlRheFNjaGVtZT48Y2JjOklEPlZBVDwvY2JjOklEPjwvY2FjOlRheFNjaGVtZT48L2NhYzpUYXhDYXRlZ29yeT48L2NhYzpUYXhTdWJ0b3RhbD48L2NhYzpUYXhUb3RhbD48Y2FjOkxlZ2FsTW9uZXRhcnlUb3RhbD48Y2JjOkxpbmVFeHRlbnNpb25BbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMDAuMDA8L2NiYzpMaW5lRXh0ZW5zaW9uQW1vdW50PjxjYmM6VGF4RXhjbHVzaXZlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjAwLjAwPC9jYmM6VGF4RXhjbHVzaXZlQW1vdW50PjxjYmM6VGF4SW5jbHVzaXZlQW1vdW50IGN1cnJlbmN5SUQ9IlNBUiI+MjMwLjAwPC9jYmM6VGF4SW5jbHVzaXZlQW1vdW50PjxjYmM6UGF5YWJsZUFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIzMC4wMDwvY2JjOlBheWFibGVBbW91bnQ+PC9jYWM6TGVnYWxNb25ldGFyeVRvdGFsPjxjYWM6SW52b2ljZUxpbmU+PGNiYzpJRD4xPC9jYmM6SUQ+PGNiYzpJbnZvaWNlZFF1YW50aXR5IHVuaXRDb2RlPSJQQ0UiPjI8L2NiYzpJbnZvaWNlZFF1YW50aXR5PjxjYmM6TGluZUV4dGVuc2lvbkFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjIwMC4wMDwvY2JjOkxpbmVFeHRlbnNpb25BbW91bnQ+PGNhYzpUYXhUb3RhbD48Y2JjOlRheEFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjMwLjAwPC9jYmM6VGF4QW1vdW50PjxjYmM6Um91bmRpbmdBbW91bnQgY3VycmVuY3lJRD0iU0FSIj4yMzAuMDA8L2NiYzpSb3VuZGluZ0Ftb3VudD48L2NhYzpUYXhUb3RhbD48Y2FjOkl0ZW0+PGNiYzpOYW1lPtiu2K/ZhdipINiq2KzYsdmK2KjZitipPC9jYmM6TmFtZT48Y2FjOkNsYXNzaWZpZWRUYXhDYXRlZ29yeT48Y2JjOklEPlM8L2NiYzpJRD48Y2JjOlBlcmNlbnQ+MTU8L2NiYzpQZXJjZW50PjxjYWM6VGF4U2NoZW1lPjxjYmM6SUQ+VkFUPC9jYmM6SUQ+PC9jYWM6VGF4U2NoZW1lPjwvY2FjOkNsYXNzaWZpZWRUYXhDYXRlZ29yeT48L2NhYzpJdGVtPjxjYWM6UHJpY2U+PGNiYzpQcmljZUFtb3VudCBjdXJyZW5jeUlEPSJTQVIiPjEwMC4wMDwvY2JjOlByaWNlQW1vdW50PjwvY2FjOlByaWNlPjwvY2FjOkludm9pY2VMaW5lPjwvSW52b2ljZT4="}}</script>
+<script>
+(() => {
+  const find = (id) => document.getElementById(id);
+  const samples = JSON.parse(find('samples').textContent);
+  const bytes = (value) => Uint8Array.from(atob(value), (char) => char.charCodeAt(0));
+  let profile = 'simplified';
+  let language = document.documentElement.lang;
+  let xml = '';
+
+  function setLanguage(next) {
+    language = next;
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.title = language === 'ar' ? 'Tatwerat ZATCA JS | دليل المطوّر' : 'Tatwerat ZATCA JS | Developer guide';
+    document.querySelectorAll('[data-switch-lang]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.switchLang === language));
+    });
+  }
+
+  function setProfile(next) {
+    profile = next;
+    const standard = profile === 'standard';
+    const sample = samples[profile];
+    xml = new TextDecoder().decode(bytes(sample.xml));
+    find('json').textContent = 'const invoice = ' + JSON.stringify(sample.invoice, null, 2) + ';';
+    find('xml').textContent = xml.replaceAll('><', '>\n<');
+    find('submit-code').textContent = [
+      "import { hashInvoiceXml } from '../../src/server/invoicing.js';",
+      '',
+      standard ? 'const xml = draftXml;' : 'const xml = await signSimplified(draftXml);',
+      'const invoiceHash = hashInvoiceXml(xml, xmllintPath);',
+      standard
+        ? 'const result = await invoicing.clearXml({ xml, invoiceHash });'
+        : 'const result = await invoicing.reportXml({ xml, invoiceHash });',
+      '',
+      'console.log(result.status);',
+    ].join('\n');
+    document.querySelectorAll('[data-profile-only]').forEach((item) => {
+      item.hidden = item.dataset.profileOnly !== profile;
+    });
+    find('result').textContent = JSON.stringify({
+      status: standard ? 'cleared' : 'reported',
+      ...(standard ? { clearedInvoiceBase64: '<Base64 XML>' } : {}),
+      diagnostics: [],
+      metadata: { httpStatus: 200 },
+    }, null, 2);
+    document.querySelectorAll('[data-profile]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.profile === profile));
+    });
+  }
+
+  document.querySelectorAll('[data-switch-lang]').forEach((button) => {
+    button.addEventListener('click', () => setLanguage(button.dataset.switchLang));
+  });
+  document.querySelectorAll('[data-profile]').forEach((button) => {
+    button.addEventListener('click', () => setProfile(button.dataset.profile));
+  });
+  document.querySelectorAll('[data-copy]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const id = button.dataset.copy;
+      try {
+        await navigator.clipboard.writeText(find(id).textContent);
+        button.dataset.originalLabel ??= button.innerHTML;
+        button.textContent = language === 'ar' ? 'تم النسخ' : 'Copied';
+        setTimeout(() => { button.innerHTML = button.dataset.originalLabel; }, 1250);
+      } catch {
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(find(id));
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    });
+  });
+  function showReferenceTarget() {
+    const target = document.getElementById(location.hash.slice(1));
+    const reference = find('function-reference');
+    if (target && reference.contains(target) && !reference.open) {
+      reference.open = true;
+      target.scrollIntoView();
+    }
+  }
+  document.querySelectorAll('.feature-nav a').forEach((link) => {
+    link.addEventListener('click', () => {
+      const target = find(link.hash.slice(1));
+      const reference = find('function-reference');
+      if (target && reference.contains(target)) reference.open = true;
+    });
+  });
+  window.addEventListener('hashchange', showReferenceTarget);
+  showReferenceTarget();
+  setProfile(profile);
+})();
+</script>
+</body>
+</html>
