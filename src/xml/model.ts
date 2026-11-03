@@ -1,9 +1,11 @@
 import { z } from 'zod';
-import { decodeBase64 } from '../core/base64.js';
-import { ZatcaEncodingError, ZatcaValidationError } from '../core/errors.js';
+import { ZatcaValidationError } from '../core/errors.js';
+import {
+  initialPreviousInvoiceHash,
+  isInvoiceDigest,
+} from '../core/invoice-digest.js';
 
-export const initialPreviousInvoiceHash =
-  'NWZlY2ViNjZmZmM4NmYzOGQ5NTI3ODZjNmQ2OTZjNzljMmRiYzIzOWRkNGU5MWI0NjcyOWQ3M2EyN2ZiNTdlOQ==';
+export { initialPreviousInvoiceHash };
 
 export const exemptionText = {
   'VATEX-SA-29': 'الخدمات المالية',
@@ -137,16 +139,11 @@ const invoiceSchema = z
     previousInvoiceHash: z
       .string()
       .max(88)
-      .refine((value) => {
-        if (value === initialPreviousInvoiceHash) return true;
-        if (value.length !== 44) return false;
-        try {
-          return decodeBase64(value).length === 32;
-        } catch (error) {
-          if (!(error instanceof ZatcaEncodingError)) throw error;
-          return false;
-        }
-      }, 'Expected a canonical Base64 SHA-256 digest or the prescribed initial PIH'),
+      .refine(
+        (value) =>
+          value === initialPreviousInvoiceHash || isInvoiceDigest(value),
+        'Expected a canonical Base64 SHA-256 digest or the prescribed initial PIH',
+      ),
     lines: z
       .array(
         z.strictObject({

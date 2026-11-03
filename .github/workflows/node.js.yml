@@ -29,9 +29,16 @@ jobs:
       - run: npm run format:check
       - run: npm run typecheck
       - run: npm run build
+      - name: Install Canonical XML 1.1 test tool
+        if: matrix.node-version == '24.x'
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
       - run: npm test
+        env:
+          ZATCA_TEST_XMLLINT: ${{ matrix.node-version == '24.x' && '/usr/bin/xmllint' || '' }}
       - run: npm run test:coverage
         if: matrix.node-version == '24.x'
+        env:
+          ZATCA_TEST_XMLLINT: /usr/bin/xmllint
       - run: npm run package:verify
       - run: npm run audit:dependencies
         if: matrix.node-version == '24.x'

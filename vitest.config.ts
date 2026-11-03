@@ -7,6 +7,7 @@ export default defineConfig({
       provider: 'v8',
       include: [
         'src/core/**/*.ts',
+        'src/crypto/**/*.ts',
         'src/qr/**/*.ts',
         'src/render/**/*.ts',
         'src/xml/**/*.ts',
