@@ -29,14 +29,24 @@ h1 { font-size:clamp(2rem,5vw,3.3rem); line-height:1.2; margin-block-end:10px; }
 .hero p { max-width:60ch; color:#dee7fe; }
 .feature-nav { display:flex; flex-wrap:wrap; gap:7px; margin-block-start:16px; }
 .feature-nav a { display:inline-flex; align-items:center; min-height:38px; padding:4px 9px; border:1px solid #57709d; border-radius:5px; color:#f2f5ff; }
-.feature-list { margin-block:10px 0; }
-.feature-row { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1.4fr); gap:4px 16px; padding-block:7px; border-block-start:1px solid var(--line); }
-.feature-row dt,.feature-row dd { margin:0; }
-.feature-row dt { text-align:start; overflow-wrap:anywhere; color:var(--blue); }
-.feature-list code { overflow-wrap:anywhere; }
-.reference-group { margin-block-start:14px; }
-.reference-group h3 { font-size:1.05rem; }
-@media(max-width:570px) { .feature-row { grid-template-columns:1fr; } }
+#function-reference > summary { padding:9px 12px; border:1px solid var(--line); border-radius:8px; color:var(--ink); }
+.reference-nav { display:flex; flex-wrap:wrap; gap:6px; margin-block:12px; }
+.reference-nav a { border:1px solid var(--line); border-radius:6px; padding:5px 9px; color:var(--ink); text-decoration:none; font-size:.86rem; }
+.reference-nav a:hover { background:#f1f4f9; text-decoration:underline; }
+.reference-group { margin-block-start:16px; border:1px solid var(--line); border-radius:10px; scroll-margin-top:12px; }
+.reference-group:target { outline:2px solid #9baed1; outline-offset:2px; }
+.reference-heading { display:flex; flex-wrap:wrap; align-items:center; gap:5px 12px; padding:12px 15px; background:#f7f9fc; border-radius:9px 9px 0 0; }
+.reference-heading h3 { font-size:1.08rem; }
+.reference-heading .muted { flex-basis:100%; font-size:.86rem; overflow-wrap:anywhere; }
+.reference-scope { border:1px solid #d5deeb; border-radius:5px; padding:1px 7px; color:#374762; background:#fff; font-size:.76rem; font-weight:650; }
+.feature-list { margin:0; padding-inline:15px; }
+.feature-row { display:grid; grid-template-columns:minmax(0, 1.05fr) minmax(0, 1fr); align-items:start; gap:8px 20px; padding-block:11px; border-block-start:1px solid var(--line); }
+.feature-row dt,.feature-row dd { margin:0; min-width:0; }
+.feature-row dd { padding-block:3px; font-size:.94rem; }
+.feature-signature { display:block; width:fit-content; max-width:100%; padding:4px 8px; border-radius:5px; background:#edf1f7; color:#4b5870; font:.83rem/1.6 Consolas,monospace; overflow-wrap:anywhere; text-align:left; }
+.feature-signature + .feature-signature { margin-block-start:4px; }
+.feature-signature b { color:#233a60; font-weight:700; }
+@media(max-width:650px) { .feature-row { grid-template-columns:1fr; gap:3px; } }
 main { padding-block:20px 38px; }
 .step { border:1px solid var(--line); border-radius:12px; background:var(--white); padding:clamp(16px,3vw,26px); margin-block-end:14px; min-width:0; scroll-margin-top:10px; }
 .step h2 { font-size:clamp(1.2rem,3vw,1.48rem); line-height:1.3; }
@@ -52,6 +62,7 @@ pre { margin:8px 0 10px; padding:12px; border-radius:7px; color:#edf2ff; backgro
 .qr-preview img { display:block; flex:none; background:#fff; }
 .qr-preview p { max-width:60ch; }
 code { unicode-bidi:isolate; }
+.reference-heading code { font-size:.86em; color:inherit; overflow-wrap:anywhere; direction:ltr; }
 p code,li code,summary code { background:var(--ice); padding:1px 4px; border-radius:3px; color:#1e3c9e; overflow-wrap:anywhere; direction:ltr; }
 summary { color:var(--blue); cursor:pointer; font-weight:650; }
 ul { margin:8px 0; padding-inline-start:24px; }
@@ -95,64 +106,95 @@ footer { color:var(--muted); font-size:.88rem; padding-block:3px 12px; }
     <p class="notice" data-lang="en"><strong>Where the code runs.</strong> The development QR API runs in a React or Vue browser app and on Node.js. The published <code>1.0.2</code> QR generator runs on Node.js. XML generation, hashing, signing and submission are server-side in the current source.</p>
     <details id="function-reference" open>
       <summary><span data-lang="ar">المرجع الكامل للدوال</span><span data-lang="en">Full function reference</span></summary>
-    <div class="reference-group">
-      <h3 data-lang="ar">مولّد QR المنشور على npm</h3><h3 data-lang="en">Published npm QR generator</h3>
-      <p class="muted" data-lang="ar">Node.js · zatca@1.0.2 · مثال العرض تحت قسم QR.</p><p class="muted" data-lang="en">Node.js · zatca@1.0.2 · see the display example in the QR section.</p>
+      <nav class="reference-nav" aria-label="API reference sections / أقسام مرجع الدوال">
+        <a href="#published-qr"><span data-lang="ar">npm المنشور</span><span data-lang="en">Published npm</span></a>
+        <a href="#qr-payload"><span data-lang="ar">حمولة QR</span><span data-lang="en">QR data</span></a>
+        <a href="#qr-images"><span data-lang="ar">صور QR</span><span data-lang="en">QR images</span></a>
+        <a href="#xml-tools"><span data-lang="ar">XML والهاش</span><span data-lang="en">XML and hash</span></a>
+        <a href="#onboarding"><span data-lang="ar">الشهادات</span><span data-lang="en">Certificates</span></a>
+        <a href="#ready-xml"><span data-lang="ar">الإرسال</span><span data-lang="en">Submission</span></a>
+      </nav>
+    <div class="reference-group" id="published-qr">
+      <div class="reference-heading">
+        <h3 data-lang="ar">مولّد QR المنشور على npm</h3><h3 data-lang="en">Published npm QR generator</h3>
+        <span class="reference-scope" data-lang="ar">npm المنشور</span><span class="reference-scope" data-lang="en">Published npm</span>
+        <p class="muted" data-lang="ar"><code>zatca@1.0.2</code> · Node.js · مثال العرض تحت قسم QR.</p><p class="muted" data-lang="en"><code>zatca@1.0.2</code> · Node.js · see the display example in the QR section.</p>
+      </div>
       <dl class="feature-list">
-        <div class="feature-row"><dt dir="ltr"><code>new GenerateQrCode(name, vat, time, total, tax)</code></dt><dd data-lang="ar">يجهّز بيانات QR للمرحلة الأولى من خمس قيم.</dd><dd data-lang="en">Creates a Phase 1 QR generator from five values.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>qr.getTLV() / qr.toBase64() / qr.render()</code></dt><dd data-lang="ar">ترجّع بايتات TLV أو Base64 أو رابط بيانات لصورة PNG، كل واحدة مستقلة.</dd><dd data-lang="en">Return TLV bytes, a Base64 payload, or a PNG data URL, respectively.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>new GenerateQrCode</b>(name, vat, time, total, tax)</code></dt><dd data-lang="ar">يجهّز بيانات QR للمرحلة الأولى من خمس قيم.</dd><dd data-lang="en">Creates a Phase 1 QR generator from five values.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>qr.getTLV</b>()</code></dt><dd data-lang="ar">ترجّع بايتات TLV في Node.js Buffer.</dd><dd data-lang="en">Returns TLV bytes as a Node.js Buffer.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>qr.toBase64</b>()</code></dt><dd data-lang="ar">ترجّع حمولة QR كنص Base64.</dd><dd data-lang="en">Returns the QR payload as a Base64 string.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>qr.render</b>()</code></dt><dd data-lang="ar">ترجّع رابط بيانات لصورة PNG تقدر تعرضه في src.</dd><dd data-lang="en">Returns a PNG data URL for an image src.</dd></div>
       </dl>
     </div>
-    <div class="reference-group">
-      <h3 data-lang="ar">توليد وقراءة وفحص QR</h3><h3 data-lang="en">Generate, decode and validate QR</h3>
-      <p class="muted" data-lang="ar">نسخة التطوير · المتصفح وNode.js · zatca/qr.</p><p class="muted" data-lang="en">Development build · browser and Node.js · zatca/qr.</p>
+    <div class="reference-group" id="qr-payload">
+      <div class="reference-heading">
+        <h3 data-lang="ar">توليد وقراءة وفحص QR</h3><h3 data-lang="en">Generate, decode and validate QR</h3>
+        <span class="reference-scope" data-lang="ar">نسخة التطوير</span><span class="reference-scope" data-lang="en">Development build</span>
+        <p class="muted" data-lang="ar"><code>zatca/qr</code> · المتصفح وNode.js</p><p class="muted" data-lang="en"><code>zatca/qr</code> · Browser and Node.js</p>
+      </div>
       <dl class="feature-list">
-        <div class="feature-row"><dt dir="ltr"><code>encodeQrTlv(fields) / encodeQrBase64(fields)</code></dt><dd data-lang="ar">اختر بايتات TLV أو Base64 من نفس بيانات الفاتورة.</dd><dd data-lang="en">Get TLV bytes or Base64 from the same invoice fields.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>decodeQrTlv(bytes, options?) / decodeQrBase64(base64, options?)</code></dt><dd data-lang="ar">اقرأ الحقول والوسوم ونتائج الفحص من حمولة جاهزة.</dd><dd data-lang="en">Read fields, tags and validation results from an existing payload.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>validateQrPayload(payload, options?)</code></dt><dd data-lang="ar">افحص حمولة المرحلة الأولى بصيغة Base64 أو بايتات TLV.</dd><dd data-lang="en">Validate a Phase 1 Base64 or TLV payload.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>inspectPhase2Qr(payload, invoiceType)</code></dt><dd data-lang="ar">يفحص البنية والوسوم لحمولة مرحلة ثانية موجودة. حدّد standard أو simplified. الفحص تجريبي وبنيوي فقط.</dd><dd data-lang="en">Experimental structural inspection of an existing Phase 2 payload. Set standard or simplified.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>encodeBase64 / decodeBase64 / encodeUtf8 / decodeUtf8</code></dt><dd data-lang="ar">أدوات تحويل عامة بين النص والبايتات.</dd><dd data-lang="en">General-purpose helpers for converting between text and bytes.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>encodeQrTlv</b>(fields)</code></dt><dd data-lang="ar">يحوّل بيانات الفاتورة إلى بايتات TLV.</dd><dd data-lang="en">Encodes invoice fields as TLV bytes.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>encodeQrBase64</b>(fields)</code></dt><dd data-lang="ar">يحوّل بيانات الفاتورة إلى نص Base64.</dd><dd data-lang="en">Encodes invoice fields as a Base64 string.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>decodeQrTlv</b>(bytes, options?)</code><code class="feature-signature"><b>decodeQrBase64</b>(base64, options?)</code></dt><dd data-lang="ar">اقرأ الحقول والوسوم ونتائج الفحص من حمولة جاهزة.</dd><dd data-lang="en">Read fields, tags and validation results from an existing payload.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>validateQrPayload</b>(payload, options?)</code></dt><dd data-lang="ar">افحص حمولة المرحلة الأولى بصيغة Base64 أو بايتات TLV.</dd><dd data-lang="en">Validate a Phase 1 Base64 or TLV payload.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>inspectPhase2Qr</b>(payload, invoiceType)</code></dt><dd data-lang="ar">يفحص البنية والوسوم لحمولة مرحلة ثانية موجودة. حدّد standard أو simplified. الفحص تجريبي وبنيوي فقط.</dd><dd data-lang="en">Experimental structural inspection of an existing Phase 2 payload. Set standard or simplified.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>encodeBase64</b></code><code class="feature-signature"><b>decodeBase64</b></code><code class="feature-signature"><b>encodeUtf8</b></code><code class="feature-signature"><b>decodeUtf8</b></code></dt><dd data-lang="ar">أدوات تحويل عامة بين النص والبايتات.</dd><dd data-lang="en">General-purpose helpers for converting between text and bytes.</dd></div>
       </dl>
     </div>
-    <div class="reference-group">
-      <h3 data-lang="ar">تحويل حمولة QR إلى صورة</h3><h3 data-lang="en">Render a QR payload as an image</h3>
-      <p class="muted" data-lang="ar">نسخة التطوير · المتصفح وNode.js · zatca/qr/render.</p><p class="muted" data-lang="en">Development build · browser and Node.js · zatca/qr/render.</p>
+    <div class="reference-group" id="qr-images">
+      <div class="reference-heading">
+        <h3 data-lang="ar">تحويل حمولة QR إلى صورة</h3><h3 data-lang="en">Render a QR payload as an image</h3>
+        <span class="reference-scope" data-lang="ar">نسخة التطوير</span><span class="reference-scope" data-lang="en">Development build</span>
+        <p class="muted" data-lang="ar"><code>zatca/qr/render</code> · المتصفح وNode.js</p><p class="muted" data-lang="en"><code>zatca/qr/render</code> · Browser and Node.js</p>
+      </div>
       <dl class="feature-list">
-        <div class="feature-row"><dt dir="ltr"><code>qrToDataUrl(base64, options?)</code></dt><dd data-lang="ar">رابط صورة PNG افتراضيًا، أو SVG لو حدّدت format. استخدمه في src.</dd><dd data-lang="en">PNG data URL by default, or SVG when you set the format. Use it as src.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>qrToPngBytes(base64, options?)</code></dt><dd data-lang="ar">بايتات صورة PNG لما تحتاج تتعامل مع الصورة كملف أو بيانات.</dd><dd data-lang="en">PNG bytes for file or binary handling.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>qrToSvg(base64, options?)</code></dt><dd data-lang="ar">نص SVG جاهز من الحمولة.</dd><dd data-lang="en">SVG markup from the supplied payload.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>qrToDataUrl</b>(base64, options?)</code></dt><dd data-lang="ar">رابط صورة PNG افتراضيًا، أو SVG لو حدّدت format. استخدمه في src.</dd><dd data-lang="en">PNG data URL by default, or SVG when you set the format. Use it as src.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>qrToPngBytes</b>(base64, options?)</code></dt><dd data-lang="ar">بايتات صورة PNG لما تحتاج تتعامل مع الصورة كملف أو بيانات.</dd><dd data-lang="en">PNG bytes for file or binary handling.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>qrToSvg</b>(base64, options?)</code></dt><dd data-lang="ar">نص SVG جاهز من الحمولة.</dd><dd data-lang="en">SVG markup from the supplied payload.</dd></div>
       </dl>
     </div>
     <div class="reference-group" id="xml-tools">
-      <h3 data-lang="ar">الحساب وملفات XML</h3><h3 data-lang="en">Calculation and XML</h3>
-      <p class="muted" data-lang="ar">واجهات Node داخل المستودع · src/xml/index.ts وsrc/server/invoicing.ts.</p><p class="muted" data-lang="en">Internal Node APIs · src/xml/index.ts and src/server/invoicing.ts.</p>
+      <div class="reference-heading">
+        <h3 data-lang="ar">الحساب وملفات XML</h3><h3 data-lang="en">Calculation and XML</h3>
+        <span class="reference-scope" data-lang="ar">واجهة داخلية</span><span class="reference-scope" data-lang="en">Internal API</span>
+        <p class="muted" data-lang="ar"><code>src/xml/index.ts</code> و<code>src/server/invoicing.ts</code> · Node.js</p><p class="muted" data-lang="en"><code>src/xml/index.ts</code> and <code>src/server/invoicing.ts</code> · Node.js</p>
+      </div>
       <dl class="feature-list">
-        <div class="feature-row"><dt dir="ltr"><code>calculateInvoice(invoiceDraft)</code></dt><dd data-lang="ar">احسب الإجماليات والضريبة وملخص الفئات الضريبية.</dd><dd data-lang="en">Compute totals, VAT and the tax-category breakdown.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>buildInvoiceXml(invoiceDraft) / generateXml(invoiceDraft)</code></dt><dd data-lang="ar">ولّد مسودة UBL غير موقّعة لفاتورة أو إشعار دائن أو مدين. المولّد الحالي يغطي مسودات محلية بالريال.</dd><dd data-lang="en">Generate an unsigned UBL invoice, credit note or debit note. The current builder covers local SAR drafts.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>parseInvoiceXml(xml) / validateInvoiceXml(xml)</code></dt><dd data-lang="ar">اقرأ رؤوس الفاتورة والإجماليات، أو افحص البنية محليًا.</dd><dd data-lang="en">Read invoice headers and totals, or validate the structure locally.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>hashInvoiceXml(xml, xmllintPath)</code></dt><dd data-lang="ar">احسب هاش الفاتورة المرجعي بصيغة Base64.</dd><dd data-lang="en">Compute the canonical invoice digest as Base64.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>initialPreviousInvoiceHash / appendInvoice(store, scope, request, prepare)</code></dt><dd data-lang="ar">استخدم الهاش الابتدائي لجهاز جديد، أو خزّن المستند والهاش في سلسلة جهاز يديرها تطبيقك.</dd><dd data-lang="en">Use the initial hash for a new device, or record a document and digest in a host-managed device chain.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>calculateInvoice</b>(invoiceDraft)</code></dt><dd data-lang="ar">احسب الإجماليات والضريبة وملخص الفئات الضريبية.</dd><dd data-lang="en">Compute totals, VAT and the tax-category breakdown.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>buildInvoiceXml</b>(invoiceDraft)</code><code class="feature-signature"><b>generateXml</b>(invoiceDraft)</code></dt><dd data-lang="ar">ولّد مسودة UBL غير موقّعة لفاتورة أو إشعار دائن أو مدين. المولّد الحالي يغطي مسودات محلية بالريال.</dd><dd data-lang="en">Generate an unsigned UBL invoice, credit note or debit note. The current builder covers local SAR drafts.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>parseInvoiceXml</b>(xml)</code></dt><dd data-lang="ar">يقرأ رؤوس الفاتورة والإجماليات.</dd><dd data-lang="en">Reads invoice headers and totals.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>validateInvoiceXml</b>(xml)</code></dt><dd data-lang="ar">يفحص بنية XML محليًا.</dd><dd data-lang="en">Validates the XML structure locally.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>hashInvoiceXml</b>(xml, xmllintPath)</code></dt><dd data-lang="ar">احسب هاش الفاتورة المرجعي بصيغة Base64.</dd><dd data-lang="en">Compute the canonical invoice digest as Base64.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>initialPreviousInvoiceHash</b></code><code class="feature-signature"><b>appendInvoice</b>(store, scope, request, prepare)</code></dt><dd data-lang="ar">استخدم الهاش الابتدائي لجهاز جديد، أو خزّن المستند والهاش في سلسلة جهاز يديرها تطبيقك.</dd><dd data-lang="en">Use the initial hash for a new device, or record a document and digest in a host-managed device chain.</dd></div>
       </dl>
     </div>
     <div class="reference-group" id="onboarding">
-      <h3 data-lang="ar">تهيئة الجهاز والشهادات</h3><h3 data-lang="en">Device onboarding and certificates</h3>
-      <p class="muted" data-lang="ar">واجهة Node داخل المستودع · createZatcaApi من src/api/client.ts.</p><p class="muted" data-lang="en">Internal Node API · createZatcaApi from src/api/client.ts.</p>
+      <div class="reference-heading">
+        <h3 data-lang="ar">تهيئة الجهاز والشهادات</h3><h3 data-lang="en">Device onboarding and certificates</h3>
+        <span class="reference-scope" data-lang="ar">واجهة داخلية</span><span class="reference-scope" data-lang="en">Internal API</span>
+        <p class="muted" data-lang="ar"><code>createZatcaApi</code> من <code>src/api/client.ts</code> · Node.js</p><p class="muted" data-lang="en"><code>createZatcaApi</code> from <code>src/api/client.ts</code> · Node.js</p>
+      </div>
       <dl class="feature-list">
-        <div class="feature-row"><dt dir="ltr"><code>requestComplianceCsid(csr, otp)</code></dt><dd data-lang="ar">اطلب شهادة الامتثال باستخدام CSR جاهز وOTP.</dd><dd data-lang="en">Request a compliance CSID with a prepared CSR and OTP.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>checkCompliance({ xml, invoiceHash }, complianceCsid)</code></dt><dd data-lang="ar">أرسل مستندًا جاهزًا لفحص الامتثال.</dd><dd data-lang="en">Submit a prepared document for a compliance check.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>requestProductionCsid(complianceCsid)</code></dt><dd data-lang="ar">اطلب شهادة الإصدار بعد خطوات الامتثال.</dd><dd data-lang="en">Request the issuance CSID after the compliance steps.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>renewProductionCsid(currentCsid, csr, otp)</code></dt><dd data-lang="ar">اطلب تجديد شهادة الإصدار.</dd><dd data-lang="en">Request renewal of an issuance CSID.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>getCsidExpiry(csid) / checkCertificateLocally(certificate, publicKey, at)</code></dt><dd data-lang="ar">اقرأ انتهاء الشهادة أو افحص تاريخها ومطابقة مفتاحها محليًا.</dd><dd data-lang="en">Read the expiry date or check certificate dates and key binding locally.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>requestComplianceCsid</b>(csr, otp)</code></dt><dd data-lang="ar">اطلب شهادة الامتثال باستخدام CSR جاهز وOTP.</dd><dd data-lang="en">Request a compliance CSID with a prepared CSR and OTP.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>checkCompliance</b>({ xml, invoiceHash }, complianceCsid)</code></dt><dd data-lang="ar">أرسل مستندًا جاهزًا لفحص الامتثال.</dd><dd data-lang="en">Submit a prepared document for a compliance check.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>requestProductionCsid</b>(complianceCsid)</code></dt><dd data-lang="ar">اطلب شهادة الإصدار بعد خطوات الامتثال.</dd><dd data-lang="en">Request the issuance CSID after the compliance steps.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>renewProductionCsid</b>(currentCsid, csr, otp)</code></dt><dd data-lang="ar">اطلب تجديد شهادة الإصدار.</dd><dd data-lang="en">Request renewal of an issuance CSID.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>getCsidExpiry</b>(csid)</code></dt><dd data-lang="ar">يقرأ تاريخ انتهاء شهادة CSID.</dd><dd data-lang="en">Reads the CSID certificate expiry date.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>checkCertificateLocally</b>(certificate, publicKey, at)</code></dt><dd data-lang="ar">يفحص تاريخ الشهادة ومطابقة مفتاحها محليًا.</dd><dd data-lang="en">Checks certificate dates and public-key binding locally.</dd></div>
       </dl>
     </div>
     <div class="reference-group" id="ready-xml">
-      <h3 data-lang="ar">إرسال XML جاهز أو ربط الإصدار كله</h3><h3 data-lang="en">Submit ready XML or combine issuance steps</h3>
-      <p class="muted" data-lang="ar">واجهة Node داخل المستودع · createInvoicing من src/server/invoicing.ts.</p><p class="muted" data-lang="en">Internal Node API · createInvoicing from src/server/invoicing.ts.</p>
+      <div class="reference-heading">
+        <h3 data-lang="ar">إرسال XML جاهز أو ربط الإصدار كله</h3><h3 data-lang="en">Submit ready XML or combine issuance steps</h3>
+        <span class="reference-scope" data-lang="ar">واجهة داخلية</span><span class="reference-scope" data-lang="en">Internal API</span>
+        <p class="muted" data-lang="ar"><code>createInvoicing</code> من <code>src/server/invoicing.ts</code> · Node.js</p><p class="muted" data-lang="en"><code>createInvoicing</code> from <code>src/server/invoicing.ts</code> · Node.js</p>
+      </div>
       <dl class="feature-list">
-        <div class="feature-row"><dt dir="ltr"><code>reportXml({ xml, invoiceHash })</code></dt><dd data-lang="ar">أبلغ عن فاتورة مبسطة موقّعة بالفعل، واقرأ الحالة والتشخيصات.</dd><dd data-lang="en">Report a signed simplified invoice and read its status and diagnostics.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>clearXml({ xml, invoiceHash })</code></dt><dd data-lang="ar">اطلب تخليص فاتورة قياسية. عند نجاحها يتاح XML المرجع.</dd><dd data-lang="en">Request clearance for a standard invoice and receive cleared XML on success.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>generatePhase1Qr(fields)</code></dt><dd data-lang="ar">اسم بديل لـ<code>encodeQrBase64</code> في واجهة المصدر الداخلية.</dd><dd data-lang="en">Alias for <code>encodeQrBase64</code> on the internal source entry.</dd></div>
-        <div class="feature-row"><dt dir="ltr"><code>issueInvoice(invoice, issuanceId)</code></dt><dd data-lang="ar">اختياري. يجمع توليد XML والهاش والإرسال مع مخزن التطبيق. في المبسطة يستدعي مزوّد التوقيع الخاص بالتطبيق.</dd><dd data-lang="en">Optional. Combines XML generation, hashing and submission with your store. Uses your signer for simplified invoices.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>reportXml</b>({ xml, invoiceHash })</code></dt><dd data-lang="ar">أبلغ عن فاتورة مبسطة موقّعة بالفعل، واقرأ الحالة والتشخيصات.</dd><dd data-lang="en">Report a signed simplified invoice and read its status and diagnostics.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>clearXml</b>({ xml, invoiceHash })</code></dt><dd data-lang="ar">اطلب تخليص فاتورة قياسية. عند نجاحها يتاح XML المرجع.</dd><dd data-lang="en">Request clearance for a standard invoice and receive cleared XML on success.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>generatePhase1Qr</b>(fields)</code></dt><dd data-lang="ar">اسم بديل لـ<code>encodeQrBase64</code> في واجهة المصدر الداخلية.</dd><dd data-lang="en">Alias for <code>encodeQrBase64</code> on the internal source entry.</dd></div>
+        <div class="feature-row"><dt dir="ltr"><code class="feature-signature"><b>issueInvoice</b>(invoice, issuanceId)</code></dt><dd data-lang="ar">اختياري. يجمع توليد XML والهاش والإرسال مع مخزن التطبيق. في المبسطة يستدعي مزوّد التوقيع الخاص بالتطبيق.</dd><dd data-lang="en">Optional. Combines XML generation, hashing and submission with your store. Uses your signer for simplified invoices.</dd></div>
       </dl>
     </div>
     </details>
