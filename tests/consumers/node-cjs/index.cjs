@@ -1,9 +1,12 @@
 const assert = require('node:assert/strict');
-const { GenerateQrCode } = require('zatca');
-const { encodeBase64, encodeUtf8 } = require('zatca/qr');
+const { GenerateQrCode, encodeQrBase64 } = require('zatca');
+const qrApi = require('zatca/qr');
+const { arabic } = require('./phase1-golden.json');
 
 (async () => {
-  assert.deepEqual(Object.keys(require('zatca')), ['GenerateQrCode']);
+  assert.equal(encodeQrBase64, qrApi.encodeQrBase64);
+  assert.equal(encodeQrBase64(arabic.input), arabic.base64);
+  assert.throws(() => encodeQrBase64({}), qrApi.ZatcaValidationError);
   const qr = new GenerateQrCode(
     'Example Shop',
     '300000000000003',
@@ -13,7 +16,7 @@ const { encodeBase64, encodeUtf8 } = require('zatca/qr');
   );
   assert.ok(Buffer.isBuffer(await qr.getTLV()));
   assert.match(await qr.render(), /^data:image\/png;base64,/);
-  assert.equal(encodeBase64(encodeUtf8('شركة')), '2LTYsdmD2Kk=');
+  assert.equal(qrApi.encodeBase64(qrApi.encodeUtf8('شركة')), '2LTYsdmD2Kk=');
 
   const failure = new Error('encoder failed');
   qr.toBase64 = async () => {

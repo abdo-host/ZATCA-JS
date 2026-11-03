@@ -47,7 +47,10 @@ try {
     ),
   );
   const tarball = join(temp, pack.filename);
-  assert.deepEqual(pack.files.map(({ path }) => path).sort(), [
+  const files = pack.files.map(({ path }) => path);
+  const sharedChunk =
+    /^dist\/phase1-[\w-]+\.(?:cjs(?:\.map)?|mjs(?:\.map)?|d\.[cm]ts)$/;
+  assert.deepEqual(files.filter((path) => !sharedChunk.test(path)).sort(), [
     'LICENSE',
     'README.md',
     'dist/index.cjs',
@@ -57,13 +60,12 @@ try {
     'dist/index.mjs',
     'dist/index.mjs.map',
     'dist/qr.cjs',
-    'dist/qr.cjs.map',
     'dist/qr.d.cts',
     'dist/qr.d.mts',
     'dist/qr.mjs',
-    'dist/qr.mjs.map',
     'package.json',
   ]);
+  assert.equal(files.filter((path) => sharedChunk.test(path)).length, 6);
   console.log(`Verified contents of ${pack.filename}`);
 
   const consumersOnly = process.argv.includes('--consumers-only');
@@ -75,6 +77,10 @@ try {
   for (const name of ['node-cjs', 'node-esm', 'browser']) {
     const cwd = join(temp, name);
     cpSync(join(fixtures, name), cwd, { recursive: true });
+    cpSync(
+      join(root, 'tests/fixtures/phase1-golden.json'),
+      join(cwd, 'phase1-golden.json'),
+    );
     writeFileSync(join(cwd, 'package.json'), JSON.stringify({ private: true }));
     npm(
       [

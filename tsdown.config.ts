@@ -11,21 +11,14 @@ const shared = {
 export default defineConfig([
   {
     ...shared,
-    entry: { index: 'src/index.ts' },
+    entry: { index: 'src/index.ts', qr: 'src/qr/index.ts' },
     platform: 'node',
     format: 'cjs',
   },
   {
     ...shared,
-    entry: { index: 'src/index-esm.ts' },
+    entry: { index: 'src/index-esm.ts', qr: 'src/qr/index.ts' },
     platform: 'node',
     format: 'esm',
-  },
-  {
-    ...shared,
-    entry: { qr: 'src/qr/index.ts' },
-    platform: 'neutral',
-    format: ['esm', 'cjs'],
-    target: 'es2022',
   },
 ]);

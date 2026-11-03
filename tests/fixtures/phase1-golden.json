@@ -1,0 +1,24 @@
+{
+  "official": {
+    "input": {
+      "sellerName": "Bobs Records",
+      "vatNumber": "310122393500003",
+      "issuedAt": "2022-04-25T15:30:00Z",
+      "invoiceTotal": "1000.00",
+      "vatTotal": "150.00"
+    },
+    "hex": "010c426f6273205265636f726473020f3331303132323339333530303030330314323032322d30342d32355431353a33303a30305a0407313030302e303005063135302e3030",
+    "base64": "AQxCb2JzIFJlY29yZHMCDzMxMDEyMjM5MzUwMDAwMwMUMjAyMi0wNC0yNVQxNTozMDowMFoEBzEwMDAuMDAFBjE1MC4wMA=="
+  },
+  "arabic": {
+    "input": {
+      "sellerName": "شركة",
+      "vatNumber": "300000000000003",
+      "issuedAt": "2024-02-29T15:30:00+03:00",
+      "invoiceTotal": "115.00",
+      "vatTotal": "15.00"
+    },
+    "hex": "0108d8b4d8b1d983d8a9020f3330303030303030303030303030330319323032342d30322d32395431353a33303a30302b30333a303004063131352e3030050531352e3030",
+    "base64": "AQjYtNix2YPYqQIPMzAwMDAwMDAwMDAwMDAzAxkyMDI0LTAyLTI5VDE1OjMwOjAwKzAzOjAwBAYxMTUuMDAFBTE1LjAw"
+  }
+}

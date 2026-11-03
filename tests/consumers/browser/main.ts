@@ -1,8 +1,15 @@
-import { decodeBase64, decodeUtf8, encodeBase64, encodeUtf8 } from 'zatca/qr';
+import { decodeQrBase64, encodeQrBase64, type QrPhase1Input } from 'zatca/qr';
+import fixture from './phase1-golden.json';
 
-const seller = 'شركة';
-const result = decodeUtf8(decodeBase64(encodeBase64(encodeUtf8(seller))));
-if (result !== seller)
-  throw new Error('Portable UTF-8/Base64 round-trip failed');
+const input: QrPhase1Input = fixture.arabic.input;
+const encoded = encodeQrBase64(input);
+const result = decodeQrBase64(encoded);
+if (
+  encoded !== fixture.arabic.base64 ||
+  !result.valid ||
+  result.fields.sellerName !== input.sellerName
+) {
+  throw new Error('Portable Phase 1 QR round-trip failed');
+}
 const output = document.querySelector('output');
-if (output) output.value = result;
+if (output) output.value = encoded;
