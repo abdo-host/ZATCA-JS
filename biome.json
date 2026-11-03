@@ -1,0 +1,29 @@
+{
+  "files": {
+    "includes": [
+      "*.json",
+      "*.ts",
+      "scripts/**",
+      "src/**",
+      "tests/**",
+      "!package-lock.json",
+      "!tests/fixtures"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "lineEnding": "lf"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  }
+}

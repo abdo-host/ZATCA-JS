@@ -1,34 +1,89 @@
 {
-  "name": "@tatwerat/zatca",
-  "version": "1.0.0",
-  "description": "Generate E-Invoice qr-code and valid XML then submitting to ZATCA API",
-  "main": "index.js",
+  "name": "zatca",
+  "version": "2.0.0-dev.0",
+  "private": true,
+  "description": "Node.js QR code generator and portable encoding utilities for ZATCA e-invoicing",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.cts",
+  "exports": {
+    ".": {
+      "browser": null,
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./qr": {
+      "import": {
+        "types": "./dist/qr.d.mts",
+        "default": "./dist/qr.mjs"
+      },
+      "require": {
+        "types": "./dist/qr.d.cts",
+        "default": "./dist/qr.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "test": "node --test tests/legacy-baseline.test.cjs"
+    "clean": "node --eval \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "npm run clean && tsdown",
+    "lint": "biome lint .",
+    "format:check": "biome format .",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.qr.json",
+    "test": "vitest run && npm run test:legacy",
+    "test:legacy": "node --test tests/legacy-baseline.test.cjs",
+    "test:coverage": "vitest run --coverage"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/abdo-host/ZATCA-JS.git"
   },
   "keywords": [
-    "E-invoicing",
-    "ZATCA-QR",
-    "QR Code",
-    "ZATCA-XML",
-    "ZATCA-Invoicing",
-    "Zatca",
-    "KSA Invoice"
+    "ZATCA",
+    "e-invoicing",
+    "qr-code",
+    "TLV"
   ],
   "author": "Tatwerat <tatwerat@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/abdo-host/ZATCA-JS/issues"
   },
-  "deprecated": false,
-  "devDependencies": {
-    "express": "^4.18.2",
-    "buffer": "^6.0.3",
-    "qrcode": "^1.5.3"
+  "homepage": "https://github.com/abdo-host/ZATCA-JS#readme",
+  "dependencies": {
+    "qrcode": "1.5.4"
   },
-  "homepage": "https://github.com/abdo-host/ZATCA-JS#readme"
+  "peerDependencies": {
+    "@types/node": ">=22"
+  },
+  "peerDependenciesMeta": {
+    "@types/node": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "@biomejs/biome": "2.6.4",
+    "@types/node": "22.20.5",
+    "@types/qrcode": "1.5.6",
+    "@vitest/coverage-v8": "4.1.12",
+    "publint": "0.3.25",
+    "tsdown": "0.23.4",
+    "typescript": "5.9.3",
+    "vite": "8.3.5",
+    "vitest": "4.1.12"
+  }
 }
