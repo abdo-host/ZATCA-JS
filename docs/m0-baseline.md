@@ -105,7 +105,7 @@ The Node targets follow the [official Node.js release schedule](https://nodejs.o
 | **M4 · SDK verification pending** | [Experimental inspection and wire-format evidence](m4-phase2-evidence.md). Generation is gated on the official SDK. The signed XML adapter in QR2-006 depends on M6. |
 | **M5 · SDK verification pending** | [Unsigned domestic SAR drafts](m5-ubl-invoices.md), exact accounting, safe inspection and local UBL XSD checks. Additional profiles and the package export depend on official validation. |
 | **M6 · Official vectors and security review pending** | [Internal hash and chain foundation](m6-crypto-foundation.md) and local certificate inspection. Signing and CSR require official vectors and SDK evidence. |
-| **M7 · Pending** | Onboarding, renewal, reporting and clearance with Sandbox evidence for each supported workflow. |
+| **M7 · Representative Sandbox workflows verified** | [Internal V2 API client](m7-zatca-api.md) with live onboarding, renewal, standard clearance and simplified reporting. Wider profiles and production acceptance remain gated. |
 | **M8 · Pending** | Documentation, examples and developer experience. Ship the QR release's relevant docs with its features. |
 | **M9 · Pending** | Security and release checks, provenance, verified npm access and a conformance report. |
 

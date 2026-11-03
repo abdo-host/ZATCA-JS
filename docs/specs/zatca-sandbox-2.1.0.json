@@ -1,0 +1,531 @@
+{
+  "retrieved": "2026-11-03",
+  "release": "2.1.0",
+  "acceptVersion": "V2",
+  "operations": {
+    "CLEARANCE": {
+      "source": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal/users/api/v1/swagger/render?fileId=CLEARANCE",
+      "sha256": "c9c0876e9ddd845af156af3baa9fc5e4b84e6cb22855582b60a138ec310673ba",
+      "openapi": "3.0.1",
+      "baseUrl": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal",
+      "method": "POST",
+      "path": "/invoices/clearance/single",
+      "basicAuth": true,
+      "headers": {
+        "Authorization": false,
+        "accept-language": false,
+        "Clearance-Status": true,
+        "Accept-Version": true
+      },
+      "request": {
+        "invoiceHash": "str",
+        "uuid": "str",
+        "invoice": "str"
+      },
+      "responses": {
+        "200": {
+          "application/json": {
+            "validationResults": {
+              "infoMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "warningMessages": [],
+              "errorMessages": [],
+              "status": "str"
+            },
+            "clearanceStatus": "str",
+            "clearedInvoice": "str"
+          }
+        },
+        "202": {
+          "application/json": {
+            "validationResults": {
+              "infoMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "warningMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "errorMessages": [],
+              "status": "str"
+            },
+            "clearanceStatus": "str",
+            "clearedInvoice": "str"
+          }
+        },
+        "208": {
+          "application/json": {
+            "validationResults": {
+              "infoMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "warningMessages": [],
+              "errorMessages": [],
+              "status": "str"
+            },
+            "clearanceStatus": "str",
+            "clearedInvoice": "str"
+          }
+        },
+        "303": {
+          "application/json": {
+            "message": "str"
+          }
+        },
+        "400": {
+          "application/json": {
+            "validationResults": {
+              "infoMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "warningMessages": [],
+              "errorMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "status": "str"
+            },
+            "clearanceStatus": "str",
+            "clearedInvoice": "null"
+          }
+        },
+        "401": {
+          "application/json": {
+            "timestamp": "int",
+            "status": "int",
+            "error": "str",
+            "message": "str"
+          }
+        },
+        "500": {
+          "application/json": {
+            "category": "str",
+            "code": "str",
+            "message": "str"
+          }
+        }
+      }
+    },
+    "COMPLIANCE_CSID": {
+      "source": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal/users/api/v1/swagger/render?fileId=COMPLIANCE_CSID",
+      "sha256": "65911ea8c006605d14c729ec070864a6e5ff9975184e11e811b967f269dfd608",
+      "openapi": "3.0.1",
+      "baseUrl": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal",
+      "method": "POST",
+      "path": "/compliance",
+      "basicAuth": false,
+      "headers": {
+        "OTP": true,
+        "Accept-Version": true
+      },
+      "request": {
+        "csr": "str"
+      },
+      "responses": {
+        "200": {
+          "application/json": {
+            "requestID": "int",
+            "dispositionMessage": "str",
+            "binarySecurityToken": "str",
+            "secret": "str"
+          }
+        },
+        "400": {
+          "application/json": {
+            "errors": [
+              {
+                "code": "str",
+                "message": "str"
+              }
+            ]
+          }
+        },
+        "406": {
+          "text/plain;charset=UTF-8": "str"
+        },
+        "500": {
+          "application/json": {
+            "code": "str",
+            "message": "str"
+          }
+        }
+      }
+    },
+    "COMPLIANCE_INVOICE": {
+      "source": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal/users/api/v1/swagger/render?fileId=COMPLIANCE_INVOICE",
+      "sha256": "026bf6ef95aaa3390987bb3002b1f5fa0bd8648335a2a8c13e1873fd989b2a91",
+      "openapi": "3.0.1",
+      "baseUrl": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal",
+      "method": "POST",
+      "path": "/compliance/invoices",
+      "basicAuth": true,
+      "headers": {
+        "Authorization": false,
+        "Accept-Language": false,
+        "Accept-Version": true
+      },
+      "request": {
+        "invoiceHash": "str",
+        "uuid": "str",
+        "invoice": "str"
+      },
+      "responses": {
+        "200": {
+          "application/json": {
+            "validationResults": {
+              "infoMessages": {
+                "type": "str",
+                "code": "str",
+                "category": "str",
+                "message": "str",
+                "status": "str"
+              }
+            },
+            "warningMessages": [],
+            "errorMessages": [],
+            "status": "str",
+            "reportingStatus": "str",
+            "clearanceStatus": "null",
+            "qrSellertStatus": "null",
+            "qrBuyertStatus": "null"
+          }
+        },
+        "400": {
+          "application/json": {
+            "validationResults": {
+              "infoMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "warningMessages": [],
+              "errorMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "status": "str"
+            },
+            "reportingStatus": "str",
+            "clearanceStatus": "null",
+            "qrSellertStatus": "null",
+            "qrBuyertStatus": "null"
+          }
+        },
+        "401": {
+          "application/json": {
+            "timestamp": "int",
+            "status": "int",
+            "error": "str",
+            "message": "str"
+          }
+        },
+        "406": {
+          "text/plain;charset=UTF-8": "str"
+        },
+        "500": {
+          "application/json": {
+            "code": "str",
+            "message": "str"
+          }
+        }
+      }
+    },
+    "ONBOARDING": {
+      "source": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal/users/api/v1/swagger/render?fileId=ONBOARDING",
+      "sha256": "8acb67acd31834044eafd5e94f6ede5ad6f881be2688d2a887e9608328e5a560",
+      "openapi": "3.0.0",
+      "baseUrl": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal",
+      "method": "POST",
+      "path": "/production/csids",
+      "basicAuth": true,
+      "headers": {
+        "Authorization": false,
+        "Accept-Version": true
+      },
+      "request": {
+        "compliance_request_id": "str"
+      },
+      "responses": {
+        "200": {
+          "application/json": {
+            "requestID": "int",
+            "dispositionMessage": "str",
+            "binarySecurityToken": "str",
+            "secret": "str"
+          }
+        },
+        "400": {
+          "application/json": {
+            "errors": [
+              {
+                "code": "str",
+                "message": "str"
+              }
+            ]
+          }
+        },
+        "401": {
+          "application/json": {
+            "timestamp": "int",
+            "status": "int",
+            "error": "str",
+            "message": "str"
+          }
+        },
+        "406": {
+          "text/plain;charset=UTF-8": "str"
+        },
+        "500": {
+          "application/json": {
+            "code": "str",
+            "message": "str"
+          }
+        }
+      }
+    },
+    "RENEWAL": {
+      "source": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal/users/api/v1/swagger/render?fileId=RENEWAL",
+      "sha256": "4e0afccf8de2b93d645fae06268c3f415026b17a23b4ae9e860bb324613adcf3",
+      "openapi": "3.0.1",
+      "baseUrl": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal",
+      "method": "PATCH",
+      "path": "/production/csids",
+      "basicAuth": true,
+      "headers": {
+        "OTP": true,
+        "accept-language": false,
+        "Accept-Version": true
+      },
+      "request": {
+        "csr": "str"
+      },
+      "responses": {
+        "200": {
+          "application/json": {
+            "requestID": "int",
+            "tokenType": "str",
+            "dispositionMessage": "str",
+            "binarySecurityToken": "str",
+            "secret": "str"
+          }
+        },
+        "400": {
+          "application/json": {
+            "errors": [
+              {
+                "code": "str",
+                "message": "str"
+              }
+            ]
+          }
+        },
+        "401": {
+          "application/json": {
+            "timestamp": "int",
+            "status": "int",
+            "error": "str",
+            "message": "str"
+          }
+        },
+        "406": {
+          "text/plain;charset=UTF-8": "str"
+        },
+        "428": {
+          "application/json": {
+            "value": {
+              "requestID": "int",
+              "tokenType": "null",
+              "dispositionMessage": "str",
+              "binarySecurityToken": "str",
+              "secret": "str",
+              "errors": "null"
+            }
+          }
+        },
+        "500": {
+          "application/json": {
+            "category": "str",
+            "code": "str",
+            "message": "str"
+          }
+        }
+      }
+    },
+    "REPORTING": {
+      "source": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal/users/api/v1/swagger/render?fileId=REPORTING",
+      "sha256": "89b31f81905a176e948db9e41be3564290976887e10c01a67f7d66e3dbb894b3",
+      "openapi": "3.0.1",
+      "baseUrl": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal",
+      "method": "POST",
+      "path": "/invoices/reporting/single",
+      "basicAuth": true,
+      "headers": {
+        "Authorization": false,
+        "accept-language": false,
+        "Clearance-Status": true,
+        "Accept-Version": true
+      },
+      "request": {
+        "invoiceHash": "str",
+        "uuid": "str",
+        "invoice": "str"
+      },
+      "responses": {
+        "200": {
+          "application/json": {
+            "validationResults": {
+              "infoMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "warningMessages": [],
+              "errorMessages": [],
+              "status": "str"
+            },
+            "reportingStatus": "str"
+          }
+        },
+        "202": {
+          "application/json": {
+            "validationResults": {
+              "infoMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "warningMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "errorMessages": [],
+              "status": "str"
+            },
+            "reportingStatus": "str"
+          }
+        },
+        "400": {
+          "application/json": {
+            "validationResults": {
+              "infoMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "warningMessages": [],
+              "errorMessages": [
+                {
+                  "type": "str",
+                  "code": "str",
+                  "category": "str",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "status": "str"
+            },
+            "reportingStatus": "str"
+          }
+        },
+        "401": {
+          "application/json": {
+            "timestamp": "int",
+            "status": "int",
+            "error": "str",
+            "message": "str"
+          }
+        },
+        "406": {
+          "text/plain;charset=UTF-8": "str"
+        },
+        "409": {
+          "application/json": {
+            "validationResults": {
+              "infoMessages": [],
+              "warningMessages": [],
+              "errorMessages": [
+                {
+                  "type": "str",
+                  "code": "null",
+                  "category": "null",
+                  "message": "str",
+                  "status": "str"
+                }
+              ],
+              "status": "str"
+            },
+            "reportingStatus": "str"
+          }
+        },
+        "500": {
+          "application/json": {
+            "category": "str",
+            "code": "str",
+            "message": "str"
+          }
+        }
+      }
+    }
+  }
+}

@@ -6,6 +6,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: [
+        'src/api/**/*.ts',
         'src/core/**/*.ts',
         'src/crypto/**/*.ts',
         'src/qr/**/*.ts',

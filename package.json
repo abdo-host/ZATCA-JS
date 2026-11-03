@@ -54,6 +54,7 @@
     "format:check": "biome format .",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.qr.json",
     "test": "vitest run && npm run test:legacy",
+    "test:api:sandbox": "vitest run --config vitest.sandbox.config.ts",
     "test:legacy": "node --test tests/legacy-compatibility.test.cjs",
     "test:coverage": "vitest run --coverage",
     "test:consumers": "node scripts/verify-package.mjs --consumers-only",
