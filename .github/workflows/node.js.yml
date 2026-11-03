@@ -32,3 +32,8 @@ jobs:
       - run: npm test
       - run: npm run test:coverage
         if: matrix.node-version == '24.x'
+      - run: npm run package:verify
+      - run: npm run audit:dependencies
+        if: matrix.node-version == '24.x'
+      - run: npm run audit:licenses
+        if: matrix.node-version == '24.x'

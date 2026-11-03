@@ -45,7 +45,11 @@
     "typecheck": "tsc --noEmit && tsc -p tsconfig.qr.json",
     "test": "vitest run && npm run test:legacy",
     "test:legacy": "node --test tests/legacy-baseline.test.cjs",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:consumers": "node scripts/verify-package.mjs --consumers-only",
+    "package:verify": "node scripts/verify-package.mjs",
+    "audit:dependencies": "npm audit --audit-level=moderate",
+    "audit:licenses": "node scripts/verify-licenses.mjs"
   },
   "repository": {
     "type": "git",

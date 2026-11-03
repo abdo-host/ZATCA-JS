@@ -4,18 +4,18 @@
     <img src="https://www.tatwerat.com/downloads/zatca-js-icon.svg" alt="Logo" width="80" height="80"> 
   </a>
   <h1 align="center">ZATCA JS Generator</h1>
-  <h3>E-Invoice Compatible QR Code And XML</h3>
-  <p align="center">    NodeJS package for generate E-Invoice qr-code and valid XML </p>
+  <h3>QR code generation for ZATCA e-invoicing</h3>
+  <p align="center">Node.js QR rendering and portable encoding utilities</p>
   <h3><a href="https://www.tatwerat.com/demo/zatcajs">Demo Link</a></h3>
 </div>
 
 
 ## Installation
 
-You can install the package via npm:
+Install the current v1 release from npm with its renderer dependency.
 
 ```bash
-npm i zatca --save
+npm install zatca@1.0.2 qrcode@1.5.4
 ```
 [![npm](https://img.shields.io/npm/v/zatca.svg)](https://www.npmjs.com/package/zatca)  [![downloads](https://img.shields.io/npm/dm/zatca.svg)](https://npmjs.org/package/zatca)
 
@@ -53,3 +53,19 @@ let TLV = await generateQrCode.getTLV();
 ```js
 let qrCode = await generateQrCode.render();
 ```
+
+## Local development build
+
+The TypeScript migration is available as a private development tarball. Build it with a current patch of Node.js 22, 24 or 26.
+
+```sh
+npm ci
+npm run build
+npm test
+npm run package:verify
+npm pack
+```
+
+Install the resulting `zatca-2.0.0-dev.0.tgz` into a separate project. The Node package root retains `GenerateQrCode` in CommonJS and ESM. TypeScript users of the Node entry should install `@types/node` for their Node version. Browser applications can import the low-level UTF-8 and Base64 utilities from `zatca/qr`.
+
+See the [M1 packaging notes](docs/m1-packaging.md) and the [compliance matrix](docs/compliance-matrix.md) for verification status.
