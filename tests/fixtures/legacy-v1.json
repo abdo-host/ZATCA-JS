@@ -1,0 +1,17 @@
+{
+  "ascii": {
+    "args": ["Example Shop", "300000000000003", "2023-07-17T12:00:00.000Z", 115, 15],
+    "tlvHex": "010c4578616d706c652053686f70020f3330303030303030303030303030330318323032332d30372d31375431323a30303a30302e3030305a040331313505023135",
+    "base64": "AQxFeGFtcGxlIFNob3ACDzMwMDAwMDAwMDAwMDAwMwMYMjAyMy0wNy0xN1QxMjowMDowMC4wMDBaBAMxMTUFAjE1",
+    "renderMime": "image/png",
+    "renderSize": 232
+  },
+  "arabic": {
+    "seller": "شركة",
+    "legacyTlvHex": "0104d8b4d8b1d983d8a9020f3330303030303030303030303030330318323032332d30372d31375431323a30303a30302e3030305a040331313505023135"
+  },
+  "invalid": {
+    "seller": "",
+    "legacyError": "<span style=\"color:#c00\">Company name must be not null</span>"
+  }
+}
