@@ -29,6 +29,16 @@
         "default": "./dist/qr.cjs"
       }
     },
+    "./qr/render": {
+      "import": {
+        "types": "./dist/render.d.mts",
+        "default": "./dist/render.mjs"
+      },
+      "require": {
+        "types": "./dist/render.d.cts",
+        "default": "./dist/render.cjs"
+      }
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -44,7 +54,7 @@
     "format:check": "biome format .",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.qr.json",
     "test": "vitest run && npm run test:legacy",
-    "test:legacy": "node --test tests/legacy-baseline.test.cjs",
+    "test:legacy": "node --test tests/legacy-compatibility.test.cjs",
     "test:coverage": "vitest run --coverage",
     "test:consumers": "node scripts/verify-package.mjs --consumers-only",
     "package:verify": "node scripts/verify-package.mjs",
@@ -81,10 +91,14 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
     "@biomejs/biome": "2.6.4",
+    "@resvg/resvg-js": "2.6.2",
     "@types/node": "22.20.5",
+    "@types/pngjs": "6.0.5",
     "@types/qrcode": "1.5.6",
     "@vitest/coverage-v8": "4.1.12",
     "fast-check": "4.10.2",
+    "jsqr": "1.4.0",
+    "pngjs": "7.0.0",
     "publint": "0.3.25",
     "tsdown": "0.23.4",
     "typescript": "5.9.3",

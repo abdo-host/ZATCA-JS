@@ -32,4 +32,4 @@ The [golden fixture](../tests/fixtures/phase1-golden.json) reproduces the publis
 
 The [Phase 1 suite](../tests/unit/phase1.test.ts) covers exact encoding, malformed inputs and seeded property and fuzz runs. All 72 tests passed on Node 22, 24 and 26 on Windows. The packed CommonJS and ESM consumers and a headless Chrome run of the Vite-built browser fixture produced the same Arabic Base64. The browser build checks that the dependency graph stays free of Node built-ins and the renderer. The build, lint, typecheck, package metadata and dependency checks passed.
 
-These checks validate QR payloads. Official SDK conformance remains pending in the [compliance matrix](compliance-matrix.md). M3 connects the existing image renderer and legacy adapter to the new core. The characterization tests still record the original `GenerateQrCode` behavior for that migration.
+These checks validate QR payloads. Official SDK conformance remains pending in the [compliance matrix](compliance-matrix.md). The [M3 migration guide](migration-v1-v2.md) describes image rendering and the legacy adapter built on this core.

@@ -1,34 +1,20 @@
 import { Buffer } from 'node:buffer';
-import QRCode, { type QRCodeToDataURLOptions } from 'qrcode';
+import { ZatcaValidationError } from '../core/errors.js';
+import { encodeUtf8 } from '../core/utf8.js';
+import {
+  checkField,
+  maxFieldBytes,
+  type QrPhase1Input,
+} from '../qr/phase1-fields.js';
+import { encodeQrBase64, encodeQrTlv } from '../qr/phase1.js';
+import type { LegacyRenderOptions } from '../render/options.js';
+import { renderLegacyPng } from '../render/render.js';
 
-/** Options forwarded to the v1 Node renderer. */
-export interface LegacyRenderOptions {
-  version?: number;
-  errorCorrectionLevel?:
-    | 'low'
-    | 'medium'
-    | 'quartile'
-    | 'high'
-    | 'L'
-    | 'M'
-    | 'Q'
-    | 'H';
-  maskPattern?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-  toSJISFunc?: (codePoint: string) => number;
-  type?: 'png' | 'image/png' | 'image/jpeg' | 'image/webp';
-  margin?: number;
-  scale?: number;
-  width?: number;
-  color?: { dark?: string; light?: string };
-  rendererOpts?: {
-    quality?: number;
-    deflateLevel?: number;
-    deflateStrategy?: number;
-  };
-  quality?: number;
-}
+export type { LegacyRenderOptions } from '../render/options.js';
 
-/** Generates a Node.js QR code using the v1 positional invoice fields. */
+/** Generates Phase 1 QR codes from the original positional arguments.
+ * @deprecated Use `encodeQrBase64` from `zatca/qr` and `qrToDataUrl` from `zatca/qr/render`.
+ */
 export class GenerateQrCode {
   constructor(
     public company_name = '',
@@ -38,76 +24,66 @@ export class GenerateQrCode {
     public tax_total: number | string = 0,
   ) {}
 
-  /** Returns the legacy TLV bytes or a v1 validation message. */
-  async getTLV(): Promise<Buffer | string> {
-    return this.validateInvoiceData() || this.#buildTlv();
+  /** Returns the Phase 1 TLV bytes as a Node Buffer. */
+  async getTLV(): Promise<Buffer> {
+    return Buffer.from(encodeQrTlv(this.#input()));
   }
 
-  /** Returns the legacy Base64 payload or a v1 validation message. */
+  /** Returns the Phase 1 QR payload as standard Base64. */
   async toBase64(): Promise<string> {
-    return this.validateInvoiceData() || this.#buildTlv().toString('base64');
+    return encodeQrBase64(this.#input());
   }
 
-  /** Renders a QR image as a Node.js data URL. */
+  /** Renders a PNG data URL with the legacy defaults. */
   async render(options: LegacyRenderOptions = {}): Promise<string> {
-    const defaults = {
-      errorCorrectionLevel: 'H',
-      type: 'image/jpeg',
-      quality: 0.5,
-      margin: 2.5,
-      color: { dark: '#000000', light: '#ffffff' },
-    } as const;
-    const renderOptions = { ...defaults, ...options };
-    // The Node renderer accepts these v1 MIME values and falls back to PNG.
-    return QRCode.toDataURL(
-      await this.toBase64(),
-      renderOptions as QRCodeToDataURLOptions,
-    );
+    return renderLegacyPng(await this.toBase64(), options);
   }
 
-  /** Builds a single field using the original v1 TLV behavior. */
+  /** @deprecated Use the Phase 1 encoder for invoice payloads. */
   getTLVForValue(tagNum: string | number, tagValue: string): Buffer {
-    return Buffer.concat([
-      Buffer.from([Number(tagNum), tagValue.length]),
-      Buffer.from(tagValue, 'utf8'),
-    ]);
+    const tag = Number(tagNum);
+    if (
+      !Number.isInteger(tag) ||
+      tag < 1 ||
+      tag > 255 ||
+      typeof tagValue !== 'string' ||
+      tagValue.length > maxFieldBytes ||
+      /[\uD800-\uDFFF]/u.test(tagValue)
+    ) {
+      throw new ZatcaValidationError('Invalid TLV tag or UTF-8 value');
+    }
+    const value = encodeUtf8(tagValue);
+    if (value.length > maxFieldBytes)
+      throw new ZatcaValidationError(
+        'A TLV value can occupy at most 255 UTF-8 bytes',
+      );
+    return Buffer.concat([Buffer.from([tag, value.length]), value]);
   }
 
-  /** Returns the first v1 validation message, or false for accepted input. */
-  validateInvoiceData(): string | false {
-    if (!this.company_name?.length) {
-      return '<span style="color:#c00">Company name must be not null</span>';
-    }
-    if (!this.tax_id?.length) {
-      return '<span style="color:#c00">Tax number name must be not null</span>';
-    }
-    if (this.tax_id.length < 15 || !/^3.*3$/.test(this.tax_id)) {
-      return '<span style="color:#c00">The tax number must consist of 15 digits, where the first and last digits are [3]</span>';
-    }
-    if (!this.invoice_date?.length) {
-      return '<span style="color:#c00">Invoice date must be not null</span>';
-    }
-    if (!this.isValidISO8601Date(this.invoice_date)) {
-      return '<span style="color:#c00">Invoice date must be ISO8601 format <a href="https://codepen.io/Abdo-Host/pen/VwVXbVZ" target="_blank"><b>Example</b></a> </span>';
-    }
+  /** @deprecated Encode an invoice directly to receive typed validation errors. */
+  validateInvoiceData(): false {
+    encodeQrTlv(this.#input());
     return false;
   }
 
-  /** Checks the legacy millisecond UTC timestamp format. */
+  /** @deprecated Encode an invoice directly to validate its timestamp. */
   isValidISO8601Date(dateString: string): boolean {
-    if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(dateString))
-      return false;
-    const date = new Date(dateString);
-    return !Number.isNaN(date.getTime()) && date.toISOString() === dateString;
+    return checkField('issuedAt', dateString) === undefined;
   }
 
-  #buildTlv(): Buffer {
-    return Buffer.concat([
-      this.getTLVForValue('1', this.company_name),
-      this.getTLVForValue('2', String(this.tax_id)),
-      this.getTLVForValue('3', String(this.invoice_date)),
-      this.getTLVForValue('4', String(this.grand_total)),
-      this.getTLVForValue('5', String(this.tax_total)),
-    ]);
+  #input(): QrPhase1Input {
+    return {
+      sellerName: this.company_name,
+      vatNumber: this.tax_id,
+      issuedAt: this.invoice_date,
+      invoiceTotal:
+        typeof this.grand_total === 'number'
+          ? String(this.grand_total)
+          : this.grand_total,
+      vatTotal:
+        typeof this.tax_total === 'number'
+          ? String(this.tax_total)
+          : this.tax_total,
+    };
   }
 }

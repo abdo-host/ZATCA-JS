@@ -1,4 +1,9 @@
-export default {
+export default ({ mode }) => ({
+  build: {
+    rolldownOptions: {
+      input: mode === 'render' ? 'render.html' : 'index.html',
+    },
+  },
   plugins: [
     {
       name: 'assert-portable-package-graph',
@@ -8,7 +13,9 @@ export default {
           if (
             moduleId.includes('__vite-browser-external') ||
             moduleId.startsWith('node:') ||
-            moduleId.includes('/node_modules/qrcode/') ||
+            (mode !== 'render' && moduleId.includes('/node_modules/qrcode/')) ||
+            moduleId.includes('/qrcode/lib/server.js') ||
+            moduleId.includes('/node_modules/pngjs/') ||
             moduleId.includes('/zatca/dist/index.')
           ) {
             this.error(
@@ -19,4 +26,4 @@ export default {
       },
     },
   ],
-};
+});

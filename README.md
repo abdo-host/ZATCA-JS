@@ -66,6 +66,6 @@ npm run package:verify
 npm pack
 ```
 
-Install the resulting `zatca-2.0.0-dev.0.tgz` into a separate project. The Node package root retains `GenerateQrCode` in CommonJS and ESM. TypeScript users of the Node entry should install `@types/node` for their Node version. Node and browser applications can encode, decode and validate Phase 1 payloads from `zatca/qr`.
+Install the resulting `zatca-2.0.0-dev.0.tgz` into a separate project. Node and browser applications can encode, decode and validate Phase 1 payloads from `zatca/qr` and render PNG or SVG from `zatca/qr/render`. The Node root retains the deprecated `GenerateQrCode` adapter in CommonJS and ESM. TypeScript users of the Node entry should install `@types/node` for their Node version.
 
-See the [Phase 1 API guide](docs/m2-phase1-qr.md), [packaging notes](docs/m1-packaging.md) and [compliance matrix](docs/compliance-matrix.md).
+See the [Phase 1 API guide](docs/m2-phase1-qr.md), [rendering and migration guide](docs/migration-v1-v2.md) and [compliance matrix](docs/compliance-matrix.md).

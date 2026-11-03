@@ -49,7 +49,7 @@ try {
   const tarball = join(temp, pack.filename);
   const files = pack.files.map(({ path }) => path);
   const sharedChunk =
-    /^dist\/phase1-[\w-]+\.(?:cjs(?:\.map)?|mjs(?:\.map)?|d\.[cm]ts)$/;
+    /^dist\/(?:(?:phase1|render)-[\w-]+\.[cm]js(?:\.map)?|(?:phase1|options)-[\w-]+\.d\.[cm]ts)$/;
   assert.deepEqual(files.filter((path) => !sharedChunk.test(path)).sort(), [
     'LICENSE',
     'README.md',
@@ -63,9 +63,13 @@ try {
     'dist/qr.d.cts',
     'dist/qr.d.mts',
     'dist/qr.mjs',
+    'dist/render.cjs',
+    'dist/render.d.cts',
+    'dist/render.d.mts',
+    'dist/render.mjs',
     'package.json',
   ]);
-  assert.equal(files.filter((path) => sharedChunk.test(path)).length, 6);
+  assert.equal(files.filter((path) => sharedChunk.test(path)).length, 12);
   console.log(`Verified contents of ${pack.filename}`);
 
   const consumersOnly = process.argv.includes('--consumers-only');
@@ -74,7 +78,7 @@ try {
     npm(['exec', '--offline', '--', 'attw', '--profile', 'node16', tarball]);
   }
 
-  for (const name of ['node-cjs', 'node-esm', 'browser']) {
+  for (const name of ['node-cjs', 'node-esm', 'browser', 'express']) {
     const cwd = join(temp, name);
     cpSync(join(fixtures, name), cwd, { recursive: true });
     cpSync(
@@ -96,7 +100,40 @@ try {
 
     if (name === 'browser') {
       tsc(['-p', 'tsconfig.json'], cwd);
-      node([join(root, 'node_modules/vite/bin/vite.js'), 'build'], cwd);
+      const vite = join(root, 'node_modules/vite/bin/vite.js');
+      node([vite, 'build'], cwd);
+      node([vite, 'build', '--mode', 'render'], cwd);
+      continue;
+    }
+
+    if (name === 'express') {
+      npm(
+        [
+          'install',
+          '--ignore-scripts',
+          '--no-audit',
+          '--no-fund',
+          'express@5.3.0',
+          '@types/express@5.0.6',
+          `@types/node@${nodeTypesVersion}`,
+        ],
+        cwd,
+      );
+      node(['--test', 'index.cjs'], cwd);
+      tsc(
+        [
+          '--strict',
+          '--target',
+          'ES2022',
+          '--module',
+          'NodeNext',
+          '--outDir',
+          'compiled',
+          'index.mts',
+        ],
+        cwd,
+      );
+      node(['--test', 'compiled/index.mjs'], cwd);
       continue;
     }
 
@@ -107,12 +144,14 @@ try {
         node([join(root, 'scripts/verify-licenses.mjs'), cwd]);
       }
       node(['--conditions=browser', 'browser-conditions.cjs'], cwd);
-      node(['--test', join(root, 'tests/legacy-baseline.test.cjs')], cwd, {
-        env: {
-          ...process.env,
-          ZATCA_LEGACY_ENTRY: join(cwd, 'node_modules/zatca/dist/index.cjs'),
-        },
+      cpSync(
+        join(root, 'tests/legacy-compatibility.test.cjs'),
+        join(cwd, 'legacy-compatibility.test.cjs'),
+      );
+      cpSync(join(root, 'tests/fixtures'), join(cwd, 'fixtures'), {
+        recursive: true,
       });
+      node(['--test', 'legacy-compatibility.test.cjs'], cwd);
     }
 
     npm(
