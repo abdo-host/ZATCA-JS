@@ -1,66 +1,56 @@
-<div id="top"></div>
-<div align="center"> 
-  <a href="https://salla.dev"> 
-    <img src="https://www.tatwerat.com/downloads/zatca-js-icon.svg" alt="Logo" width="80" height="80"> 
-  </a>
-  <h1 align="center">ZATCA JS Generator</h1>
-  <h3>QR code generation for ZATCA e-invoicing</h3>
-  <p align="center">Node.js QR rendering and portable encoding utilities</p>
-  <h3><a href="https://www.tatwerat.com/demo/zatcajs">Demo Link</a></h3>
-</div>
+# Tatwerat ZATCA JS
 
+Generate QR payloads for Saudi e-invoicing in JavaScript.
 
-## Installation
+مكتبة JavaScript لتوليد رموز QR للفواتير الإلكترونية السعودية.
 
-Install the current v1 release from npm with its renderer dependency.
+## Published package / الإصدار المنشور
 
-```bash
+**npm `zatca@1.0.2`** provides the legacy Phase 1 QR generator for Node.js.
+
+الإصدار المنشور يوفّر مولّد QR للمرحلة الأولى على Node.js. مثال الاستخدام التالي خاص بالإصدار المنشور.
+
+```sh
 npm install zatca@1.0.2 qrcode@1.5.4
 ```
-[![npm](https://img.shields.io/npm/v/zatca.svg)](https://www.npmjs.com/package/zatca)  [![downloads](https://img.shields.io/npm/dm/zatca.svg)](https://npmjs.org/package/zatca)
-
-## Usage
 
 ```js
-// Import in your app
-const TT_Zatca = require('zatca');
+const { GenerateQrCode } = require('zatca');
 
-/*
-* Run Generate QrCode Class
-* @param1=company_name
-* @param2=tax_id
-* @param3=invoice_date
-* @param4=grand_total
-* @param5=tax_total
-*/
-const generateQrCode = new TT_Zatca.GenerateQrCode('Tatwerat', '302520021521453', '2011-10-05T14:48:00.000Z', 100.00, 15.00);
+async function main() {
+  const qr = new GenerateQrCode(
+    'Example Store',
+    '300000000000003',
+    '2026-11-03T12:30:00.000Z',
+    230.00,
+    30.00,
+  );
+
+  const base64 = await qr.toBase64();
+  const tlv = await qr.getTLV();
+  const pngDataUrl = await qr.render();
+
+  console.log({ base64, tlvBytes: tlv.length, pngDataUrl });
+}
+
+main().catch(console.error);
 ```
 
-### Generate Base64
+| Method / الدالة | Result / الناتج |
+| --- | --- |
+| `toBase64()` | Base64 QR payload / حمولة الرمز بترميز Base64 |
+| `getTLV()` | Raw TLV bytes / بايتات TLV |
+| `render()` | PNG data URL / رابط بيانات لصورة PNG |
 
-```js
-let base64 = await generateQrCode.toBase64();
-```
+## Development preview / نسخة التطوير
 
-### Generate TLV
+The source repository builds a private `2.0.0-dev.0` tarball. The preview provides Phase 1 UTF-8 encoding, decoding, validation and QR rendering through `zatca/qr` and `zatca/qr/render`. These subpaths are available from the development tarball.
 
-```js
-let TLV = await generateQrCode.getTLV();
-```
+المستودع يحتوي على نسخة تطوير محلية `2.0.0-dev.0`. فيها دعم UTF-8، وتوليد وقراءة وفحص حمولة QR للمرحلة الأولى، ورسم QR. المسارات الجديدة في ملف الحزمة المبني من المستودع.
 
-### Render QR Code Image
+Build and verify on Node.js 22 or later.
 
-```js
-let qrCode = await generateQrCode.render();
-```
-
-## Invoice lab
-
-Run `npm ci` and `npm run demo` to open the [local invoice lab](http://127.0.0.1:4177/). It generates a UBL draft and Phase 1 QR, and simulates reporting and clearance outcomes. The [Arabic walkthrough](docs/invoice-demo.md) includes steps for a demo. The [Node integration example](examples/invoicing/README.md) shows the invoice JSON and per-device settings for the internal server entry. Open the [standalone Arabic and English HTML guide](docs/invoice-integration.html) in a browser to see the API request object, in-memory XML generation, and reporting and clearance examples. The [technical Markdown guide](docs/invoice-integration.md) covers JSON-to-UBL and ready-XML submission.
-
-## Local development build
-
-The TypeScript migration is available as a private development tarball. Build it with a current patch of Node.js 22, 24 or 26.
+أوامر بناء وفحص نسخة التطوير على Node.js 22 أو أحدث.
 
 ```sh
 npm ci
@@ -70,6 +60,39 @@ npm run package:verify
 npm pack
 ```
 
-Install the resulting `zatca-2.0.0-dev.0.tgz` into a separate project. Node and browser applications can encode, decode and validate Phase 1 payloads from `zatca/qr` and render PNG or SVG from `zatca/qr/render`. The Node root retains the deprecated `GenerateQrCode` adapter in CommonJS and ESM. TypeScript users of the Node entry should install `@types/node` for their Node version.
+Install the resulting tarball in a separate project for evaluation.
 
-See the [Phase 1 API guide](docs/m2-phase1-qr.md), [rendering and migration guide](docs/migration-v1-v2.md) and [compliance matrix](docs/compliance-matrix.md).
+ثبّت ملف الحزمة الناتج داخل مشروع منفصل للتجربة.
+
+```sh
+npm install ./zatca-2.0.0-dev.0.tgz
+```
+
+```js
+import { decodeQrBase64, encodeQrBase64 } from 'zatca/qr';
+
+const payload = encodeQrBase64({
+  sellerName: 'شركة مدار التجريبية',
+  vatNumber: '300000000000003',
+  issuedAt: '2026-11-03T15:30:00+03:00',
+  invoiceTotal: '230.00',
+  vatTotal: '30.00',
+});
+
+console.log(decodeQrBase64(payload).valid);
+```
+
+## Invoice integration status / حالة ربط الفواتير
+
+The repository includes internal Node.js code for unsigned UBL drafts, canonical hashes and submitting prepared XML. Reporting and clearance were exercised against ZATCA Sandbox with prepared XML examples. The invoice APIs remain internal, and the complete flow from invoice data through signing and submission remains pending release verification.
+
+المستودع فيه كود Node داخلي لتوليد مسودة UBL غير موقّعة، وحساب الهاش، وإرسال XML مجهّز. جرّبنا الإبلاغ والتخليص على Sandbox باستخدام XML جاهز. واجهات الفواتير لسه داخلية، ومسار بيانات الفاتورة إلى التوقيع والإرسال يحتاج تحقق كامل قبل إتاحته للمستخدمين.
+
+- [Phase 1 API and examples / أمثلة QR](docs/m2-phase1-qr.md)
+- [Migration guide / دليل الترقية](docs/migration-v1-v2.md)
+- [Invoice integration guide / دليل ربط الفواتير](docs/invoice-integration.html)
+- [Sandbox test results / نتائج الاختبار](docs/m7-zatca-api.md#verification)
+
+## License / الترخيص
+
+MIT.
