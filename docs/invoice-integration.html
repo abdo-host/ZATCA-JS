@@ -72,6 +72,32 @@ th:first-child { width:31%; }
     </ol>
   </nav>
   <main>
+    <article id="developer-entry">
+      <div class="chapter"><h2>ابدأ من هنا لو بتدمج الحزمة في نظامك</h2></div>
+      <p>ملف الفاتورة فيه بيانات البيع. إعدادات زاتكا مكانها خادمك، مرة لكل جهاز. الدالة <code>issueInvoice</code> تربطهم وتعيد حالة الإرسال.</p>
+      <p class="note">واجهة Node دي موجودة داخل المستودع. النسخة المتاحة للتثبيت من npm تدعم QR. التوقيع للفاتورة المبسطة يعتمد على مزوّد توقيع يهيّئه التطبيق.</p>
+      <p><a href="../examples/invoicing/invoice.json" download>نزّل JSON الفاتورة كامل</a> · <a href="../examples/invoicing/README.md">شوف مثال المطوّر وإعدادات الشهادة</a></p>
+      <pre>const invoicing = createInvoicing({
+  environment: 'sandbox',
+  csid: issuedSandboxCsid,
+  issuance: {
+    egsId: 'device-01',
+    xmllintPath: absoluteXmllintPath,
+    store,
+    signSimplified,
+  },
+});
+
+const result = await invoicing.issueInvoice(invoiceJson, invoiceJson.id);
+console.log(result.status);</pre>
+      <p><code>csid</code> فيه معرّف طلب الشهادة و<code>binarySecurityToken</code> و<code>secret</code>. <code>store</code> يحفظ سلسلة الفواتير ويمنع تكرار الإرسال. الفاتورة القياسية تستخدم التخليص. المبسطة تستدعي مزوّد التوقيع أولًا ثم تستخدم الإبلاغ.</p>
+      <ul>
+        <li>XML فقط عبر <code>generateXml(invoiceJson, chainLink)</code>.</li>
+        <li>إبلاغ XML موقّع جاهز عبر <code>invoicing.reportXml({ xml, invoiceHash })</code>. تهيئة هذا المسار تحتاج <code>environment</code> و<code>csid</code> فقط.</li>
+        <li>QR المرحلة الأولى عبر <code>generatePhase1Qr(fields)</code>.</li>
+      </ul>
+    </article>
+
     <section class="path" aria-labelledby="path-title">
       <h2 id="path-title">اختار نوع الفاتورة</h2>
       <div class="path-controls" role="group" aria-label="نوع الفاتورة">

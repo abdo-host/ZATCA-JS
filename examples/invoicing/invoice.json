@@ -1,0 +1,46 @@
+{
+  "kind": "standard",
+  "documentKind": "invoice",
+  "id": "INV-1001",
+  "uuid": "a2e8e2b6-858c-4c16-bca8-ec820b12adcb",
+  "issuedAt": "2026-11-03T10:30:00+03:00",
+  "supplyDate": "2026-11-03",
+  "currency": "SAR",
+  "seller": {
+    "name": "شركة مدار التجريبية",
+    "vatNumber": "300000000000003",
+    "registrationId": "1234567890",
+    "address": {
+      "street": "شارع التجربة",
+      "buildingNumber": "1234",
+      "district": "حي الاختبار",
+      "city": "الرياض",
+      "postalCode": "12345",
+      "country": "SA"
+    }
+  },
+  "buyer": {
+    "name": "شركة العميل التجريبية",
+    "address": {
+      "street": "شارع العميل",
+      "buildingNumber": "2345",
+      "district": "حي الاختبار",
+      "city": "الرياض",
+      "postalCode": "12345",
+      "country": "SA"
+    }
+  },
+  "paymentMeansCode": "30",
+  "lines": [
+    {
+      "id": "1",
+      "name": "خدمة تجريبية",
+      "quantity": "2",
+      "unitCode": "PCE",
+      "unitPrice": "100.00",
+      "tax": {
+        "category": "S"
+      }
+    }
+  ]
+}
