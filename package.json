@@ -100,9 +100,12 @@
     "jsqr": "1.4.0",
     "pngjs": "7.0.0",
     "publint": "0.3.25",
+    "saxes": "6.0.0",
     "tsdown": "0.23.4",
     "typescript": "5.9.3",
     "vite": "8.3.5",
-    "vitest": "4.1.12"
+    "vitest": "4.1.12",
+    "xmlbuilder2": "4.0.3",
+    "zod": "4.6.7"
   }
 }

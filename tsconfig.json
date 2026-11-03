@@ -7,11 +7,13 @@
     "verbatimModuleSyntax": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
     "noEmit": true,
     "types": ["node"]
   },
   "include": [
     "src/**/*.ts",
+    "scripts/**/*.ts",
     "tests/unit/**/*.ts",
     "tsdown.config.ts",
     "vitest.config.ts"

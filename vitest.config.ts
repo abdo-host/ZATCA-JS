@@ -5,7 +5,12 @@ export default defineConfig({
     include: ['tests/unit/**/*.test.ts'],
     coverage: {
       provider: 'v8',
-      include: ['src/core/**/*.ts', 'src/qr/**/*.ts', 'src/render/**/*.ts'],
+      include: [
+        'src/core/**/*.ts',
+        'src/qr/**/*.ts',
+        'src/render/**/*.ts',
+        'src/xml/**/*.ts',
+      ],
       reporter: ['text', 'json-summary'],
     },
   },

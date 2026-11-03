@@ -103,7 +103,7 @@ The Node targets follow the [official Node.js release schedule](https://nodejs.o
 | **M2 · Complete** | [Phase 1 TLV encode, decode and validation](m2-phase1-qr.md) with Unicode, size limits and byte-level vectors. |
 | **M3 · Complete** | [Image renderer, legacy adapter and migration guide](migration-v1-v2.md), verified with independent scans and packed consumers. |
 | **M4 · SDK verification pending** | [Experimental inspection and wire-format evidence](m4-phase2-evidence.md). Generation is gated on the official SDK. The signed XML adapter in QR2-006 depends on M6. |
-| **M5 · Pending** | Typed invoice model, decimal calculations and UBL XML. Verify each supported invoice and note profile with the official SDK. |
+| **M5 · SDK verification pending** | [Unsigned domestic SAR drafts](m5-ubl-invoices.md), exact accounting, safe inspection and local UBL XSD checks. Additional profiles and the package export depend on official validation. |
 | **M6 · Pending** | Signing, hashing, PIH/ICV and certificates with official vectors and independent review. |
 | **M7 · Pending** | Onboarding, renewal, reporting and clearance with Sandbox evidence for each supported workflow. |
 | **M8 · Pending** | Documentation, examples and developer experience. Ship the QR release's relevant docs with its features. |
