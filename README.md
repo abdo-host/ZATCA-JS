@@ -6,19 +6,19 @@ Generate QR payloads for Saudi e-invoicing in JavaScript.
 
 ## Manual / خطوات الاستخدام
 
-- [Use the published QR generator / استخدم مولّد QR المنشور](#published-package--الإصدار-المنشور)
-- [Show a QR on a web page / اعرض QR في صفحة](#development-preview--نسخة-التطوير)
+- [Install and generate a QR in Node.js / ثبّت المكتبة وولّد QR في Node.js](#published-package--الإصدار-المنشور)
+- [Show a QR on a web page / اعرض QR في صفحة](#browser-qr--qr-في-المتصفح)
 - [Work with invoices and XML / اشتغل ببيانات الفاتورة وXML](#invoice-integration--ربط-الفواتير)
 - [API Reference / مرجع الدوال](#api-reference--مرجع-الدوال)
 
 ### Published package / الإصدار المنشور
 
-**Stable npm release `zatca@1.0.2`** provides the legacy Phase 1 QR generator for Node.js.
+Install the current npm release with Node.js 22 or later. The package includes the Node.js `GenerateQrCode` adapter and browser-compatible QR APIs.
 
-الإصدار المنشور يوفّر مولّد QR للمرحلة الأولى على Node.js. مثال الاستخدام التالي خاص بالإصدار المنشور.
+ثبّت الإصدار الحالي من npm باستخدام Node.js 22 أو أحدث. الحزمة فيها `GenerateQrCode` لـNode.js ودوال QR تعمل في المتصفح.
 
 ```sh
-npm install zatca@1.0.2 qrcode@1.5.4
+npm install zatca
 ```
 
 ```js
@@ -47,35 +47,11 @@ To display the PNG in a web app, pass `pngDataUrl` to the frontend and use it as
 
 لعرض الصورة، استخدم قيمة `pngDataUrl` كـ`src` للـ`<img>` في الواجهة.
 
-### Development preview / نسخة التطوير
+### Browser QR / QR في المتصفح
 
-The `next` tag selects the `2.0.0-dev.0` QR preview. It provides Phase 1 UTF-8 encoding, decoding, validation and QR rendering through `zatca/qr` and `zatca/qr/render`.
+Use `zatca/qr` to encode, decode and validate Phase 1 payloads and `zatca/qr/render` to render QR images.
 
-الوسم `next` يثبّت النسخة التجريبية `2.0.0-dev.0`. فيها دعم UTF-8، وتوليد وقراءة وفحص حمولة QR للمرحلة الأولى، ورسم QR.
-
-```sh
-npm install zatca@next
-```
-
-Build and verify on Node.js 22 or later.
-
-أوامر بناء وفحص نسخة التطوير على Node.js 22 أو أحدث.
-
-```sh
-npm ci
-npm run build
-npm test
-npm run package:verify
-npm pack
-```
-
-Install the resulting tarball in a separate project for evaluation.
-
-ثبّت ملف الحزمة الناتج داخل مشروع منفصل للتجربة.
-
-```sh
-npm install ./zatca-2.0.0-dev.0.tgz
-```
+استخدم `zatca/qr` لتوليد وقراءة وفحص بيانات QR للمرحلة الأولى، و`zatca/qr/render` لعرضها كصورة.
 
 In a browser app, add an image element and give it the renderer's data URL.
 
@@ -230,7 +206,7 @@ Each operation can be used on its own. اختر الوظيفة اللي محتا
 | `qr.toBase64()` | Base64 payload / حمولة Base64 |
 | `qr.render()` | PNG data URL / رابط بيانات لصورة PNG |
 
-### Development QR API / دوال QR في نسخة التطوير
+### Portable QR API / دوال QR للمتصفح وNode.js
 
 | Import | Function | Result / الناتج |
 | --- | --- | --- |
@@ -261,7 +237,7 @@ Each operation can be used on its own. اختر الوظيفة اللي محتا
 | `requestComplianceCsid`, `checkCompliance`, `requestProductionCsid`, `renewProductionCsid` | Onboard, check and renew CSIDs / تهيئة وفحص وتجديد الشهادات |
 | `getCsidExpiry(csid)`, `checkCertificateLocally(...)` | Expiry and local certificate checks / انتهاء الشهادة وفحصها محليًا |
 
-- [HTML guide / دليل HTML](https://github.com/abdo-host/ZATCA-JS/blob/release/qr-preview/docs/invoice-integration.html)
+- [HTML guide / دليل HTML](https://abdo-host.github.io/ZATCA-JS/)
 - [Node integration example / مثال الربط](https://github.com/abdo-host/ZATCA-JS/blob/release/qr-preview/examples/invoicing/README.md)
 - [Sandbox test results / نتائج Sandbox](https://github.com/abdo-host/ZATCA-JS/blob/release/qr-preview/docs/m7-zatca-api.md#verification)
 - [Migration guide / دليل الترقية](https://github.com/abdo-host/ZATCA-JS/blob/release/qr-preview/docs/migration-v1-v2.md)
