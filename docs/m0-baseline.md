@@ -102,7 +102,7 @@ The Node targets follow the [official Node.js release schedule](https://nodejs.o
 | **M1 · Complete** | INF-001–008 in two reviewable slices. Establish strict TypeScript, reproducible npm install, dependency boundaries and CI. Then validate dual builds, declarations, UTF-8/Base64 utilities, typed errors and isolated packed CJS/ESM/TS/Vite consumers. Run build, tests and package lint before M2. |
 | **M2 · Complete** | [Phase 1 TLV encode, decode and validation](m2-phase1-qr.md) with Unicode, size limits and byte-level vectors. |
 | **M3 · Complete** | [Image renderer, legacy adapter and migration guide](migration-v1-v2.md), verified with independent scans and packed consumers. |
-| **M4 · Next** | Phase 2 QR and official fixture validation. The signed XML adapter in QR2-006 depends on M6. |
+| **M4 · SDK verification pending** | [Experimental inspection and wire-format evidence](m4-phase2-evidence.md). Generation is gated on the official SDK. The signed XML adapter in QR2-006 depends on M6. |
 | **M5 · Pending** | Typed invoice model, decimal calculations and UBL XML. Verify each supported invoice and note profile with the official SDK. |
 | **M6 · Pending** | Signing, hashing, PIH/ICV and certificates with official vectors and independent review. |
 | **M7 · Pending** | Onboarding, renewal, reporting and clearance with Sandbox evidence for each supported workflow. |

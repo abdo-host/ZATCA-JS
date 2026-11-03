@@ -1,4 +1,9 @@
-import { decodeQrBase64, encodeQrBase64, type QrPhase1Input } from 'zatca/qr';
+import {
+  decodeQrBase64,
+  encodeQrBase64,
+  inspectPhase2Qr,
+  type QrPhase1Input,
+} from 'zatca/qr';
 import fixture from './phase1-golden.json';
 
 const input: QrPhase1Input = fixture.arabic.input;
@@ -10,6 +15,10 @@ if (
   result.fields.sellerName !== input.sellerName
 ) {
   throw new Error('Portable Phase 1 QR round-trip failed');
+}
+const inspection = inspectPhase2Qr(encoded, 'standard');
+if (inspection.structureValid || inspection.errors.length !== 3) {
+  throw new Error('Phase 2 inspection must report the missing binary tags');
 }
 const output = document.querySelector('output');
 if (output) output.value = encoded;

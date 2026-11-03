@@ -109,6 +109,14 @@ export function decodeQrTlv(
   data: Uint8Array,
   options?: QrDecodeOptions,
 ): QrDecodeResult {
+  return decodeTlvRecords(data, options, 5);
+}
+
+export function decodeTlvRecords(
+  data: Uint8Array,
+  options: QrDecodeOptions | undefined,
+  maxKnownTag: 5 | 9,
+): QrDecodeResult {
   if (
     !ArrayBuffer.isView(data) ||
     Object.prototype.toString.call(data) !== '[object Uint8Array]'
@@ -156,11 +164,10 @@ export function decodeQrTlv(
       continue;
     }
     seen.add(tag);
-    const field = phase1Fields[tag - 1];
-    if (!field) {
+    if (tag === 0 || tag > maxKnownTag) {
       const problem = issue(
         'ZATCA_QR_UNKNOWN_TAG',
-        `Unsupported Phase 1 tag ${tag}`,
+        `Unsupported QR tag ${tag}`,
         path,
       );
       if (options?.mode === 'tolerant' && tag !== 0)
@@ -170,13 +177,11 @@ export function decodeQrTlv(
     }
     if (tag < highestKnownTag)
       errors.push(
-        issue(
-          'ZATCA_QR_TAG_ORDER',
-          'Phase 1 tags must be in ascending order',
-          path,
-        ),
+        issue('ZATCA_QR_TAG_ORDER', 'QR tags must be in ascending order', path),
       );
     highestKnownTag = Math.max(tag, highestKnownTag);
+    const field = phase1Fields[tag - 1];
+    if (!field) continue;
 
     try {
       const text = decodeUtf8(value);
@@ -215,6 +220,14 @@ export function decodeQrBase64(
   data: string,
   options?: QrDecodeOptions,
 ): QrDecodeResult {
+  return decodeBase64Records(data, options, 5);
+}
+
+export function decodeBase64Records(
+  data: string,
+  options: QrDecodeOptions | undefined,
+  maxKnownTag: 5 | 9,
+): QrDecodeResult {
   if (typeof data !== 'string')
     return emptyResult(
       issue('ZATCA_QR_INPUT_TYPE', 'Expected a Base64 string', '/qr'),
@@ -227,7 +240,7 @@ export function decodeQrBase64(
     if (!(error instanceof ZatcaEncodingError)) throw error;
     return emptyResult(issue(error.code, error.message, '/qr'));
   }
-  return decodeQrTlv(bytes, options);
+  return decodeTlvRecords(bytes, options, maxKnownTag);
 }
 
 /** Checks the strict Phase 1 QR structure and fields. This does not validate an invoice. */

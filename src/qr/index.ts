@@ -17,3 +17,9 @@ export {
   type ValidationResult,
   validateQrPayload,
 } from './phase1.js';
+export {
+  inspectPhase2Qr,
+  type Phase2BinaryTag,
+  type Phase2InvoiceType,
+  type Phase2QrInspection,
+} from './phase2-inspection.js';
