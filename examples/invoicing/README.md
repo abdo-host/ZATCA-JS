@@ -1,6 +1,6 @@
 # نقطة الدخول لتكامل الفواتير
 
-يمرّر خادم التطبيق بيانات الفاتورة من جسم الطلب مباشرةً كـobject. [عينة بيانات الفاتورة](invoice.json) توضّح شكل هذا الـobject. إعدادات زاتكا تخص جهاز الإصدار وتُمرّر إلى `createInvoicing()` عند التهيئة.
+يمرّر التطبيق بيانات الفاتورة إلى دوال Node كـobject من أي مصدر بيانات عنده. [عينة بيانات الفاتورة](invoice.json) توضّح شكل هذا الـobject. إعدادات زاتكا تخص جهاز الإصدار وتُمرّر إلى `createInvoicing()` عند التهيئة.
 
 مثال TypeScript داخل المستودع. استيراد المصدر التالي يناسب ملفًا داخل `examples/invoicing/`. قيم `store` و`signSimplified` تأتي من تطبيقك، وبيانات الاعتماد من مخزن أسرار الخادم.
 
@@ -27,11 +27,11 @@ const invoicing = createInvoicing({
   },
 });
 
-export function issueFromApi(invoice: InvoiceInput) {
+export function issueFromObject(invoice: InvoiceInput) {
   return invoicing.issueInvoice(invoice, invoice.id);
 }
 
-// const result = await issueFromApi(req.body);
+// const result = await issueFromObject(invoice);
 ```
 
 `issueInvoice` يتحقق من بيانات الفاتورة، ويأخذ ICV وPIH من المخزن، ويولّد XML. لو الفاتورة مبسطة يستدعي `signSimplified` ليعيد XML موقّعًا فيه QR المرحلة الثانية. بعدها يحسب الهاش على المستند الجاهز ويستدعي Reporting أو Clearance. العينة قياسية، فتستخدم Clearance. غيّر `kind` إلى `simplified` عند تجربة الإبلاغ مع مزوّد توقيع مُعدّ للاختبار. التوقيع الفعلي مسؤولية المزود، ولا توجد دالة توقيع مدمجة في الحزمة الحالية.
@@ -57,8 +57,7 @@ import {
 
 const invoicing = createInvoicing({ environment: 'sandbox', csid });
 
-// Inside your API handler
-const draftXml = generateXml({ ...req.body, ...chainLink });
+const draftXml = generateXml({ ...invoice, ...chainLink });
 const xml = await signSimplified(draftXml);
 const invoiceHash = hashInvoiceXml(xml, xmllintPath);
 const result = await invoicing.reportXml({ xml, invoiceHash });

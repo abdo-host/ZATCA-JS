@@ -91,6 +91,8 @@ footer { color:var(--muted); font-size:.88rem; padding-block:3px 12px; }
     <h2 data-lang="en">Available operations</h2>
     <p data-lang="ar">كل مجموعة لها استخدام مستقل. مثلًا، عرض QR يحتاج بيانات الرمز فقط، وإرسال XML جاهز يبدأ من النص والهاش وبيانات اعتماد الإرسال.</p>
     <p data-lang="en">Use each group independently. For example, QR rendering starts with QR data, and ready-XML submission starts with the document, its hash and submission credentials.</p>
+    <p class="notice" data-lang="ar"><strong>مكان التشغيل.</strong> دوال QR في نسخة التطوير تعمل داخل React أو Vue في المتصفح، وتعمل أيضًا على Node.js. إصدار npm الحالي <code>1.0.2</code> يستخدم مولّد QR على Node.js. توليد XML والهاش والتوقيع والإرسال مسار Node على الخادم في الكود الحالي.</p>
+    <p class="notice" data-lang="en"><strong>Where the code runs.</strong> The development QR API runs in a React or Vue browser app and on Node.js. The published <code>1.0.2</code> QR generator runs on Node.js. XML generation, hashing, signing and submission are server-side in the current source.</p>
     <details id="function-reference" open>
       <summary><span data-lang="ar">المرجع الكامل للدوال</span><span data-lang="en">Full function reference</span></summary>
     <div class="reference-group">
@@ -103,7 +105,7 @@ footer { color:var(--muted); font-size:.88rem; padding-block:3px 12px; }
     </div>
     <div class="reference-group">
       <h3 data-lang="ar">توليد وقراءة وفحص QR</h3><h3 data-lang="en">Generate, decode and validate QR</h3>
-      <p class="muted" data-lang="ar">نسخة التطوير المحلية · zatca/qr.</p><p class="muted" data-lang="en">Local development build · zatca/qr.</p>
+      <p class="muted" data-lang="ar">نسخة التطوير · المتصفح وNode.js · zatca/qr.</p><p class="muted" data-lang="en">Development build · browser and Node.js · zatca/qr.</p>
       <dl class="feature-list">
         <div class="feature-row"><dt dir="ltr"><code>encodeQrTlv(fields) / encodeQrBase64(fields)</code></dt><dd data-lang="ar">اختر بايتات TLV أو Base64 من نفس بيانات الفاتورة.</dd><dd data-lang="en">Get TLV bytes or Base64 from the same invoice fields.</dd></div>
         <div class="feature-row"><dt dir="ltr"><code>decodeQrTlv(bytes, options?) / decodeQrBase64(base64, options?)</code></dt><dd data-lang="ar">اقرأ الحقول والوسوم ونتائج الفحص من حمولة جاهزة.</dd><dd data-lang="en">Read fields, tags and validation results from an existing payload.</dd></div>
@@ -114,7 +116,7 @@ footer { color:var(--muted); font-size:.88rem; padding-block:3px 12px; }
     </div>
     <div class="reference-group">
       <h3 data-lang="ar">تحويل حمولة QR إلى صورة</h3><h3 data-lang="en">Render a QR payload as an image</h3>
-      <p class="muted" data-lang="ar">نسخة التطوير المحلية · zatca/qr/render.</p><p class="muted" data-lang="en">Local development build · zatca/qr/render.</p>
+      <p class="muted" data-lang="ar">نسخة التطوير · المتصفح وNode.js · zatca/qr/render.</p><p class="muted" data-lang="en">Development build · browser and Node.js · zatca/qr/render.</p>
       <dl class="feature-list">
         <div class="feature-row"><dt dir="ltr"><code>qrToDataUrl(base64, options?)</code></dt><dd data-lang="ar">رابط صورة PNG افتراضيًا، أو SVG لو حدّدت format. استخدمه في src.</dd><dd data-lang="en">PNG data URL by default, or SVG when you set the format. Use it as src.</dd></div>
         <div class="feature-row"><dt dir="ltr"><code>qrToPngBytes(base64, options?)</code></dt><dd data-lang="ar">بايتات صورة PNG لما تحتاج تتعامل مع الصورة كملف أو بيانات.</dd><dd data-lang="en">PNG bytes for file or binary handling.</dd></div>
@@ -159,16 +161,15 @@ footer { color:var(--muted); font-size:.88rem; padding-block:3px 12px; }
   </section>
   <section class="step stack" id="input">
     <p class="muted"><span data-lang="ar">مثال اختياري لربط الدوال معًا</span><span data-lang="en">Optional example that combines several operations</span></p>
-    <div class="chapter"><bdi>01</bdi><h2 data-lang="ar">استقبل بيانات الفاتورة من التطبيق</h2><h2 data-lang="en">Receive the invoice object from your application</h2></div>
-    <p data-lang="ar">بعد ما الـAPI يقرأ جسم الطلب، بيانات الفاتورة بتكون <code>object</code> في <code>req.body</code>. المثال التالي يوضح شكل البيانات اللي هتمرّرها للدالة.</p>
-    <p data-lang="en">After your API parses the request body, the invoice is an object in <code>req.body</code>. This sample shows the data you pass to the function.</p>
-    <pre>const invoice = req.body;</pre>
+    <div class="chapter"><bdi>01</bdi><h2 data-lang="ar">ابدأ ببيانات الفاتورة</h2><h2 data-lang="en">Start with the invoice object</h2></div>
+    <p data-lang="ar"><code>invoice</code> هو object فيه بيانات الفاتورة. ممكن يكون من فورم، أو حالة التطبيق، أو أي مصدر بيانات عندك. اختار نوع الفاتورة وشوف مثال كامل للـobject اللي هتمرّره للدالة.</p>
+    <p data-lang="en"><code>invoice</code> is an object containing the invoice data. It can come from a form, application state or any data source. Pick the invoice type to see the full object you pass to the function.</p>
     <div class="control-row" role="group" aria-label="Invoice profile / نوع الفاتورة">
       <button type="button" data-profile="simplified" aria-pressed="true"><span data-lang="ar">مبسطة B2C</span><span data-lang="en">Simplified B2C</span></button>
       <button type="button" data-profile="standard" aria-pressed="false"><span data-lang="ar">قياسية B2B</span><span data-lang="en">Standard B2B</span></button>
     </div>
     <details open>
-      <summary><span data-lang="ar">مثال كامل لقيمة req.body</span><span data-lang="en">Full req.body example</span></summary>
+      <summary><span data-lang="ar">مثال كامل لـinvoice</span><span data-lang="en">Full invoice object example</span></summary>
       <pre id="json" class="preview" aria-label="Invoice object example"></pre>
     </details>
   </section>
@@ -299,7 +300,7 @@ async function generateInvoiceQr() {
     const standard = profile === 'standard';
     const sample = samples[profile];
     xml = new TextDecoder().decode(bytes(sample.xml));
-    find('json').textContent = JSON.stringify(sample.invoice, null, 2) + '\n';
+    find('json').textContent = 'const invoice = ' + JSON.stringify(sample.invoice, null, 2) + ';';
     find('xml').textContent = xml.replaceAll('><', '>\n<');
     find('submit-code').textContent = [
       "import { hashInvoiceXml } from '../../src/server/invoicing.js';",

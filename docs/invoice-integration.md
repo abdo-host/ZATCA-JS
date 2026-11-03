@@ -60,12 +60,11 @@
 }
 ```
 
-مرّر قيمة `req.body` بعد تحليل الطلب إلى الدالة. في المثال أعلاه قيم ICV وPIH لأول مستند لجهاز جديد. في التطبيق يجلب الخادم القيم الحالية من سلسلة الجهاز ويضيفها إلى الـobject.
+مرّر object الفاتورة `invoice` إلى الدالة. ممكن ييجي من أي مصدر بيانات في تطبيقك. في المثال أعلاه قيم ICV وPIH لأول مستند لجهاز جديد. في التطبيق يجلب الخادم القيم الحالية من سلسلة الجهاز ويضيفها إلى الـobject.
 
 ```ts
 import { generateXml, hashInvoiceXml } from '../src/server/invoicing.js';
 
-const invoice = req.body;
 const draftXml = generateXml({ ...invoice, ...chainLink });
 
 // Simplified B2C
