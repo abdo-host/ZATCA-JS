@@ -2,7 +2,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [master]
+    branches: [master, release/qr-preview]
   pull_request:
     branches: [master]
 
@@ -44,3 +44,11 @@ jobs:
         if: matrix.node-version == '24.x'
       - run: npm run audit:licenses
         if: matrix.node-version == '24.x'
+      - run: npm pack --pack-destination .
+        if: github.event_name == 'push' && github.ref == 'refs/heads/release/qr-preview' && matrix.node-version == '24.x'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: github.event_name == 'push' && github.ref == 'refs/heads/release/qr-preview' && matrix.node-version == '24.x'
+        with:
+          name: npm-qr-preview
+          path: '*.tgz'
+          if-no-files-found: error

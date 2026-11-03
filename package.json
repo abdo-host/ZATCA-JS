@@ -1,7 +1,6 @@
 {
   "name": "zatca",
   "version": "2.0.0-dev.0",
-  "private": true,
   "description": "Node.js QR code generator and portable encoding utilities for ZATCA e-invoicing",
   "type": "module",
   "sideEffects": false,

@@ -13,7 +13,7 @@ Generate QR payloads for Saudi e-invoicing in JavaScript.
 
 ### Published package / الإصدار المنشور
 
-**npm `zatca@1.0.2`** provides the legacy Phase 1 QR generator for Node.js.
+**Stable npm release `zatca@1.0.2`** provides the legacy Phase 1 QR generator for Node.js.
 
 الإصدار المنشور يوفّر مولّد QR للمرحلة الأولى على Node.js. مثال الاستخدام التالي خاص بالإصدار المنشور.
 
@@ -49,9 +49,13 @@ To display the PNG in a web app, pass `pngDataUrl` to the frontend and use it as
 
 ### Development preview / نسخة التطوير
 
-The source repository builds a private `2.0.0-dev.0` tarball. The preview provides Phase 1 UTF-8 encoding, decoding, validation and QR rendering through `zatca/qr` and `zatca/qr/render`. These subpaths are available from the development tarball.
+The `next` tag selects the `2.0.0-dev.0` QR preview. It provides Phase 1 UTF-8 encoding, decoding, validation and QR rendering through `zatca/qr` and `zatca/qr/render`.
 
-المستودع يحتوي على نسخة تطوير محلية `2.0.0-dev.0`. فيها دعم UTF-8، وتوليد وقراءة وفحص حمولة QR للمرحلة الأولى، ورسم QR. المسارات الجديدة في ملف الحزمة المبني من المستودع.
+الوسم `next` يثبّت النسخة التجريبية `2.0.0-dev.0`. فيها دعم UTF-8، وتوليد وقراءة وفحص حمولة QR للمرحلة الأولى، ورسم QR.
+
+```sh
+npm install zatca@next
+```
 
 Build and verify on Node.js 22 or later.
 
@@ -257,10 +261,10 @@ Each operation can be used on its own. اختر الوظيفة اللي محتا
 | `requestComplianceCsid`, `checkCompliance`, `requestProductionCsid`, `renewProductionCsid` | Onboard, check and renew CSIDs / تهيئة وفحص وتجديد الشهادات |
 | `getCsidExpiry(csid)`, `checkCertificateLocally(...)` | Expiry and local certificate checks / انتهاء الشهادة وفحصها محليًا |
 
-- [HTML guide / دليل HTML](docs/invoice-integration.html)
-- [Node integration example / مثال الربط](examples/invoicing/README.md)
-- [Sandbox test results / نتائج Sandbox](docs/m7-zatca-api.md#verification)
-- [Migration guide / دليل الترقية](docs/migration-v1-v2.md)
+- [HTML guide / دليل HTML](https://github.com/abdo-host/ZATCA-JS/blob/release/qr-preview/docs/invoice-integration.html)
+- [Node integration example / مثال الربط](https://github.com/abdo-host/ZATCA-JS/blob/release/qr-preview/examples/invoicing/README.md)
+- [Sandbox test results / نتائج Sandbox](https://github.com/abdo-host/ZATCA-JS/blob/release/qr-preview/docs/m7-zatca-api.md#verification)
+- [Migration guide / دليل الترقية](https://github.com/abdo-host/ZATCA-JS/blob/release/qr-preview/docs/migration-v1-v2.md)
 
 ## License / الترخيص
 
