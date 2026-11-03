@@ -54,6 +54,10 @@ let TLV = await generateQrCode.getTLV();
 let qrCode = await generateQrCode.render();
 ```
 
+## Invoice lab
+
+Run `npm ci` and `npm run demo` to open the [local invoice lab](http://127.0.0.1:4177/). It generates a UBL draft and Phase 1 QR, and simulates reporting and clearance outcomes. The [Arabic walkthrough](docs/invoice-demo.md) includes steps for a demo.
+
 ## Local development build
 
 The TypeScript migration is available as a private development tarball. Build it with a current patch of Node.js 22, 24 or 26.

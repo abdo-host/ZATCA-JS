@@ -4,6 +4,7 @@
       "*.json",
       "*.ts",
       "scripts/**",
+      "demo/**/*.ts",
       "src/**",
       "tests/**",
       "!package-lock.json",

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="تجربة محلية لمسودة فاتورة وQR ومحاكاة الإرسال">
+    <title>مختبر الفاتورة | Tatwerat ZATCA JS</title>
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="frame masthead-inner">
+        <a class="brand" href="./" aria-label="مختبر الفاتورة">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span dir="ltr">Tatwerat <strong>ZATCA JS</strong></span>
+        </a>
+        <span class="environment"><span aria-hidden="true"></span> تجربة محلية</span>
+      </div>
+    </header>
+    <main class="frame">
+      <section class="intro" aria-labelledby="title">
+        <div>
+          <h1 id="title">مختبر الفاتورة</h1>
+          <p>أنشئ مسودة، افحص رمز الاستجابة السريعة، وجرّب مسار التخليص أو الإبلاغ.</p>
+        </div>
+        <p class="demo-label"><span aria-hidden="true">◈</span> بيانات اصطناعية للعرض</p>
+      </section>
+
+      <div class="workbench">
+        <section class="workspace" aria-labelledby="editor-title">
+          <div class="section-title"><span class="step">01</span><h2 id="editor-title">بيانات الفاتورة</h2></div>
+          <form id="invoice-form" novalidate>
+            <fieldset>
+              <legend>نوع الفاتورة</legend>
+              <div class="profile-picker">
+                <label><input type="radio" name="profile" value="simplified" checked><span>مبسطة <small dir="ltr">B2C</small></span></label>
+                <label><input type="radio" name="profile" value="standard"><span>قياسية <small dir="ltr">B2B</small></span></label>
+              </div>
+            </fieldset>
+            <label for="seller">اسم البائع</label>
+            <input id="seller" name="seller" value="شركة مدار التجريبية" maxlength="200" required>
+            <label for="vat">الرقم الضريبي</label>
+            <input id="vat" name="vat" value="300000000000003" dir="ltr" inputmode="numeric" maxlength="20" required>
+            <div class="fields">
+              <div><label for="quantity">الكمية</label><input id="quantity" name="quantity" value="2" dir="ltr" inputmode="decimal" required></div>
+              <div><label for="price">سعر الوحدة بالريال</label><input id="price" name="price" value="100.00" dir="ltr" inputmode="decimal" required></div>
+            </div>
+            <div class="form-actions">
+              <button class="primary" type="submit">إنشاء المسودة</button>
+              <button class="secondary" type="reset">استعادة العينة</button>
+            </div>
+            <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section class="preview" aria-labelledby="preview-title">
+          <div class="section-title"><span class="step">02</span><h2 id="preview-title">معاينة المسودة</h2></div>
+          <div class="receipt" id="receipt" aria-busy="true">
+            <div class="receipt-heading">
+              <div><p class="receipt-caption">مسودة فاتورة ضريبية</p><h3 id="receipt-seller">شركة مدار التجريبية</h3></div>
+              <span class="receipt-id" dir="ltr">LAB–001</span>
+            </div>
+            <div class="receipt-meta">
+              <span id="receipt-profile">فاتورة مبسطة</span>
+              <bdi id="receipt-vat">300000000000003</bdi>
+            </div>
+            <div class="receipt-item">
+              <span>خدمة تجريبية <small id="receipt-quantity"></small></span>
+              <bdi id="receipt-net"></bdi>
+            </div>
+            <div class="receipt-item tax"><span>ضريبة القيمة المضافة <bdi>15%</bdi></span><bdi id="receipt-tax"></bdi></div>
+            <div class="receipt-item total"><span>الإجمالي بالريال</span><bdi id="receipt-total">—</bdi></div>
+            <div class="receipt-bottom">
+              <img id="qr-image" alt="رمز QR للمرحلة الأولى" width="120" height="120" hidden>
+              <div><strong>رمز المرحلة الأولى</strong><p>امسحه أو افحص الحقول الخمسة في تبويب البيانات.</p><button type="button" class="text-action" id="save-qr" disabled>تنزيل SVG</button></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="results" aria-labelledby="results-title">
+        <div class="section-title"><span class="step">03</span><h2 id="results-title">الفحص والمحاكاة</h2></div>
+        <div class="results-nav" aria-label="عرض تفاصيل النتيجة">
+          <button type="button" data-panel="flow" aria-pressed="true">مسار الإرسال</button>
+          <button type="button" data-panel="xml" aria-pressed="false">مسودة XML</button>
+          <button type="button" data-panel="qr" aria-pressed="false">بيانات QR</button>
+        </div>
+        <div id="panel-flow">
+          <div class="scenario-controls">
+            <div><label for="scenario">رد الجهة في المحاكاة</label><select id="scenario" name="scenario">
+              <option value="accepted">قبول</option><option value="warning">قبول مع تحذير</option>
+              <option value="rejected">رفض</option><option value="timeout">انتهاء المهلة</option>
+            </select></div>
+            <button type="button" class="primary" id="simulate" disabled>تشغيل المحاكاة</button>
+          </div>
+          <ol class="timeline">
+            <li><span>1</span><div><strong>مسودة XML</strong><small id="step-draft">في انتظار المسودة</small></div></li>
+            <li><span>2</span><div><strong>فحص محلي</strong><small id="step-check">فحص البنية وQR</small></div></li>
+            <li><span>3</span><div><strong id="step-route">الإبلاغ</strong><small id="step-endpoint" dir="ltr">/invoices/reporting/single</small></div></li>
+          </ol>
+          <p class="outcome" id="outcome" role="status">شغّل المحاكاة لرؤية نتيجة الإرسال.</p>
+          <p class="muted">المحاكاة تعمل داخل المتصفح. التوقيع واختبار Sandbox الحي مساران منفصلان.</p>
+        </div>
+        <div id="panel-xml" hidden>
+          <div class="result-bar"><p>معاينة UBL غير موقّعة</p><button type="button" class="secondary" id="save-xml" disabled>تنزيل XML</button></div>
+          <pre dir="ltr" id="xml-output"></pre>
+        </div>
+        <div id="panel-qr" hidden>
+          <div class="result-bar"><p>قراءة TLV من الرمز المولّد</p><span id="tag-count" dir="ltr"></span></div>
+          <table><thead><tr><th scope="col">الوسم</th><th scope="col">القيمة</th><th scope="col">بايت</th></tr></thead><tbody id="tags"></tbody></table>
+          <details><summary>حمولة Base64</summary><pre dir="ltr" id="payload"></pre></details>
+        </div>
+      </section>
+
+      <footer><span dir="ltr">Tatwerat ZATCA JS</span><span>مختبر التطوير والفوترة الإلكترونية</span></footer>
+    </main>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>

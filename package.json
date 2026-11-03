@@ -50,6 +50,9 @@
   "scripts": {
     "clean": "node --eval \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
     "build": "npm run clean && tsdown",
+    "demo": "vite demo --host 127.0.0.1 --port 4177 --strictPort",
+    "demo:build": "vite build demo --base ./",
+    "demo:preview": "vite preview demo --host 127.0.0.1 --port 4177 --strictPort",
     "lint": "biome lint .",
     "format:check": "biome format .",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.qr.json",
