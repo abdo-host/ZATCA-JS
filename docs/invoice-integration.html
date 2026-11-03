@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="دليل عربي وإنجليزي يوضح إعدادات زاتكا وبيانات الفاتورة واستدعاءات Node">
-<title>Tatwerat ZATCA JS | دليل المطوّر</title>
+<title>Tatwerat ZATCA JS | Developer guide</title>
 <style>
 :root { color-scheme:light; --ink:#142340; --muted:#50617d; --paper:#f2f5fb; --white:#fff; --line:#dce4f0; --blue:#2145b8; --ice:#e9effe; --night:#12203d; font:16px/1.65 "Segoe UI",Tahoma,sans-serif; color:var(--ink); background:var(--paper); }
 *,*::before,*::after { box-sizing:border-box; }
@@ -66,8 +66,8 @@ footer { color:var(--muted); font-size:.88rem; padding-block:3px 12px; }
     <div class="top">
       <span class="brand" dir="ltr">Tatwerat ZATCA JS</span>
       <div class="lang" role="group" aria-label="Language / اللغة">
-        <button type="button" data-switch-lang="ar" lang="ar" aria-pressed="true">العربية</button>
-        <button type="button" data-switch-lang="en" lang="en" aria-pressed="false">English</button>
+        <button type="button" data-switch-lang="ar" lang="ar" aria-pressed="false">العربية</button>
+        <button type="button" data-switch-lang="en" lang="en" aria-pressed="true">English</button>
       </div>
     </div>
     <div class="hero">
@@ -282,7 +282,7 @@ async function generateInvoiceQr() {
   const samples = JSON.parse(find('samples').textContent);
   const bytes = (value) => Uint8Array.from(atob(value), (char) => char.charCodeAt(0));
   let profile = 'simplified';
-  let language = 'ar';
+  let language = document.documentElement.lang;
   let xml = '';
 
   function setLanguage(next) {
